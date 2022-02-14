@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-
+<?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.GameController">
    <center>
@@ -15,20 +15,20 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Circle fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+                  <Circle fx:id="red" fill="DODGERBLUE" onMouseClicked="#collectRed" radius="20.0" stroke="BLACK" strokeType="INSIDE">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Circle>
-                  <Circle fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+                  <Circle fx:id="green" fill="DODGERBLUE" onMouseClicked="#collectGreen" radius="20.0" stroke="BLACK" strokeType="INSIDE">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </Circle>
-                  <Circle fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fx:id="blue" fill="DODGERBLUE" onMouseClicked="#collectBlue" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fx:id="brown" fill="DODGERBLUE" onMouseClicked="#collectBrown" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fx:id="white" fill="DODGERBLUE" onMouseClicked="#collectWhite" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fx:id="gold" fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
@@ -80,8 +80,62 @@
                   <RadioButton mnemonicParsing="false" text="Build" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Text fx:id="reds" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="greens" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="blues" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="browns" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="whites" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="golds" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="poins" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <ImageView fx:id="res1" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess01" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="res2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess02" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="res2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess03" pickOnBounds="true" preserveRatio="true" />
+               </children></HBox>
          </children>
       </VBox>
    </bottom>
+   <right>
+      <VBox fx:id="redsLeft" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text fx:id="reds1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="greens1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="blues1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="browns1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="whites1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="golds1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="poins1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="textRes" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+         </children>
+      </VBox>
+   </right>
+   <top>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text fx:id="reds11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="greens11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="blues11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="browns11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="whites11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="golds11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="poins11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="textRes1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text fx:id="reds111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="greens111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="blues111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="browns111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="whites111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="golds111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="poins111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="textRes11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+         </children>
+      </VBox>
+   </left>
 </BorderPane>
