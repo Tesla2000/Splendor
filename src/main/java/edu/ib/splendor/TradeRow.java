@@ -42,8 +42,14 @@ public class TradeRow {
                 tierThirdHidden.remove(0);
             } else tierThirdVisible[index] = null;
         }
-        player.deck.add(card);
-
-
+        player.addCard(card);
     }
+    public Card getCard(Tier tier, int index){
+        Card card;
+        if (tier.equals(Tier.FIRST)) card = tierFirstVisible[index];
+        else if (tier.equals(Tier.SECOND)) card = tierSecondVisible[index];
+        else card = tierThirdVisible[index];
+        return card;
+    }
+
 }

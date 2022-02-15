@@ -10,6 +10,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class GameController {
+    private Player player;
+    private Board board;
 
     @FXML
     private ResourceBundle resources;
@@ -136,12 +138,39 @@ public class GameController {
 
     @FXML
     private Text whites111;
-    private int collectLimit;
 
-    private void buyEstate(Tier reserve, int i) {
-
+    private void buyEstate(Tier tier, int i) {
+        Card card;
+        if (!tier.equals(Tier.RESERVE))
+            card = board.getTradeRow().getCard(tier,i);
+        else card = player.getReserve()[i];
+        if (
+                Math.max(card.getBLUE() - (player.getBlue()+ player.getBlueProduction()), 0) +
+                Math.max(card.getRED() - (player.getRed()+ player.getRedProduction()), 0) +
+                Math.max(card.getGREEN() - (player.getGreen()+ player.getGreenProduction()), 0) +
+                Math.max(card.getBROWN() - (player.getBrown()+ player.getBrownProduction()), 0) +
+                Math.max(card.getWHITE() - (player.getWhite()+ player.getWhiteProduction()), 0) >= player.getGold()
+        ) {
+            player.setGold(player.getGold()-(Math.max(card.getBLUE() - (player.getBlue()+ player.getBlueProduction()), 0) +
+                    Math.max(card.getRED() - (player.getRed()+ player.getRedProduction()), 0) +
+                    Math.max(card.getGREEN() - (player.getGreen()+ player.getGreenProduction()), 0) +
+                    Math.max(card.getBROWN() - (player.getBrown()+ player.getBrownProduction()), 0) +
+                    Math.max(card.getWHITE() - (player.getWhite()+ player.getWhiteProduction()), 0)));
+            player.setRed(Math.max(card.getRED() - (player.getRed()+ player.getRedProduction()), 0));
+            player.setGreen(Math.max(card.getGREEN() - (player.getGreen()+ player.getGreenProduction()), 0));
+            player.setBlue(Math.max(card.getBLUE() - (player.getBlue()+ player.getBlueProduction()), 0));
+            player.setBrown(Math.max(card.getBROWN() - (player.getBrown()+ player.getBrownProduction()), 0));
+            player.setWhite(Math.max(card.getWHITE() - (player.getWhite()+ player.getWhiteProduction()), 0));
+        }
+        if (!tier.equals(Tier.RESERVE))
+            board.getTradeRow().takeCard(tier, i, player);
+        else {
+            player.addCard(card);
+            player.removeReserve(card);
+        }
     }
-    private void collectGem(int limit, Gem gem){
+
+    private void collectGem(Gem gem){
 
     }
 
@@ -238,28 +267,28 @@ public class GameController {
     }
 
     @FXML
-    void collectBlue(MouseEvent event, Object gem) {
-        collectGem(collectLimit, Gem.BLUE);
+    void collectBlue(MouseEvent event) {
+        collectGem(Gem.BLUE);
     }
 
     @FXML
     void collectBrown(MouseEvent event) {
-        collectGem(collectLimit, Gem.BROWN);
+        collectGem(Gem.BROWN);
     }
 
     @FXML
     void collectGreen(MouseEvent event) {
-        collectGem(collectLimit, Gem.GREEN);
+        collectGem(Gem.GREEN);
     }
 
     @FXML
     void collectRed(MouseEvent event) {
-        collectGem(collectLimit, Gem.RED);
+        collectGem(Gem.RED);
     }
 
     @FXML
     void collectWhite(MouseEvent event) {
-        collectGem(collectLimit, Gem.WHITE);
+        collectGem(Gem.WHITE);
     }
 
     @FXML

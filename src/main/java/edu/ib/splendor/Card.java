@@ -8,7 +8,29 @@ public class Card {
     private final int BLUE;
     private final int BROWN;
     private final int WHITE;
+
+    public Card(Tier tier, int index, int RED, int GREEN, int BLUE, int BROWN, int WHITE, int points, Gem production) {
+        this.tier = tier;
+        this.index = index;
+        this.RED = RED;
+        this.GREEN = GREEN;
+        this.BLUE = BLUE;
+        this.BROWN = BROWN;
+        this.WHITE = WHITE;
+        this.points = points;
+        this.production = production;
+    }
+
+    private int points = 0;
     private final Gem production;
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
     public void setTier(Tier tier) {
         this.tier = tier;
