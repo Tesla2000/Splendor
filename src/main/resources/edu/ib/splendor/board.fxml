@@ -33,37 +33,37 @@
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="aristocrat0" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="aristocrat1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="aristocrat2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="aristocrat3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess30" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess31" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess32" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess33" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess34" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building34" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess30" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building32" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess31" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building33" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess32" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building31" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess33" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building30" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess34" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess20" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess21" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess22" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess23" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess24" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building24" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess20" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building22" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess21" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building23" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess22" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building21" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess23" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building20" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess24" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess10" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess11" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess12" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess13" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess14" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building14" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess10" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building12" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess11" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building13" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess12" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building11" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess13" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building10" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess14" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
          </children>
@@ -74,10 +74,10 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <RadioButton mnemonicParsing="false" text="Get Three" />
-                  <RadioButton mnemonicParsing="false" text="Get Two" />
-                  <RadioButton mnemonicParsing="false" text="Reserve" />
-                  <RadioButton mnemonicParsing="false" text="Build" />
+                  <RadioButton fx:id="getThree" mnemonicParsing="false" text="Get Three" />
+                  <RadioButton fx:id="getTwo" mnemonicParsing="false" text="Get Two" />
+                  <RadioButton fx:id="reserve" mnemonicParsing="false" text="Reserve" />
+                  <RadioButton fx:id="build" mnemonicParsing="false" text="Build" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">

@@ -1,22 +1,33 @@
 package edu.ib.splendor;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class TradeRow {
     private ArrayList<Card> tierFirstHidden;
     private ArrayList<Card> tierSecondHidden;
     private ArrayList<Card> tierThirdHidden;
-    private Card[] tierFirstVisible;
-    private Card[] tierSecondVisible;
-    private Card[] tierThirdVisible;
+    private Card[] tierFirstVisible = new Card[4];
+    private Card[] tierSecondVisible = new Card[4];
+    private Card[] tierThirdVisible = new Card[4];
 
-    public TradeRow(ArrayList<Card> tierFirstHidden, ArrayList<Card> tierSecondHidden, ArrayList<Card> tierThirdHidden, Card[] tierFirstVisible, Card[] tierSecondVisible, Card[] tierThirdVisible) {
+    public TradeRow(ArrayList<Card> tierFirstHidden, ArrayList<Card> tierSecondHidden, ArrayList<Card> tierThirdHidden) {
         this.tierFirstHidden = tierFirstHidden;
         this.tierSecondHidden = tierSecondHidden;
         this.tierThirdHidden = tierThirdHidden;
-        this.tierFirstVisible = tierFirstVisible;
-        this.tierSecondVisible = tierSecondVisible;
-        this.tierThirdVisible = tierThirdVisible;
+        Random random = new Random();
+        int index;
+        for (int i=0; i<4;i++) {
+            index = random.nextInt(tierFirstHidden.size());
+            this.tierFirstVisible[i] = this.tierFirstHidden.get(index);
+            this.tierFirstHidden.remove(index);
+            index = random.nextInt(tierSecondHidden.size());
+            this.tierSecondVisible[i] = this.tierSecondHidden.get(index);
+            this.tierSecondHidden.remove(index);
+            index = random.nextInt(tierThirdHidden.size());
+            this.tierThirdVisible[i] = this.tierThirdHidden.get(index);
+            this.tierThirdHidden.remove(index);
+        }
     }
 
     public void takeCard(Tier tier, int index, Player player){
