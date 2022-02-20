@@ -12,6 +12,7 @@ public class Player {
     private HashMap<Gem, Integer> possession = new HashMap<>();
     private HashMap<Gem, Integer> production = new HashMap<>();
     private int points = 0;
+    private String name = "";
     private HashMap<Gem, Boolean> taken = new HashMap<>();
     private int collectLimit = 0;
 
@@ -28,6 +29,21 @@ public class Player {
     }
 
     public Player() {
+        possession.put(Gem.RED, 0);
+        possession.put(Gem.GREEN, 0);
+        possession.put(Gem.BLUE, 0);
+        possession.put(Gem.BROWN, 0);
+        possession.put(Gem.WHITE, 0);
+        possession.put(Gem.GOLD, 0);
+        production.put(Gem.RED, 0);
+        production.put(Gem.GREEN, 0);
+        production.put(Gem.BLUE, 0);
+        production.put(Gem.BROWN, 0);
+        production.put(Gem.WHITE, 0);
+    }
+
+    public Player(String name) {
+        this.name = name;
         possession.put(Gem.RED, 0);
         possession.put(Gem.GREEN, 0);
         possession.put(Gem.BLUE, 0);
@@ -138,5 +154,9 @@ public class Player {
     public void addAristocrat(Aristocrat aristocrat){
         aristocrats.add(aristocrat);
         updateStates();
+    }
+
+    public String getName() {
+        return name;
     }
 }

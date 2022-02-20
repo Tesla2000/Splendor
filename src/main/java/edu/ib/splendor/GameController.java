@@ -1,14 +1,17 @@
 package edu.ib.splendor;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -16,12 +19,12 @@ import javafx.scene.text.Text;
 public class GameController {
     private Player currentPlayer;
     private Board board;
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
+    private Text redResource;
+    private Text greenResource;
+    private Text blueResource;
+    private Text brownResource;
+    private Text whiteResource;
+    private Text goldResource;
 
     @FXML
     private ImageView aristocrat0;
@@ -35,6 +38,68 @@ public class GameController {
     @FXML
     private ImageView aristocrat3;
 
+    @FXML
+    private Circle blue;
+
+    @FXML
+    private StackPane bluePane;
+
+    @FXML
+    private Text blues;
+
+    @FXML
+    private Text blues1;
+
+    @FXML
+    private Text blues11;
+
+    @FXML
+    private Text blues111;
+
+    @FXML
+    private Text bluesProduction;
+
+    @FXML
+    private Text bluesProduction1;
+
+    @FXML
+    private Text bluesProduction11;
+
+    @FXML
+    private Text bluesProduction111;
+
+    @FXML
+    private Circle brown;
+
+    @FXML
+    private StackPane brownPane;
+
+    @FXML
+    private Text browns;
+
+    @FXML
+    private Text browns1;
+
+    @FXML
+    private Text browns11;
+
+    @FXML
+    private Text browns111;
+
+    @FXML
+    private Text brownsProduction;
+
+    @FXML
+    private Text brownsProduction1;
+
+    @FXML
+    private Text brownsProduction11;
+
+    @FXML
+    private Text brownsProduction111;
+
+    @FXML
+    private RadioButton build;
 
     @FXML
     private ImageView building10;
@@ -82,37 +147,16 @@ public class GameController {
     private ImageView building34;
 
     @FXML
-    private Circle blue;
+    private RadioButton getThree;
 
     @FXML
-    private Text blues;
-
-    @FXML
-    private Text blues1;
-
-    @FXML
-    private Text blues11;
-
-    @FXML
-    private Text blues111;
-
-    @FXML
-    private Circle brown;
-
-    @FXML
-    private Text browns;
-
-    @FXML
-    private Text browns1;
-
-    @FXML
-    private Text browns11;
-
-    @FXML
-    private Text browns111;
+    private RadioButton getTwo;
 
     @FXML
     private Circle gold;
+
+    @FXML
+    private StackPane goldPane;
 
     @FXML
     private Text golds;
@@ -130,19 +174,10 @@ public class GameController {
     private Circle green;
 
     @FXML
+    private StackPane greenPane;
+
+    @FXML
     private Text greens;
-
-    @FXML
-    private RadioButton reserve;
-
-    @FXML
-    private RadioButton build;
-
-    @FXML
-    private RadioButton getThree;
-
-    @FXML
-    private RadioButton getTwo;
 
     @FXML
     private Text greens1;
@@ -152,6 +187,33 @@ public class GameController {
 
     @FXML
     private Text greens111;
+
+    @FXML
+    private Text greensProduction;
+
+    @FXML
+    private Text greensProduction1;
+
+    @FXML
+    private Text greensProduction11;
+
+    @FXML
+    private Text greensProduction111;
+
+    @FXML
+    private ToggleGroup option;
+
+    @FXML
+    private Text playerName;
+
+    @FXML
+    private Text playerName1;
+
+    @FXML
+    private Text playerName11;
+
+    @FXML
+    private Text playerName111;
 
     @FXML
     private Text poins;
@@ -169,6 +231,9 @@ public class GameController {
     private Circle red;
 
     @FXML
+    private StackPane redPane;
+
+    @FXML
     private Text reds;
 
     @FXML
@@ -184,6 +249,18 @@ public class GameController {
     private VBox redsLeft;
 
     @FXML
+    private Text redsProduction;
+
+    @FXML
+    private Text redsProduction1;
+
+    @FXML
+    private Text redsProduction11;
+
+    @FXML
+    private Text redsProduction111;
+
+    @FXML
     private ImageView res1;
 
     @FXML
@@ -191,6 +268,12 @@ public class GameController {
 
     @FXML
     private ImageView res3;
+
+    @FXML
+    private RadioButton reserve;
+
+    @FXML
+    private HBox resourceBox;
 
     @FXML
     private Text textRes;
@@ -205,6 +288,9 @@ public class GameController {
     private Circle white;
 
     @FXML
+    private StackPane whitePane;
+
+    @FXML
     private Text whites;
 
     @FXML
@@ -216,6 +302,17 @@ public class GameController {
     @FXML
     private Text whites111;
 
+    @FXML
+    private Text whitesProduction;
+
+    @FXML
+    private Text whitesProduction1;
+
+    @FXML
+    private Text whitesProduction11;
+
+    @FXML
+    private Text whitesProduction111;
 
 
     private void buyEstate(Tier tier, int i) {
@@ -313,14 +410,59 @@ public class GameController {
             building14.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
 
     }
-
+    private void showResources(){
+        String string;
+        string =  board.getStored(Gem.RED).toString();
+        if (redResource == null) {
+            redResource = new Text(red.getCenterX(), red.getCenterY(), string);
+            redPane.getChildren().add(redResource);
+        }
+        else redResource.setText(string);
+        string =  board.getStored(Gem.GREEN).toString();
+        if (greenResource == null) {
+            greenResource = new Text(green.getCenterX(), green.getCenterY(), string);
+            greenPane.getChildren().add(greenResource);
+        }
+        else greenResource.setText(string);
+        string =  board.getStored(Gem.BLUE).toString();
+        if (blueResource == null) {
+            blueResource = new Text(blue.getCenterX(), blue.getCenterY(), string);
+            bluePane.getChildren().add(blueResource);
+        }
+        else blueResource.setText(string);
+        string =  board.getStored(Gem.BROWN).toString();
+        if (brownResource == null) {
+            brownResource = new Text(brown.getCenterX(), brown.getCenterY(), string);
+            brownPane.getChildren().add(brownResource);
+        }
+        else brownResource.setText(string);
+        string =  board.getStored(Gem.WHITE).toString();
+        if (whiteResource == null) {
+            whiteResource = new Text(white.getCenterX(), white.getCenterY(), string);
+            whitePane.getChildren().add(whiteResource);
+        }
+        else whiteResource.setText(string);
+        string =  board.getStored(Gem.GOLD).toString();
+        if (goldResource == null) {
+            goldResource = new Text(gold.getCenterX(), gold.getCenterY(), string);
+            goldPane.getChildren().add(goldResource);
+        }
+        else goldResource.setText(string);
+    }
 
     private void updateFields() {
+        showResources();
         reds.setText("Reds: " + currentPlayer.getPossession().get(Gem.RED));
         greens.setText("Greens: " + currentPlayer.getPossession().get(Gem.GREEN));
         browns.setText("Browns: " + currentPlayer.getPossession().get(Gem.BROWN));
         blues.setText("Blues: " + currentPlayer.getPossession().get(Gem.BLUE));
         whites.setText("Whites: " + currentPlayer.getPossession().get(Gem.WHITE));
+        redsProduction.setText("Reds production: " + currentPlayer.getProduction().get(Gem.RED));
+        greensProduction.setText("Greens production: " + currentPlayer.getProduction().get(Gem.GREEN));
+        brownsProduction.setText("Browns production: " + currentPlayer.getProduction().get(Gem.BROWN));
+        bluesProduction.setText("Blues production: " + currentPlayer.getProduction().get(Gem.BLUE));
+        whitesProduction.setText("Whites production: " + currentPlayer.getProduction().get(Gem.WHITE));
+        playerName.setText(currentPlayer.getName());
         golds.setText("Golds: " + currentPlayer.getPossession().get(Gem.GOLD));
         poins.setText("Points: " + currentPlayer.getPoints());
         if (currentPlayer.getReserve()[0]!=null)
@@ -336,6 +478,12 @@ public class GameController {
             blues11.setText("Blues: " + board.getPlayers().get(1).getPossession().get(Gem.BLUE));
             whites11.setText("Whites: " + board.getPlayers().get(1).getPossession().get(Gem.WHITE));
             golds11.setText("Golds: " + board.getPlayers().get(1).getPossession().get(Gem.GOLD));
+            redsProduction11.setText("Reds production: " + board.getPlayers().get(1).getProduction().get(Gem.RED));
+            greensProduction11.setText("Greens production: " + board.getPlayers().get(1).getProduction().get(Gem.GREEN));
+            brownsProduction11.setText("Browns production: " + board.getPlayers().get(1).getProduction().get(Gem.BROWN));
+            bluesProduction11.setText("Blues production: " + board.getPlayers().get(1).getProduction().get(Gem.BLUE));
+            whitesProduction11.setText("Whites production: " + board.getPlayers().get(1).getProduction().get(Gem.WHITE));
+            playerName11.setText(board.getPlayers().get(1).getName());
             poins11.setText("Points: " + board.getPlayers().get(1).getPoints());
             textRes1.setText("Reserved: " + board.getPlayers().get(1).getReserveNumber());
         } else {
@@ -346,6 +494,12 @@ public class GameController {
             whites1.setText("Whites: " + board.getPlayers().get(1).getPossession().get(Gem.WHITE));
             golds1.setText("Golds: " + board.getPlayers().get(1).getPossession().get(Gem.GOLD));
             poins1.setText("Points: " + board.getPlayers().get(1).getPoints());
+            redsProduction1.setText("Reds production: " + board.getPlayers().get(1).getProduction().get(Gem.RED));
+            greensProduction1.setText("Greens production: " + board.getPlayers().get(1).getProduction().get(Gem.GREEN));
+            brownsProduction1.setText("Browns production: " + board.getPlayers().get(1).getProduction().get(Gem.BROWN));
+            bluesProduction1.setText("Blues production: " + board.getPlayers().get(1).getProduction().get(Gem.BLUE));
+            whitesProduction1.setText("Whites production: " + board.getPlayers().get(1).getProduction().get(Gem.WHITE));
+            playerName1.setText(board.getPlayers().get(1).getName());
             textRes.setText("Reserved: " + board.getPlayers().get(1).getReserveNumber());
             reds11.setText("Reds: " + board.getPlayers().get(2).getPossession().get(Gem.RED));
             greens11.setText("Greens: " + board.getPlayers().get(2).getPossession().get(Gem.GREEN));
@@ -355,6 +509,12 @@ public class GameController {
             golds11.setText("Golds: " + board.getPlayers().get(2).getPossession().get(Gem.GOLD));
             poins11.setText("Points: " + board.getPlayers().get(2).getPoints());
             textRes1.setText("Reserved: " + board.getPlayers().get(2).getReserveNumber());
+            redsProduction11.setText("Reds production: " + board.getPlayers().get(2).getProduction().get(Gem.RED));
+            greensProduction11.setText("Greens production: " + board.getPlayers().get(2).getProduction().get(Gem.GREEN));
+            brownsProduction11.setText("Browns production: " + board.getPlayers().get(2).getProduction().get(Gem.BROWN));
+            bluesProduction11.setText("Blues production: " + board.getPlayers().get(2).getProduction().get(Gem.BLUE));
+            whitesProduction11.setText("Whites production: " + board.getPlayers().get(2).getProduction().get(Gem.WHITE));
+            playerName11.setText(board.getPlayers().get(2).getName());
         }
         if (board.getPlayers().size()==4) {
             reds111.setText("Reds: " + board.getPlayers().get(3).getPossession().get(Gem.RED));
@@ -365,6 +525,12 @@ public class GameController {
             golds111.setText("Golds: " + board.getPlayers().get(3).getPossession().get(Gem.GOLD));
             poins111.setText("Points: " + board.getPlayers().get(3).getPoints());
             textRes11.setText("Reserved: " + board.getPlayers().get(3).getReserveNumber());
+            redsProduction111.setText("Reds production: " + board.getPlayers().get(3).getProduction().get(Gem.RED));
+            greensProduction111.setText("Greens production: " + board.getPlayers().get(3).getProduction().get(Gem.GREEN));
+            brownsProduction111.setText("Browns production: " + board.getPlayers().get(3).getProduction().get(Gem.BROWN));
+            bluesProduction111.setText("Blues production: " + board.getPlayers().get(3).getProduction().get(Gem.BLUE));
+            whitesProduction111.setText("Whites production: " + board.getPlayers().get(3).getProduction().get(Gem.WHITE));
+            playerName111.setText(board.getPlayers().get(3).getName());
         }
 
 
