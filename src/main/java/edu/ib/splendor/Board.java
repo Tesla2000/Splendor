@@ -33,10 +33,6 @@ public class Board {
         stored.put(gem, Math.max(stored.get(gem)+value, 0));
     }
 
-    public Board(TradeRow tradeRow, ArrayList<Player> players) {
-        this.tradeRow = tradeRow;
-        this.players = players;
-    }
 
     public TradeRow getTradeRow() {
         return tradeRow;

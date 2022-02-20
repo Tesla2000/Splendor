@@ -1,7 +1,9 @@
 package edu.ib.splendor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Player {
     private ArrayList<Card> deck = new ArrayList<>();
@@ -52,6 +54,10 @@ public class Player {
 
     public Card[] getReserve(){
         return reserve;
+    }
+
+    public int getReserveNumber(){
+        return (int) (3 - Arrays.stream(reserve).filter(Objects::isNull).count());
     }
 
     public void insertReserve(Card card){

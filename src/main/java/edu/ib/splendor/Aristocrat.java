@@ -1,6 +1,6 @@
 package edu.ib.splendor;
 
-public record Aristocrat(int red, int green, int blue, int brown, int white, int points) {
+public record Aristocrat(int red, int green, int blue, int brown, int white, int points, String image) {
 
     public int getRed() {
         return red;
@@ -25,4 +25,6 @@ public record Aristocrat(int red, int green, int blue, int brown, int white, int
     public int getPoints() {
         return points;
     }
+
+    public String getImage(){return image;}
 }

@@ -55,6 +55,15 @@ public class TradeRow {
         }
         player.addCard(card);
     }
+
+    public Card getHiddenCard(Tier tier){
+        Card card;
+        if (tier.equals(Tier.FIRST)) card = tierFirstHidden.get(0);
+        else if (tier.equals(Tier.SECOND)) card = tierSecondHidden.get(0);
+        else card = tierThirdHidden.get(0);
+        return card;
+    }
+
     public Card getCard(Tier tier, int index){
         Card card;
         if (tier.equals(Tier.FIRST)) card = tierFirstVisible[index];

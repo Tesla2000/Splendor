@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -9,61 +10,70 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.GameController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.GameController">
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="460.0" prefWidth="913.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Circle fx:id="red" fill="DODGERBLUE" onMouseClicked="#collectRed" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+                  <Circle fx:id="red" fill="#e10000" onMouseClicked="#collectRed" radius="20.0" stroke="BLACK" strokeType="INSIDE">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Circle>
-                  <Circle fx:id="green" fill="DODGERBLUE" onMouseClicked="#collectGreen" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+                  <Circle fx:id="green" fill="#23ff1f" onMouseClicked="#collectGreen" radius="20.0" stroke="BLACK" strokeType="INSIDE">
                      <HBox.margin>
-                        <Insets />
+                        <Insets right="10.0" />
                      </HBox.margin>
                   </Circle>
-                  <Circle fx:id="blue" fill="DODGERBLUE" onMouseClicked="#collectBlue" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fx:id="brown" fill="DODGERBLUE" onMouseClicked="#collectBrown" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fx:id="white" fill="DODGERBLUE" onMouseClicked="#collectWhite" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fx:id="gold" fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fx:id="blue" fill="DODGERBLUE" onMouseClicked="#collectBlue" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin></Circle>
+                  <Circle fx:id="brown" fill="#8d4e01" onMouseClicked="#collectBrown" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin></Circle>
+                  <Circle fx:id="white" fill="WHITE" onMouseClicked="#collectWhite" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin></Circle>
+                  <Circle fx:id="gold" fill="#eeff1f" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="aristocrat0" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="aristocrat1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="aristocrat2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="aristocrat3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="aristocrat0" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="aristocrat1" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="aristocrat2" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="aristocrat3" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="building34" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess30" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building32" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess31" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building33" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess32" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building31" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess33" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building30" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess34" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building34" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess30" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building32" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess31" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building33" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess32" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building31" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess33" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building30" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess34" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="building24" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess20" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building22" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess21" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building23" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess22" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building21" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess23" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building20" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess24" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building24" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess20" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building22" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess21" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building23" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess22" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building21" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess23" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building20" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess24" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="building14" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess10" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building12" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess11" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building13" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess12" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building11" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess13" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="building10" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess14" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building14" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess10" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building12" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess11" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building13" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess12" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building11" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess13" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="building10" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess14" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
          </children>
@@ -72,15 +82,18 @@
    <bottom>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <RadioButton fx:id="getThree" mnemonicParsing="false" text="Get Three" />
-                  <RadioButton fx:id="getTwo" mnemonicParsing="false" text="Get Two" />
-                  <RadioButton fx:id="reserve" mnemonicParsing="false" text="Reserve" />
-                  <RadioButton fx:id="build" mnemonicParsing="false" text="Build" />
+                  <RadioButton fx:id="getThree" mnemonicParsing="false" text="Get Three">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="option" />
+                     </toggleGroup></RadioButton>
+                  <RadioButton fx:id="getTwo" mnemonicParsing="false" text="Get Two" toggleGroup="$option" />
+                  <RadioButton fx:id="reserve" mnemonicParsing="false" text="Reserve" toggleGroup="$option" />
+                  <RadioButton fx:id="build" mnemonicParsing="false" text="Build" toggleGroup="$option" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Text fx:id="reds" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                   <Text fx:id="greens" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
@@ -89,15 +102,15 @@
                   <Text fx:id="whites" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                   <Text fx:id="golds" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                   <Text fx:id="poins" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <ImageView fx:id="res1" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess01" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="res2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess02" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="res2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#actionAccess03" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="res1" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess01" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="res2" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess02" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="res3" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#actionAccess03" pickOnBounds="true" preserveRatio="true" />
                </children></HBox>
          </children>
       </VBox>
    </bottom>
    <right>
-      <VBox fx:id="redsLeft" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="redsLeft" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Text fx:id="reds1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
             <Text fx:id="greens1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
@@ -111,7 +124,7 @@
       </VBox>
    </right>
    <top>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Text fx:id="reds11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
             <Text fx:id="greens11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
@@ -125,7 +138,7 @@
       </HBox>
    </top>
    <left>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Text fx:id="reds111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
             <Text fx:id="greens111" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />

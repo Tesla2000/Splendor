@@ -2,6 +2,7 @@ package edu.ib.splendor;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -189,6 +190,9 @@ public class GameController {
     private ImageView res2;
 
     @FXML
+    private ImageView res3;
+
+    @FXML
     private Text textRes;
 
     @FXML
@@ -216,8 +220,9 @@ public class GameController {
 
     private void buyEstate(Tier tier, int i) {
         Card card;
+        i--;
         int goldNeeded = 0;
-        if (build.isSelected()){
+        if (build.isSelected() && i>=0){
             if (!tier.equals(Tier.RESERVE))
                 card = board.getTradeRow().getCard(tier,i);
             else card = currentPlayer.getReserve()[i];
@@ -238,15 +243,16 @@ public class GameController {
             }
         }
         if (reserve.isSelected()){
-            if (!tier.equals(Tier.RESERVE)) {
+            if (!tier.equals(Tier.RESERVE) && i>=0)
                 card = board.getTradeRow().getCard(tier, i);
+            else card = board.getTradeRow().getHiddenCard(tier);
+            if (Arrays.stream(currentPlayer.getReserve()).toList().contains(null)) {
                 currentPlayer.addReserve(card);
-                if (board.getStored(Gem.GOLD)>0)
-                currentPlayer.changeGem(Gem.GOLD, -1);
+                if (board.getStored(Gem.GOLD) > 0)
+                    currentPlayer.changeGem(Gem.GOLD, -1);
                 endTurn();
             }
         }
-
     }
 
     private void collectGem(Gem gem){
@@ -263,6 +269,7 @@ public class GameController {
             currentPlayer.changeGem(gem, -1);
             board.changeStored(gem, -1);
             currentPlayer.setCollectLimit(currentPlayer.getCollectLimit()-1);
+            currentPlayer.addToTaken(gem);
             if (currentPlayer.getCollectLimit()==0) endTurn();
             else updateFields();
         }
@@ -271,6 +278,7 @@ public class GameController {
 
     private void endTurn() {
         board.turn();
+        currentPlayer.clearTaken();
         currentPlayer = board.getPlayers().get(0);
         updateFields();
         setPictures();
@@ -300,70 +308,63 @@ public class GameController {
             building23.setImage(image);
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 3).getPicture());
             building33.setImage(image);
-            // Tutaj wstaw pozostałe
-
+            building34.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
+            building24.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
+            building14.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
 
     }
 
 
     private void updateFields() {
+        reds.setText("Reds: " + currentPlayer.getPossession().get(Gem.RED));
+        greens.setText("Greens: " + currentPlayer.getPossession().get(Gem.GREEN));
+        browns.setText("Browns: " + currentPlayer.getPossession().get(Gem.BROWN));
+        blues.setText("Blues: " + currentPlayer.getPossession().get(Gem.BLUE));
+        whites.setText("Whites: " + currentPlayer.getPossession().get(Gem.WHITE));
+        golds.setText("Golds: " + currentPlayer.getPossession().get(Gem.GOLD));
+        poins.setText("Points: " + currentPlayer.getPoints());
+        if (currentPlayer.getReserve()[0]!=null)
+            res1.setImage(new Image(currentPlayer.getReserve()[0].getPicture()));
+        if (currentPlayer.getReserve()[1]!=null)
+            res2.setImage(new Image(currentPlayer.getReserve()[1].getPicture()));
+        if (currentPlayer.getReserve()[2]!=null)
+            res3.setImage(new Image(currentPlayer.getReserve()[2].getPicture()));
         if (board.getPlayers().size()==2){
-            reds.setText(String.valueOf(currentPlayer.getPossession().get(Gem.RED)));
-            greens.setText(String.valueOf(currentPlayer.getPossession().get(Gem.GREEN)));
-            browns.setText(String.valueOf(currentPlayer.getPossession().get(Gem.BROWN)));
-            blues.setText(String.valueOf(currentPlayer.getPossession().get(Gem.BLUE)));
-            whites.setText(String.valueOf(currentPlayer.getPossession().get(Gem.WHITE)));
-            golds.setText(String.valueOf(currentPlayer.getPossession().get(Gem.GOLD)));
-            reds11.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.RED)));
-            greens11.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.GREEN)));
-            browns11.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.BROWN)));
-            blues11.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.BLUE)));
-            whites11.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.WHITE)));
-            golds11.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.GOLD)));
-        } else if (board.getPlayers().size()==3){
-            reds.setText(String.valueOf(currentPlayer.getPossession().get(Gem.RED)));
-            greens.setText(String.valueOf(currentPlayer.getPossession().get(Gem.GREEN)));
-            browns.setText(String.valueOf(currentPlayer.getPossession().get(Gem.BROWN)));
-            blues.setText(String.valueOf(currentPlayer.getPossession().get(Gem.BLUE)));
-            whites.setText(String.valueOf(currentPlayer.getPossession().get(Gem.WHITE)));
-            golds.setText(String.valueOf(currentPlayer.getPossession().get(Gem.GOLD)));
-            reds1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.RED)));
-            greens1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.GREEN)));
-            browns1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.BROWN)));
-            blues1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.BLUE)));
-            whites1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.WHITE)));
-            golds1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.GOLD)));
-            reds11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.RED)));
-            greens11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.GREEN)));
-            browns11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.BROWN)));
-            blues11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.BLUE)));
-            whites11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.WHITE)));
-            golds11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.GOLD)));
+            reds11.setText("Reds: " + board.getPlayers().get(1).getPossession().get(Gem.RED));
+            greens11.setText("Greens: " + board.getPlayers().get(1).getPossession().get(Gem.GREEN));
+            browns11.setText("Browns: " + board.getPlayers().get(1).getPossession().get(Gem.BROWN));
+            blues11.setText("Blues: " + board.getPlayers().get(1).getPossession().get(Gem.BLUE));
+            whites11.setText("Whites: " + board.getPlayers().get(1).getPossession().get(Gem.WHITE));
+            golds11.setText("Golds: " + board.getPlayers().get(1).getPossession().get(Gem.GOLD));
+            poins11.setText("Points: " + board.getPlayers().get(1).getPoints());
+            textRes1.setText("Reserved: " + board.getPlayers().get(1).getReserveNumber());
         } else {
-            reds.setText(String.valueOf(currentPlayer.getPossession().get(Gem.RED)));
-            greens.setText(String.valueOf(currentPlayer.getPossession().get(Gem.GREEN)));
-            browns.setText(String.valueOf(currentPlayer.getPossession().get(Gem.BROWN)));
-            blues.setText(String.valueOf(currentPlayer.getPossession().get(Gem.BLUE)));
-            whites.setText(String.valueOf(currentPlayer.getPossession().get(Gem.WHITE)));
-            golds.setText(String.valueOf(currentPlayer.getPossession().get(Gem.GOLD)));
-            reds1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.RED)));
-            greens1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.GREEN)));
-            browns1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.BROWN)));
-            blues1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.BLUE)));
-            whites1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.WHITE)));
-            golds1.setText(String.valueOf(board.getPlayers().get(1).getPossession().get(Gem.GOLD)));
-            reds11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.RED)));
-            greens11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.GREEN)));
-            browns11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.BROWN)));
-            blues11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.BLUE)));
-            whites11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.WHITE)));
-            golds11.setText(String.valueOf(board.getPlayers().get(2).getPossession().get(Gem.GOLD)));
-            reds111.setText(String.valueOf(board.getPlayers().get(3).getPossession().get(Gem.RED)));
-            greens111.setText(String.valueOf(board.getPlayers().get(3).getPossession().get(Gem.GREEN)));
-            browns111.setText(String.valueOf(board.getPlayers().get(3).getPossession().get(Gem.BROWN)));
-            blues111.setText(String.valueOf(board.getPlayers().get(3).getPossession().get(Gem.BLUE)));
-            whites111.setText(String.valueOf(board.getPlayers().get(3).getPossession().get(Gem.WHITE)));
-            golds111.setText(String.valueOf(board.getPlayers().get(3).getPossession().get(Gem.GOLD)));
+            reds1.setText("Reds: " + board.getPlayers().get(1).getPossession().get(Gem.RED));
+            greens1.setText("Greens: " + board.getPlayers().get(1).getPossession().get(Gem.GREEN));
+            browns1.setText("Browns: " + board.getPlayers().get(1).getPossession().get(Gem.BROWN));
+            blues1.setText("Blues: " + board.getPlayers().get(1).getPossession().get(Gem.BLUE));
+            whites1.setText("Whites: " + board.getPlayers().get(1).getPossession().get(Gem.WHITE));
+            golds1.setText("Golds: " + board.getPlayers().get(1).getPossession().get(Gem.GOLD));
+            poins1.setText("Points: " + board.getPlayers().get(1).getPoints());
+            textRes.setText("Reserved: " + board.getPlayers().get(1).getReserveNumber());
+            reds11.setText("Reds: " + board.getPlayers().get(2).getPossession().get(Gem.RED));
+            greens11.setText("Greens: " + board.getPlayers().get(2).getPossession().get(Gem.GREEN));
+            browns11.setText("Browns: " + board.getPlayers().get(2).getPossession().get(Gem.BROWN));
+            blues11.setText("Blues: " + board.getPlayers().get(2).getPossession().get(Gem.BLUE));
+            whites11.setText("Whites: " + board.getPlayers().get(2).getPossession().get(Gem.WHITE));
+            golds11.setText("Golds: " + board.getPlayers().get(2).getPossession().get(Gem.GOLD));
+            poins11.setText("Points: " + board.getPlayers().get(2).getPoints());
+            textRes1.setText("Reserved: " + board.getPlayers().get(2).getReserveNumber());
+        }
+        if (board.getPlayers().size()==4) {
+            reds111.setText("Reds: " + board.getPlayers().get(3).getPossession().get(Gem.RED));
+            greens111.setText("Greens: " + board.getPlayers().get(3).getPossession().get(Gem.GREEN));
+            browns111.setText("Browns: " + board.getPlayers().get(3).getPossession().get(Gem.BROWN));
+            blues111.setText("Blues: " + board.getPlayers().get(3).getPossession().get(Gem.BLUE));
+            whites111.setText("Whites: " + board.getPlayers().get(3).getPossession().get(Gem.WHITE));
+            golds111.setText("Golds: " + board.getPlayers().get(3).getPossession().get(Gem.GOLD));
+            poins111.setText("Points: " + board.getPlayers().get(3).getPoints());
+            textRes11.setText("Reserved: " + board.getPlayers().get(3).getReserveNumber());
         }
 
 
@@ -541,7 +542,7 @@ public class GameController {
         for (int i=0; i<4; i++){
             players.add(new Player());
         }
-        board = new Board(tradeRow, players);
+        board = new Board(tradeRow, players, 7,7,7,7,7,5);
         setPictures();
         currentPlayer = players.get(0);
         updateFields();
