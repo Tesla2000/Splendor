@@ -378,8 +378,24 @@ public class GameController {
         currentPlayer.clearTaken();
         currentPlayer = board.getPlayers().get(0);
         updateFields();
+        getAristocrats();
         setPictures();
     }
+
+    private void getAristocrats() {
+        for (Aristocrat aristocrat: board.getAristocrats())
+            if (
+                    aristocrat.getBlue()<=currentPlayer.getProduction().get(Gem.BLUE) &&
+                    aristocrat.getRed()<=currentPlayer.getProduction().get(Gem.RED) &&
+                    aristocrat.getGreen()<=currentPlayer.getProduction().get(Gem.GREEN) &&
+                    aristocrat.getBrown()<=currentPlayer.getProduction().get(Gem.BROWN) &&
+                    aristocrat.getWhite()<=currentPlayer.getProduction().get(Gem.WHITE)
+            ) {
+                currentPlayer.setPoints(currentPlayer.getPoints() + aristocrat.getPoints());
+                board.removeAristocrat(aristocrat);
+            }
+    }
+
     private void setPictures(){
             Image image = new Image(board.getTradeRow().getCard(Tier.FIRST, 0).getPicture());
             building10.setImage(image);
@@ -408,6 +424,26 @@ public class GameController {
             building34.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
             building24.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
             building14.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
+            try {
+                aristocrat0.setImage(new Image(board.getAristocrats().get(0).getImage()));
+            }catch (Exception e) {
+                aristocrat0.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
+            }
+            try {
+                aristocrat1.setImage(new Image(board.getAristocrats().get(0).getImage()));
+            }catch (Exception e) {
+                aristocrat1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
+            }
+            try {
+                aristocrat2.setImage(new Image(board.getAristocrats().get(0).getImage()));
+            }catch (Exception e) {
+                aristocrat2.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
+            }
+            try {
+                aristocrat3.setImage(new Image(board.getAristocrats().get(0).getImage()));
+            }catch (Exception e) {
+                aristocrat3.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
+            }
 
     }
     private void showResources(){
@@ -695,15 +731,8 @@ public class GameController {
         assert whites1 != null : "fx:id=\"whites1\" was not injected: check your FXML file 'board.fxml'.";
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
-        ArrayList<Card> cardsFirst = new ArrayList<>();
-        ArrayList<Card> cardsSecond = new ArrayList<>();
-        ArrayList<Card> cardsThird = new ArrayList<>();
-        for (int i=0; i<10; i++) {
-            cardsFirst.add(new Card(Tier.FIRST, 1, 1, 1, 1, 1, Gem.RED, 1, "C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            cardsSecond.add(new Card(Tier.SECOND, 1, 1, 1, 1, 1, Gem.RED, 1, "C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            cardsThird.add(new Card(Tier.FIRST, 1, 1, 1, 1, 1, Gem.RED, 1, "C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-        }
-        TradeRow tradeRow = new TradeRow(cardsFirst,cardsSecond,cardsThird);
+        ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
+        TradeRow tradeRow = new TradeRow(cards.get(0),cards.get(1),cards.get(2));
         ArrayList<Player> players = new ArrayList<>();
         for (int i=0; i<4; i++){
             players.add(new Player());

@@ -2,15 +2,21 @@ package edu.ib.splendor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Board {
     private TradeRow tradeRow;
     private ArrayList<Player> players;
+    private ArrayList<Aristocrat> aristocrats;
     private HashMap<Gem, Integer> stored = new HashMap<>();
 
     public Board(TradeRow tradeRow, ArrayList<Player> players, int red, int green, int blue, int brown, int white, int gold) {
         this.tradeRow = tradeRow;
         this.players = players;
+        aristocrats = GenerateDeck.generateAristocrats();
+        Random random = new Random();
+        while (aristocrats.size()!=4)
+            aristocrats.remove(random.nextInt(aristocrats.size()));
         stored.put(Gem.RED, red);
         stored.put(Gem.GREEN, green);
         stored.put(Gem.BLUE, blue);
@@ -48,5 +54,12 @@ public class Board {
 
     public void setPlayers(ArrayList<Player> players) {
         this.players = players;
+    }
+
+    public ArrayList<Aristocrat> getAristocrats() {
+        return aristocrats;
+    }
+    public void removeAristocrat(Aristocrat aristocrat){
+        aristocrats.remove(aristocrat);
     }
 }

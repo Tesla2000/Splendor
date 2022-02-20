@@ -2,12 +2,10 @@ package edu.ib.splendor;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class GenerateDeck {
-    public static void main(String[] args) {
-        generate();
-    }
-    public static ArrayList<ArrayList<Card>> generate(){
+    public static ArrayList<ArrayList<Card>> generateCards(){
         ArrayList<ArrayList<Card>> cards = new ArrayList<>();
         cards.add(new ArrayList<>());
         cards.add(new ArrayList<>());
@@ -30,16 +28,16 @@ public class GenerateDeck {
             while ((line= bufferedReader.readLine())!=null){
                 String[] words = line.split("\t");
                 if (words[1].equals("black")) production=Gem.BROWN;
-                if (words[1].equals("blue")) production=Gem.BLUE;
-                if (words[1].equals("white")) production=Gem.WHITE;
-                if (words[1].equals("green")) production=Gem.GREEN;
+                else if (words[1].equals("blue")) production=Gem.BLUE;
+                else if (words[1].equals("white")) production=Gem.WHITE;
+                else if (words[1].equals("green")) production=Gem.GREEN;
                 else production=Gem.RED;
                 red = Integer.parseInt(words[7]);
                 green = Integer.parseInt(words[6]);
                 blue = Integer.parseInt(words[5]);
                 brown = Integer.parseInt(words[8]);
                 white = Integer.parseInt(words[4]);
-                picture = words[3];
+                picture = words[0] + production+words[7] + words[6] + words[5] + words[8] + words[4];
                 points = Integer.parseInt(words[2]);
                 if (words[0].equals("1")) {
                     tier = Tier.FIRST;
@@ -65,5 +63,20 @@ public class GenerateDeck {
             e.printStackTrace();
         }
         return cards;
+    }
+
+    public static ArrayList<Aristocrat> generateAristocrats(){
+        ArrayList<Aristocrat> aristocrats = new ArrayList<>();
+        aristocrats.add(new Aristocrat(4,4,0,0,0,"44000"));
+        aristocrats.add(new Aristocrat(0,4,4,0,0,"04400"));
+        aristocrats.add(new Aristocrat(0,0,4,0,4,"00404"));
+        aristocrats.add(new Aristocrat(0,0,4,4,0,"00440"));
+        aristocrats.add(new Aristocrat(0,0,0,4,4,"00044"));
+        aristocrats.add(new Aristocrat(0,0,3,3,3,"00333"));
+        aristocrats.add(new Aristocrat(0,3,3,0,3,"03303"));
+        aristocrats.add(new Aristocrat(3,3,0,3,0,"33030"));
+        aristocrats.add(new Aristocrat(3,3,3,0,0,"33300"));
+        aristocrats.add(new Aristocrat(3,0,0,3,3,"30033"));
+        return aristocrats;
     }
 }
