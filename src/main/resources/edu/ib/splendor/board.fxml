@@ -21,6 +21,11 @@
                         <Circle fx:id="red" fill="#e10000" onMouseClicked="#collectRed" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
                      </children>
                   </StackPane>
+                  <StackPane fx:id="greenPane" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <Circle fx:id="green" fill="#23ff1f" onMouseClicked="#collectGreen" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                     </children>
+                  </StackPane>
                   <StackPane fx:id="bluePane" prefHeight="150.0" prefWidth="200.0">
                      <children>
                         <Circle fx:id="blue" fill="DODGERBLUE" onMouseClicked="#collectBlue" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
@@ -39,11 +44,6 @@
                   <StackPane fx:id="goldPane" prefHeight="150.0" prefWidth="200.0">
                      <children>
                         <Circle fx:id="gold" fill="#eeff1f" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-                     </children>
-                  </StackPane>
-                  <StackPane fx:id="greenPane" prefHeight="150.0" prefWidth="200.0">
-                     <children>
-                        <Circle fx:id="green" fill="#23ff1f" onMouseClicked="#collectGreen" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
                      </children>
                   </StackPane>
                </children>

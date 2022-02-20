@@ -43,4 +43,14 @@ public class Card {
         return production;
     }
 
+    @Override
+    public String toString() {
+        return "Card{" +
+                "tier=" + tier +
+                ", cost=" + cost +
+                ", picture='" + picture + '\'' +
+                ", points=" + points +
+                ", production=" + production +
+                '}';
+    }
 }
