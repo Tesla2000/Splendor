@@ -386,10 +386,10 @@ public class GameController {
         for (Aristocrat aristocrat: board.getAristocrats())
             if (
                     aristocrat.getBlue()<=currentPlayer.getProduction().get(Gem.BLUE) &&
-                    aristocrat.getRed()<=currentPlayer.getProduction().get(Gem.RED) &&
-                    aristocrat.getGreen()<=currentPlayer.getProduction().get(Gem.GREEN) &&
-                    aristocrat.getBrown()<=currentPlayer.getProduction().get(Gem.BROWN) &&
-                    aristocrat.getWhite()<=currentPlayer.getProduction().get(Gem.WHITE)
+                            aristocrat.getRed()<=currentPlayer.getProduction().get(Gem.RED) &&
+                            aristocrat.getGreen()<=currentPlayer.getProduction().get(Gem.GREEN) &&
+                            aristocrat.getBrown()<=currentPlayer.getProduction().get(Gem.BROWN) &&
+                            aristocrat.getWhite()<=currentPlayer.getProduction().get(Gem.WHITE)
             ) {
                 currentPlayer.setPoints(currentPlayer.getPoints() + aristocrat.getPoints());
                 board.removeAristocrat(aristocrat);
@@ -397,53 +397,102 @@ public class GameController {
     }
 
     private void setPictures(){
-            Image image = new Image(board.getTradeRow().getCard(Tier.FIRST, 0).getPicture());
+        Image image;
+        try{
+            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 0).getPicture());
             building10.setImage(image);
+        } catch (Exception e){
+            building10.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 0).getPicture());
             building20.setImage(image);
+        } catch (Exception e){
+            building20.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 0).getPicture());
             building30.setImage(image);
+        } catch (Exception e){
+            building30.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 1).getPicture());
             building11.setImage(image);
+        } catch (Exception e){
+            building11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 1).getPicture());
             building21.setImage(image);
+        } catch (Exception e){
+            building21.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 1).getPicture());
             building31.setImage(image);
+        } catch (Exception e){
+            building31.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 2).getPicture());
             building12.setImage(image);
+        } catch (Exception e){
+            building12.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 2).getPicture());
             building22.setImage(image);
+        } catch (Exception e){
+            building22.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 2).getPicture());
             building32.setImage(image);
+        } catch (Exception e){
+            building32.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 3).getPicture());
             building13.setImage(image);
+        } catch (Exception e){
+            building13.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 3).getPicture());
             building23.setImage(image);
+        } catch (Exception e){
+            building23.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 3).getPicture());
             building33.setImage(image);
-            building34.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            building24.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            building14.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            try {
-                aristocrat0.setImage(new Image(board.getAristocrats().get(0).getImage()));
-            }catch (Exception e) {
-                aristocrat0.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            }
-            try {
-                aristocrat1.setImage(new Image(board.getAristocrats().get(0).getImage()));
-            }catch (Exception e) {
-                aristocrat1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            }
-            try {
-                aristocrat2.setImage(new Image(board.getAristocrats().get(0).getImage()));
-            }catch (Exception e) {
-                aristocrat2.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            }
-            try {
-                aristocrat3.setImage(new Image(board.getAristocrats().get(0).getImage()));
-            }catch (Exception e) {
-                aristocrat3.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\splendor.jpg"));
-            }
+        } catch (Exception e){
+            building33.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        building34.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        building24.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        building14.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        try {
+            aristocrat0.setImage(new Image(board.getAristocrats().get(0).getImage()));
+        }catch (Exception e) {
+            aristocrat0.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try {
+            aristocrat1.setImage(new Image(board.getAristocrats().get(1).getImage()));
+        }catch (Exception e) {
+            aristocrat1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try {
+            aristocrat2.setImage(new Image(board.getAristocrats().get(2).getImage()));
+        }catch (Exception e) {
+            aristocrat2.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try {
+            aristocrat3.setImage(new Image(board.getAristocrats().get(3).getImage()));
+        }catch (Exception e) {
+            aristocrat3.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
 
     }
     private void showResources(){

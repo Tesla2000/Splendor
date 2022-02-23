@@ -2,14 +2,14 @@ package edu.ib.splendor;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Random;
 
 public class GenerateDeck {
     public static ArrayList<ArrayList<Card>> generateCards(){
         ArrayList<ArrayList<Card>> cards = new ArrayList<>();
-        cards.add(new ArrayList<>());
-        cards.add(new ArrayList<>());
-        cards.add(new ArrayList<>());
+        ArrayList<Card> first = new ArrayList<>();
+        ArrayList<Card> second = new ArrayList<>();
+        ArrayList<Card> third = new ArrayList<>();
         File file = new File("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\buildings.txt");
         try {
             FileReader reader = new FileReader(file);
@@ -42,23 +42,28 @@ public class GenerateDeck {
                 if (words[0].equals("1")) {
                     tier = Tier.FIRST;
                     card = new Card(tier,red,green,blue,brown,white,production,points,picture);
-                    cards.get(0).add(card);
+                    first.add(card);
                 }
                 else if (words[0].equals("2")) {
                     tier = Tier.SECOND;
                     card = new Card(tier,red,green,blue,brown,white,production,points,picture);
-                    cards.get(1).add(card);
+                    second.add(card);
                 }
                 else {
                     tier = Tier.THIRD;
                     card = new Card(tier,red,green,blue,brown,white,production,points,picture);
-                    cards.get(2).add(card);
+                    third.add(card);
                 }
-                System.out.println(card);
+//                System.out.println(card);
             }
-
+            reader.close();
+            bufferedReader.close();
+            cards.add((ArrayList<Card>) shoveArray(first));
+            cards.add((ArrayList<Card>) shoveArray(second));
+            cards.add((ArrayList<Card>) shoveArray(third));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,13 +75,26 @@ public class GenerateDeck {
         aristocrats.add(new Aristocrat(4,4,0,0,0,"44000"));
         aristocrats.add(new Aristocrat(0,4,4,0,0,"04400"));
         aristocrats.add(new Aristocrat(0,0,4,0,4,"00404"));
-        aristocrats.add(new Aristocrat(0,0,4,4,0,"00440"));
+        aristocrats.add(new Aristocrat(1,0,0,4,0,"40040"));
         aristocrats.add(new Aristocrat(0,0,0,4,4,"00044"));
         aristocrats.add(new Aristocrat(0,0,3,3,3,"00333"));
         aristocrats.add(new Aristocrat(0,3,3,0,3,"03303"));
         aristocrats.add(new Aristocrat(3,3,0,3,0,"33030"));
         aristocrats.add(new Aristocrat(3,3,3,0,0,"33300"));
         aristocrats.add(new Aristocrat(3,0,0,3,3,"30033"));
-        return aristocrats;
+        ArrayList<Aristocrat> aristocrats1 = (ArrayList<Aristocrat>) shoveArray(aristocrats);
+        return aristocrats1;
+    }
+    
+    private static ArrayList<?> shoveArray(ArrayList<?> arrayList){
+        ArrayList<Object> holder = new ArrayList<>();
+        Random random = new Random();
+        int number;
+        while (arrayList.size()>0){
+            number = random.nextInt(arrayList.size());
+            holder.add(arrayList.get(number));
+            arrayList.remove(number);
+        }
+        return holder;
     }
 }
