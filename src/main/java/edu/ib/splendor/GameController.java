@@ -318,6 +318,7 @@ public class GameController {
 
     private void buyEstate(Tier tier, int i) {
         Card card;
+        HashMap<Gem, Integer> cost = new HashMap<>();
         int goldNeeded = 0;
         if (build.isSelected() && i>=0){
             if (!tier.equals(Tier.RESERVE)) {
@@ -325,12 +326,14 @@ public class GameController {
                 card = board.getTradeRow().getCard(tier, i);
             }
             else card = currentPlayer.getReserve()[i];
-            for (Gem gem: card.getCost().keySet())
-                goldNeeded += Math.max(card.getCost().get(gem)- currentPlayer.getPossession().get(gem)
-                        - currentPlayer.getProduction().get(gem),0);
+            for (Gem gem: card.getCost().keySet()) {
+                cost.put(gem, -Math.max(card.getCost().get(gem) - currentPlayer.getPossession().get(gem)
+                        - currentPlayer.getProduction().get(gem), 0));
+                goldNeeded += Math.max(card.getCost().get(gem) - currentPlayer.getPossession().get(gem)
+                        - currentPlayer.getProduction().get(gem), 0);
+            }
             if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD)) {
                 currentPlayer.changeGem(Gem.GOLD, goldNeeded);
-                HashMap<Gem, Integer> cost = new HashMap<>();
                 cost.put(Gem.GOLD, goldNeeded);
                 for (Gem gem: card.getCost().keySet()) {
                     Integer paid = Math.max(0, card.getCost().get(gem) - currentPlayer.getProduction().get(gem));
