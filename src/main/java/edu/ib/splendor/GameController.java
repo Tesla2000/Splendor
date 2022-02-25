@@ -2,6 +2,7 @@ package edu.ib.splendor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -317,19 +318,27 @@ public class GameController {
 
     private void buyEstate(Tier tier, int i) {
         Card card;
-        i--;
         int goldNeeded = 0;
         if (build.isSelected() && i>=0){
-            if (!tier.equals(Tier.RESERVE))
-                card = board.getTradeRow().getCard(tier,i);
+            if (!tier.equals(Tier.RESERVE)) {
+                i--;
+                card = board.getTradeRow().getCard(tier, i);
+            }
             else card = currentPlayer.getReserve()[i];
             for (Gem gem: card.getCost().keySet())
                 goldNeeded += Math.max(card.getCost().get(gem)- currentPlayer.getPossession().get(gem)
                         - currentPlayer.getProduction().get(gem),0);
             if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD)) {
                 currentPlayer.changeGem(Gem.GOLD, goldNeeded);
-                for (Gem gem: card.getCost().keySet())
-                    currentPlayer.changeGem(gem, card.getCost().get(gem));
+                HashMap<Gem, Integer> cost = new HashMap<>();
+                cost.put(Gem.GOLD, goldNeeded);
+                for (Gem gem: card.getCost().keySet()) {
+                    Integer paid = Math.max(0, card.getCost().get(gem) - currentPlayer.getProduction().get(gem));
+                    currentPlayer.changeGem(gem, paid);
+                    cost.put(gem, paid);
+                }
+                for (Gem gem: cost.keySet())
+                    board.changeStored(gem, cost.get(gem));
                 if (!tier.equals(Tier.RESERVE))
                     board.getTradeRow().takeCard(tier, i, currentPlayer);
                 else {
@@ -340,13 +349,17 @@ public class GameController {
             }
         }
         if (reserve.isSelected()){
-            if (!tier.equals(Tier.RESERVE) && i>=0)
+            i--;
+            if (i>=0)
                 card = board.getTradeRow().getCard(tier, i);
             else card = board.getTradeRow().getHiddenCard(tier);
             if (Arrays.stream(currentPlayer.getReserve()).toList().contains(null)) {
                 currentPlayer.addReserve(card);
-                if (board.getStored(Gem.GOLD) > 0)
+                if (board.getStored(Gem.GOLD) > 0 && currentPlayer.allGems()<10) {
                     currentPlayer.changeGem(Gem.GOLD, -1);
+                    board.changeStored(Gem.GOLD, -1);
+                }
+                board.getTradeRow().takeCardToReserve(tier, i);
                 endTurn();
             }
         }
@@ -382,6 +395,7 @@ public class GameController {
         setPictures();
     }
 
+
     private void getAristocrats() {
         for (Aristocrat aristocrat: board.getAristocrats())
             if (
@@ -399,80 +413,98 @@ public class GameController {
     private void setPictures(){
         Image image;
         try{
+            image = new Image(currentPlayer.getReserve()[0].getPicture());
+            res1.setImage(image);
+        } catch (Exception e){
+            res1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
+            image = new Image(currentPlayer.getReserve()[1].getPicture());
+            res2.setImage(image);
+        } catch (Exception e){
+            res2.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
+            image = new Image(currentPlayer.getReserve()[2].getPicture());
+            res3.setImage(image);
+        } catch (Exception e){
+            res3.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 0).getPicture());
-            building10.setImage(image);
-        } catch (Exception e){
-            building10.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
-        }
-        try{
-            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 0).getPicture());
-            building20.setImage(image);
-        } catch (Exception e){
-            building20.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
-        }
-        try{
-            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 0).getPicture());
-            building30.setImage(image);
-        } catch (Exception e){
-            building30.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
-        }
-        try{
-            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 1).getPicture());
             building11.setImage(image);
         } catch (Exception e){
             building11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
         try{
-            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 1).getPicture());
+            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 0).getPicture());
             building21.setImage(image);
         } catch (Exception e){
             building21.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
         try{
-            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 1).getPicture());
+            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 0).getPicture());
             building31.setImage(image);
         } catch (Exception e){
             building31.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
         try{
-            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 2).getPicture());
+            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 1).getPicture());
             building12.setImage(image);
         } catch (Exception e){
             building12.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
         try{
-            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 2).getPicture());
+            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 1).getPicture());
             building22.setImage(image);
         } catch (Exception e){
             building22.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
         try{
-            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 2).getPicture());
+            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 1).getPicture());
             building32.setImage(image);
         } catch (Exception e){
             building32.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
         try{
-            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 3).getPicture());
+            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 2).getPicture());
             building13.setImage(image);
         } catch (Exception e){
             building13.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
         try{
-            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 3).getPicture());
+            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 2).getPicture());
             building23.setImage(image);
         } catch (Exception e){
             building23.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
         try{
-            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 3).getPicture());
+            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 2).getPicture());
             building33.setImage(image);
         } catch (Exception e){
             building33.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         }
-        building34.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
-        building24.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
-        building14.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        try{
+            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 3).getPicture());
+            building14.setImage(image);
+        } catch (Exception e){
+            building14.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
+            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 3).getPicture());
+            building24.setImage(image);
+        } catch (Exception e){
+            building24.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        try{
+            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 3).getPicture());
+            building34.setImage(image);
+        } catch (Exception e){
+            building34.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        }
+        building30.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        building20.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
+        building10.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\splendor.jpg"));
         try {
             aristocrat0.setImage(new Image(board.getAristocrats().get(0).getImage()));
         }catch (Exception e) {
@@ -624,7 +656,6 @@ public class GameController {
     @FXML
     void actionAccess01(MouseEvent event) {
         buyEstate(Tier.RESERVE, 0);
-
     }
 
 
@@ -783,7 +814,7 @@ public class GameController {
         ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
         TradeRow tradeRow = new TradeRow(cards.get(0),cards.get(1),cards.get(2));
         ArrayList<Player> players = new ArrayList<>();
-        for (int i=0; i<4; i++){
+        for (int i=0; i<2; i++){
             players.add(new Player());
         }
         board = new Board(tradeRow, players, 7,7,7,7,7,5);
