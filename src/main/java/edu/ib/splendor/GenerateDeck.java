@@ -32,12 +32,12 @@ public class GenerateDeck {
                 else if (words[1].equals("white")) production=Gem.WHITE;
                 else if (words[1].equals("green")) production=Gem.GREEN;
                 else production=Gem.RED;
-                red = Integer.parseInt(words[7]);
-                green = Integer.parseInt(words[6]);
-                blue = Integer.parseInt(words[5]);
-                brown = Integer.parseInt(words[8]);
-                white = Integer.parseInt(words[4]);
-                picture = words[0] + production+words[7] + words[6] + words[5] + words[8] + words[4];
+                red = Integer.parseInt(words[8]);
+                green = Integer.parseInt(words[7]);
+                blue = Integer.parseInt(words[6]);
+                brown = Integer.parseInt(words[4]);
+                white = Integer.parseInt(words[5]);
+                picture = words[0] + production+ red + green + blue+ brown + white;
                 points = Integer.parseInt(words[2]);
                 if (words[0].equals("1")) {
                     tier = Tier.FIRST;
