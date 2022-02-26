@@ -38,6 +38,7 @@ public class GenerateDeck {
                 brown = Integer.parseInt(words[4]);
                 white = Integer.parseInt(words[5]);
                 picture = words[0] + production+ red + green + blue+ brown + white;
+//                System.out.println(picture);
                 points = Integer.parseInt(words[2]);
                 if (words[0].equals("1")) {
                     tier = Tier.FIRST;
@@ -54,7 +55,6 @@ public class GenerateDeck {
                     card = new Card(tier,red,green,blue,brown,white,production,points,picture);
                     third.add(card);
                 }
-//                System.out.println(card);
             }
             reader.close();
             bufferedReader.close();

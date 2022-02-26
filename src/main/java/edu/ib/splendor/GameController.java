@@ -415,6 +415,10 @@ public class GameController {
 
     private void setPictures(){
         Image image;
+//        System.out.println(board.getTradeRow().getCard(Tier.SECOND, 0).getPicture());
+//        System.out.println(board.getTradeRow().getCard(Tier.SECOND, 1).getPicture());
+//        System.out.println(board.getTradeRow().getCard(Tier.SECOND, 2).getPicture());
+//        System.out.println(board.getTradeRow().getCard(Tier.SECOND, 3).getPicture());
         try{
             image = new Image(currentPlayer.getReserve()[0].getPicture());
             res1.setImage(image);
