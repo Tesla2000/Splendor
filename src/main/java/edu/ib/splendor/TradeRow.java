@@ -31,7 +31,12 @@ public class TradeRow {
     }
 
     public void takeCardToReserve(Tier tier, int index){
-        if (tier.equals(Tier.FIRST)) {
+        if (index==-1){
+            if (tierFirstHidden.size()>0) {
+                tierFirstHidden.remove(0);
+            }
+        }
+        else if (tier.equals(Tier.FIRST)) {
             if (tierFirstHidden.size()>0) {
                 tierFirstVisible[index] = tierFirstHidden.get(0);
                 tierFirstHidden.remove(0);

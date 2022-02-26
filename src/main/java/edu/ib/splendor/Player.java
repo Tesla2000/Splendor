@@ -106,8 +106,9 @@ public class Player {
 
     private void updateStates(){
         points = 0;
+        production = new HashMap<>();
         for (Card card: deck){
-            production.put(card.getProduction(), production.get(card.getProduction())+1);
+            production.put(card.getProduction(), production.getOrDefault(card.getProduction(),0)+1);
             points += card.getPoints();
         }
         for (Aristocrat aristocrat: aristocrats)

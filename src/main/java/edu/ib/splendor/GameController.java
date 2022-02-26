@@ -327,18 +327,18 @@ public class GameController {
             }
             else card = currentPlayer.getReserve()[i];
             for (Gem gem: card.getCost().keySet()) {
-                cost.put(gem, -Math.max(card.getCost().get(gem) - currentPlayer.getPossession().get(gem)
-                        - currentPlayer.getProduction().get(gem), 0));
-                goldNeeded += Math.max(card.getCost().get(gem) - currentPlayer.getPossession().get(gem)
-                        - currentPlayer.getProduction().get(gem), 0);
+                cost.put(gem, -Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
+                        - currentPlayer.getProduction().getOrDefault(gem,0), 0));
+                goldNeeded += Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
+                        - currentPlayer.getProduction().getOrDefault(gem,0), 0);
             }
             if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD)) {
                 currentPlayer.changeGem(Gem.GOLD, goldNeeded);
                 cost.put(Gem.GOLD, goldNeeded);
                 for (Gem gem: card.getCost().keySet()) {
-                    Integer paid = Math.max(0, card.getCost().get(gem) - currentPlayer.getProduction().get(gem));
+                    Integer paid = Math.max(0, card.getCost().getOrDefault(gem,0) - currentPlayer.getProduction().getOrDefault(gem,0));
                     currentPlayer.changeGem(gem, paid);
-                    cost.put(gem, paid);
+                    cost.put(gem, cost.getOrDefault(gem,0)+paid);
                 }
                 for (Gem gem: cost.keySet())
                     board.changeStored(gem, cost.get(gem));
@@ -392,9 +392,9 @@ public class GameController {
     private void endTurn() {
         board.turn();
         currentPlayer.clearTaken();
+        getAristocrats();
         currentPlayer = board.getPlayers().get(0);
         updateFields();
-        getAristocrats();
         setPictures();
     }
 
@@ -402,11 +402,11 @@ public class GameController {
     private void getAristocrats() {
         for (Aristocrat aristocrat: board.getAristocrats())
             if (
-                    aristocrat.getBlue()<=currentPlayer.getProduction().get(Gem.BLUE) &&
-                            aristocrat.getRed()<=currentPlayer.getProduction().get(Gem.RED) &&
-                            aristocrat.getGreen()<=currentPlayer.getProduction().get(Gem.GREEN) &&
-                            aristocrat.getBrown()<=currentPlayer.getProduction().get(Gem.BROWN) &&
-                            aristocrat.getWhite()<=currentPlayer.getProduction().get(Gem.WHITE)
+                    aristocrat.getBlue()<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
+                            aristocrat.getRed()<=currentPlayer.getProduction().getOrDefault(Gem.RED,0) &&
+                            aristocrat.getGreen()<=currentPlayer.getProduction().getOrDefault(Gem.GREEN,0) &&
+                            aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
+                            aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
             ) {
                 currentPlayer.setPoints(currentPlayer.getPoints() + aristocrat.getPoints());
                 board.removeAristocrat(aristocrat);
