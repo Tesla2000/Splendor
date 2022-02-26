@@ -7,10 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.GameController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.GameController">
    <center>
       <VBox maxHeight="-Infinity" prefHeight="350.0" prefWidth="913.0" BorderPane.alignment="CENTER">
          <children>
@@ -18,32 +17,32 @@
                <children>
                   <StackPane fx:id="redPane" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Circle fx:id="red" fill="#e10000" onMouseClicked="#collectRed" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                        <ImageView fx:id="red" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#collectRed" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </StackPane>
                   <StackPane fx:id="greenPane" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Circle fx:id="green" fill="#23ff1f" onMouseClicked="#collectGreen" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                        <ImageView fx:id="green" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#collectGreen" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </StackPane>
                   <StackPane fx:id="bluePane" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Circle fx:id="blue" fill="DODGERBLUE" onMouseClicked="#collectBlue" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                        <ImageView fx:id="blue" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#collectBlue" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </StackPane>
                   <StackPane fx:id="brownPane" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Circle fx:id="brown" fill="#8d4e01" onMouseClicked="#collectBrown" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                        <ImageView fx:id="brown" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#collectBrown" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </StackPane>
                   <StackPane fx:id="whitePane" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Circle fx:id="white" fill="WHITE" onMouseClicked="#collectWhite" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                        <ImageView fx:id="white" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#collectWhite" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </StackPane>
                   <StackPane fx:id="goldPane" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Circle fx:id="gold" fill="#eeff1f" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+                        <ImageView fx:id="gold" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </StackPane>
                </children>
@@ -92,25 +91,44 @@
                   <RadioButton fx:id="build" mnemonicParsing="false" text="Build" toggleGroup="$option" />
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <Text fx:id="playerName" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Text fx:id="redsProduction" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="greensProduction" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="bluesProduction" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="brownsProduction" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="whitesProduction" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                              <Text fx:id="playerName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                              <Text fx:id="poins" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
+                        <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Text fx:id="reds" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="greens" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="blues" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="browns" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="whites" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="golds" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                              <Text fx:id="poins" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                              <StackPane fx:id="redsPane" prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="reds" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </StackPane>
+                              <StackPane fx:id="greensPane" prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="greens" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </StackPane>
+                              <StackPane fx:id="bluesPane" prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="blues" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </StackPane>
+                              <StackPane fx:id="brownsPane" prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="browns" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </StackPane>
+                              <StackPane fx:id="whitesPane" prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="whites" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </StackPane>
+                              <StackPane fx:id="goldsPane" prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="golds" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </StackPane>
                            </children>
                         </HBox>
                      </children>
@@ -126,72 +144,125 @@
    <right>
       <VBox fx:id="redsLeft" alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="350.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Text fx:id="playerName1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="reds1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="greens1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="blues1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="browns1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="whites1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="golds1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="poins1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="textRes" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="redsProduction1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="greensProduction1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="bluesProduction1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="brownsProduction1" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="whitesProduction1" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <Text fx:id="playerName1" strokeType="OUTSIDE" strokeWidth="0.0" fill="WHITE" />
+            <Text fx:id="poins1" strokeType="OUTSIDE" strokeWidth="0.0" fill="WHITE"/>
+            <Text fx:id="textRes" strokeType="OUTSIDE" strokeWidth="0.0" fill="WHITE"/>
+            <StackPane fx:id="redsPane1" prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="reds1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </StackPane>
+            <StackPane fx:id="greensPane1" prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="greens1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </StackPane>
+            <StackPane fx:id="bluesPane1" prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="blues1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </StackPane>
+            <StackPane fx:id="brownsPane1" prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="browns1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </StackPane>
+            <StackPane fx:id="whitesPane1" prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="whites1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </StackPane>
+            <StackPane fx:id="goldsPane1" prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="golds1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </StackPane>
          </children>
       </VBox>
    </right>
    <top>
       <VBox alignment="TOP_CENTER" prefHeight="90.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <children>
+         <children>
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Text fx:id="playerName11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="playerName11" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="poins11" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="textRes1"  fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                </children>
             </HBox>
-               <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
-                  <children>
-                     <Text fx:id="reds11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                     <Text fx:id="greens11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                     <Text fx:id="blues11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                     <Text fx:id="browns11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                     <Text fx:id="whites11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                     <Text fx:id="golds11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                     <Text fx:id="poins11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                     <Text fx:id="textRes1" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  </children>
-               </HBox>
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Text fx:id="redsProduction11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <Text fx:id="greensProduction11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <Text fx:id="bluesProduction11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <Text fx:id="brownsProduction11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <Text fx:id="whitesProduction11" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <StackPane fx:id="redsPane11" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="reds11" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="greensPane11" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="greens11" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="bluesPane11" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="blues11" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="brownsPane11" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="browns11" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="whitesPane11" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="whites11" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="goldsPane11" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="golds11" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
                </children>
             </HBox>
-            </children>
-         </VBox>
+         </children>
+      </VBox>
    </top>
    <left>
-      <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="350.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <Text fx:id="playerName111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="reds111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="greens111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="blues111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="browns111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="whites111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="golds111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="poins111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="textRes11" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="redsProduction111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="greensProduction111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="bluesProduction111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="brownsProduction111" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="whitesProduction111" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <VBox alignment="CENTER_RIGHT" maxHeight="-Infinity" prefHeight="350.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <Text fx:id="playerName111" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <Text fx:id="poins111" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <Text fx:id="textRes11" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <children>
+               <StackPane fx:id="redsPane111" prefHeight="150.0" prefWidth="200.0">
+                  <children>
+                     <ImageView fx:id="reds111" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                  </children>
+               </StackPane>
+               <StackPane fx:id="greensPane111" prefHeight="150.0" prefWidth="200.0">
+                  <children>
+                     <ImageView fx:id="greens111" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                  </children>
+               </StackPane>
+               <StackPane fx:id="bluesPane111" prefHeight="150.0" prefWidth="200.0">
+                  <children>
+                     <ImageView fx:id="blues111" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                  </children>
+               </StackPane>
+               <StackPane fx:id="brownsPane111" prefHeight="150.0" prefWidth="200.0">
+                  <children>
+                     <ImageView fx:id="browns111" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                  </children>
+               </StackPane>
+               <StackPane fx:id="whitesPane111" prefHeight="150.0" prefWidth="200.0">
+                  <children>
+                     <ImageView fx:id="whites111" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                  </children>
+               </StackPane>
+               <StackPane fx:id="goldsPane111" prefHeight="150.0" prefWidth="200.0">
+                  <children>
+                     <ImageView fx:id="golds111" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                  </children>
+               </StackPane>
          </children>
       </VBox>
    </left>
