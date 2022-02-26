@@ -42,6 +42,21 @@ public class Player {
         production.put(Gem.WHITE, 0);
     }
 
+    public Player(String name, Integer gold) {
+        this.name = name;
+        possession.put(Gem.RED, 0);
+        possession.put(Gem.GREEN, 0);
+        possession.put(Gem.BLUE, 0);
+        possession.put(Gem.BROWN, 0);
+        possession.put(Gem.WHITE, 0);
+        possession.put(Gem.GOLD, gold);
+        production.put(Gem.RED, 0);
+        production.put(Gem.GREEN, 0);
+        production.put(Gem.BLUE, 0);
+        production.put(Gem.BROWN, 0);
+        production.put(Gem.WHITE, 0);
+    }
+
     public Player(String name) {
         this.name = name;
         possession.put(Gem.RED, 0);

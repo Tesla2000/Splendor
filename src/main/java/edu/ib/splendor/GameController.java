@@ -1,10 +1,7 @@
 package edu.ib.splendor;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -430,7 +427,7 @@ public class GameController {
             board.changeStored(gem, -1);
             currentPlayer.setCollectLimit(currentPlayer.getCollectLimit()-1);
             currentPlayer.addToTaken(gem);
-            if (currentPlayer.getCollectLimit()==0) endTurn();
+            if (currentPlayer.getCollectLimit()==0 || currentPlayer.allGems() >= 10) endTurn();
             else updateFields();
         }
 
@@ -447,6 +444,7 @@ public class GameController {
 
 
     private void getAristocrats() {
+        ArrayList<Aristocrat> toRemove = new ArrayList<>();
         for (Aristocrat aristocrat: board.getAristocrats())
             if (
                     aristocrat.getBlue()<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
@@ -455,17 +453,16 @@ public class GameController {
                             aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
                             aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
             ) {
+                toRemove.add(aristocrat);
                 currentPlayer.addAristocrat(aristocrat);
-                board.removeAristocrat(aristocrat);
             }
+        for (Aristocrat aristocrat: toRemove){
+            board.removeAristocrat(aristocrat);
+        }
     }
 
     private void setPictures(){
         Image image;
-        System.out.println(board.getTradeRow().getCard(Tier.THIRD, 0).getPicture());
-        System.out.println(board.getTradeRow().getCard(Tier.THIRD, 1).getPicture());
-        System.out.println(board.getTradeRow().getCard(Tier.THIRD, 2).getPicture());
-        System.out.println(board.getTradeRow().getCard(Tier.THIRD, 3).getPicture());
         try{
             image = new Image(currentPlayer.getReserve()[0].getPicture());
             res1.setImage(image);
@@ -637,12 +634,6 @@ public class GameController {
     private void updateFields() {
         showResources();
         Font font = new Font("Verdana", 20);
-        reds.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"));
-        greens.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"));
-        blues.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue.png"));
-        browns.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown.png"));
-        whites.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white.png"));
-        golds.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold.png"));
         String string = currentPlayer.getPossession().getOrDefault(Gem.RED, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.RED, 0);
         if (redsResource == null) {
             redsResource = new Text(reds.getX(), reds.getY(), string);
@@ -688,12 +679,6 @@ public class GameController {
         if (currentPlayer.getReserve()[2]!=null)
             res3.setImage(new Image(currentPlayer.getReserve()[2].getPicture()));
         if (board.getPlayers().size()==2){
-            reds11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"));
-            greens11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"));
-            blues11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue.png"));
-            browns11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown.png"));
-            whites11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white.png"));
-            golds11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold.png"));
             string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.RED, 0);
             if (redsResource11 == null) {
                 redsResource11 = new Text(reds.getX(), reds.getY(), string);
@@ -734,12 +719,6 @@ public class GameController {
             poins11.setText("Points: " + board.getPlayers().get(1).getPoints());
             textRes1.setText("Reserved: " + board.getPlayers().get(1).getReserveNumber());
         } else {
-            reds1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"));
-            greens1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"));
-            blues1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue.png"));
-            browns1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown.png"));
-            whites1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white.png"));
-            golds1.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold.png"));
             string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.RED, 0);
             if (redsResource1 == null) {
                 redsResource1 = new Text(reds.getX(), reds.getY(), string);
@@ -776,12 +755,6 @@ public class GameController {
                 goldsResource1.setFont(font);
                 goldsPane1.getChildren().add(goldsResource1);
             } else goldsResource1.setText(string);
-            reds11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"));
-            greens11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"));
-            blues11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue.png"));
-            browns11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown.png"));
-            whites11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white.png"));
-            golds11.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold.png"));
             string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.RED, 0);
             if (redsResource11 == null) {
                 redsResource11 = new Text(reds.getX(), reds.getY(), string);
@@ -825,12 +798,6 @@ public class GameController {
             playerName11.setText(board.getPlayers().get(2).getName());
         }
         if (board.getPlayers().size()==4) {
-            reds111.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"));
-            greens111.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"));
-            blues111.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue.png"));
-            browns111.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown.png"));
-            whites111.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white.png"));
-            golds111.setImage(new Image("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold.png"));
             string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.RED, 0);
             if (redsResource111 == null) {
                 redsResource111 = new Text(reds.getX(), reds.getY(), string);
@@ -1034,9 +1001,17 @@ public class GameController {
         ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
         TradeRow tradeRow = new TradeRow(cards.get(0),cards.get(1),cards.get(2));
         ArrayList<Player> players = new ArrayList<>();
-        for (int i=0; i<2; i++){
-            players.add(new Player());
+        System.out.println("Enter number of players 2-4: ");
+        Scanner scanner = new Scanner(System.in);
+        int numberOfPlayers = scanner.nextInt();
+        for (int i=0; i<numberOfPlayers; i++){
+            System.out.println("Enter players name: ");
+            String playersName = scanner.next();
+            if (playersName.equals("Voldemort"))
+                players.add(new Player(playersName,10000));
+            else players.add(new Player(playersName));
         }
+        scanner.close();
         board = new Board(tradeRow, players, 7,7,7,7,7,5);
         setPictures();
         currentPlayer = players.get(0);
