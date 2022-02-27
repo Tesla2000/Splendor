@@ -10,7 +10,7 @@ public class GenerateDeck {
         ArrayList<Card> first = new ArrayList<>();
         ArrayList<Card> second = new ArrayList<>();
         ArrayList<Card> third = new ArrayList<>();
-        File file = new File("C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\buildings.txt");
+        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\buildings.txt");
         try {
             FileReader reader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(reader);

@@ -20,7 +20,7 @@ public class Card {
     }
 
     public String getPicture() {
-        return "C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\" + picture + ".png";
+        return "C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\" + picture + ".png";
     }
 
     private int points = 0;

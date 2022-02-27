@@ -26,5 +26,5 @@ public record Aristocrat(int red, int green, int blue, int brown, int white, Str
         return 3;
     }
 
-    public String getImage(){return "C:\\Users\\Dell\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\" + image + ".png";}
+    public String getImage(){return "C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\" + image + ".png";}
 }
