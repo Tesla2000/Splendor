@@ -98,4 +98,15 @@ public class TradeRow {
         return card;
     }
 
+    public Card[] getTierFirstVisible() {
+        return tierFirstVisible;
+    }
+
+    public Card[] getTierSecondVisible() {
+        return tierSecondVisible;
+    }
+
+    public Card[] getTierThirdVisible() {
+        return tierThirdVisible;
+    }
 }

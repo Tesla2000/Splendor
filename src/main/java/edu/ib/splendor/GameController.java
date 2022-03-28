@@ -3,6 +3,7 @@ package edu.ib.splendor;
 import java.net.URL;
 import java.util.*;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -954,6 +955,11 @@ public class GameController {
     @FXML
     void collectWhite(MouseEvent event) {
         collectGem(Gem.WHITE);
+    }
+
+    @FXML
+    void end(ActionEvent event) {
+        endTurn();
     }
 
     @FXML
