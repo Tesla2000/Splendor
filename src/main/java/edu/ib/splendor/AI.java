@@ -9,7 +9,7 @@ import java.util.*;
 public class AI {
     private static boolean lost;
     private static boolean won;
-    private static int gameCounter;
+    private static int gameCounter = 0;
     private static List<int[]> moves;
     private final BoardController boardController;
     private final HashMap<Integer, Move> possibleMoves;
@@ -18,7 +18,6 @@ public class AI {
 
     public AI(BoardController boardController, Board board) {
         lost = false;
-        gameCounter = 0;
         won = false;
         moves = new ArrayList<>();
         this.boardController = boardController;
@@ -84,7 +83,7 @@ public class AI {
             keys[i] = value;
         }
         Arrays.sort(keys);
-        int[] state = new int[183];
+        int[] state = new int[184];
         state[0] = player.getPoints();
         state[1] = player.getReserveNumber();
         state[2] = player.getPossession().get(Gem.BLUE);
@@ -95,12 +94,12 @@ public class AI {
         state[7] = player.getPossession().get(Gem.WHITE);
         state[8] = player.getPossession().get(Gem.WHITE);
         state[9] = player.getPossession().get(Gem.GOLD);
-        state[10] = player.getProduction().get(Gem.BLUE);
-        state[11] = player.getProduction().get(Gem.BROWN);
-        state[12] = player.getProduction().get(Gem.GREEN);
-        state[13] = player.getProduction().get(Gem.RED);
-        state[14] = player.getProduction().get(Gem.WHITE);
-        state[15] = player.getProduction().get(Gem.GOLD);
+        state[10] = player.getProduction().getOrDefault(Gem.BLUE, 0);
+        state[11] = player.getProduction().getOrDefault(Gem.BROWN, 0);
+        state[12] = player.getProduction().getOrDefault(Gem.GREEN, 0);
+        state[13] = player.getProduction().getOrDefault(Gem.RED, 0);
+        state[14] = player.getProduction().getOrDefault(Gem.WHITE, 0);
+//        state[15] = player.getProduction().get(Gem.GOLD);
         state[16] = board.getStored(Gem.BLUE);
         state[17] = board.getStored(Gem.BROWN);
         state[18] = board.getStored(Gem.GREEN);
@@ -146,7 +145,7 @@ public class AI {
             state[119 + 11*i] = board.getTradeRow().getTierFirstVisible()[i].getCost().get(Gem.RED);
             state[120 + 11*i] = board.getTradeRow().getTierFirstVisible()[i].getCost().get(Gem.WHITE);
         }
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < board.getAristocrats().size(); i++){
             state[164+5*i] = board.getAristocrats().get(i).getBlue();
             state[165+5*i] = board.getAristocrats().get(i).getBrown();
             state[166+5*i] = board.getAristocrats().get(i).getGreen();
@@ -197,21 +196,19 @@ public class AI {
     }
 
     private static void saveToFile() throws IOException {
+        if (moves.size() <= 25) {
         File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\"+moves.size()+"\\"+gameCounter+".txt");
         FileWriter writer = null;
         gameCounter++;
         try {
             writer = new FileWriter(file);
-            if (moves.size() <= 30) {
-                System.out.println(moves.size());
-                writer.write(moves.size());
-                for (int[] state : moves) {
-                    for (int element : state) {
-                        writer.write(element);
-                        writer.write(",");
-                    }
-                    writer.write("\n");
+            System.out.println(moves.size());
+            for (int[] state : moves) {
+                for (int element : state) {
+                    writer.write(String.valueOf(element));
+                    writer.write(",");
                 }
+                writer.write("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -219,6 +216,6 @@ public class AI {
             if (writer != null) {
                 writer.close();
             }
-        }
+        }}
     }
 }
