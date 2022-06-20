@@ -359,8 +359,6 @@ public class GameController {
     @FXML
     private StackPane whitesPane111;
 
-
-
     private void buyEstate(Tier tier, int i) {
         Card card;
         HashMap<Gem, Integer> cost = new HashMap<>();
