@@ -63,6 +63,7 @@ public class BoardController {
 
     public void getAristocrats(Board board, Player currentPlayer) {
         ArrayList<Aristocrat> toRemove = new ArrayList<>();
+        AI.aristocrat = false;
         for (Aristocrat aristocrat: board.getAristocrats())
             if (
                     aristocrat.getBlue()<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
@@ -71,6 +72,7 @@ public class BoardController {
                     aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
                     aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
             ) {
+                AI.aristocrat = true;
                 toRemove.add(aristocrat);
                 currentPlayer.addAristocrat(aristocrat);
             }

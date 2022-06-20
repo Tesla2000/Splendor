@@ -1,7 +1,6 @@
 package edu.ib.splendor;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -10,6 +9,7 @@ public class AI {
     private static boolean lost;
     private static boolean won;
     private static int gameCounter = 0;
+    public static boolean aristocrat;
     private static List<int[]> moves;
     private final BoardController boardController;
     private final HashMap<Integer, Move> possibleMoves;
@@ -19,6 +19,7 @@ public class AI {
     public AI(BoardController boardController, Board board) {
         lost = false;
         won = false;
+        aristocrat = false;
         moves = new ArrayList<>();
         this.boardController = boardController;
         this.board = board;
@@ -155,6 +156,7 @@ public class AI {
             if (playMove(order.get(keys[i]))) {
                 state[0] = order.get(keys[i]);
                 moves.add(state);
+                if (aristocrat) moves.add(new int[]{});
                 return;
             }
         }
@@ -202,7 +204,7 @@ public class AI {
         gameCounter++;
         try {
             writer = new FileWriter(file);
-            System.out.println(moves.size());
+//            System.out.println(moves.size());
             for (int[] state : moves) {
                 for (int element : state) {
                     writer.write(String.valueOf(element));

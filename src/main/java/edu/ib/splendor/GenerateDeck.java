@@ -75,7 +75,7 @@ public class GenerateDeck {
         aristocrats.add(new Aristocrat(4,4,0,0,0,"44000"));
         aristocrats.add(new Aristocrat(0,4,4,0,0,"04400"));
         aristocrats.add(new Aristocrat(0,0,4,0,4,"00404"));
-        aristocrats.add(new Aristocrat(1,0,0,4,0,"40040"));
+        aristocrats.add(new Aristocrat(4,0,0,4,0,"40040"));
         aristocrats.add(new Aristocrat(0,0,0,4,4,"00044"));
         aristocrats.add(new Aristocrat(0,0,3,3,3,"00333"));
         aristocrats.add(new Aristocrat(0,3,3,0,3,"03303"));
