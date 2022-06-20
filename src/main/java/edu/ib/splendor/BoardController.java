@@ -53,7 +53,7 @@ public class BoardController {
     public void collectGem(Gem gem, Board board, Player currentPlayer){
         currentPlayer.changeGem(gem, -1);
         board.changeStored(gem, -1);
-        endTurn(board, currentPlayer);
+//        endTurn(board, currentPlayer);
     }
 
     public void endTurn(Board board, Player currentPlayer) {
@@ -66,10 +66,10 @@ public class BoardController {
         for (Aristocrat aristocrat: board.getAristocrats())
             if (
                     aristocrat.getBlue()<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
-                            aristocrat.getRed()<=currentPlayer.getProduction().getOrDefault(Gem.RED,0) &&
-                            aristocrat.getGreen()<=currentPlayer.getProduction().getOrDefault(Gem.GREEN,0) &&
-                            aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
-                            aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
+                    aristocrat.getRed()<=currentPlayer.getProduction().getOrDefault(Gem.RED,0) &&
+                    aristocrat.getGreen()<=currentPlayer.getProduction().getOrDefault(Gem.GREEN,0) &&
+                    aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
+                    aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
             ) {
                 toRemove.add(aristocrat);
                 currentPlayer.addAristocrat(aristocrat);
