@@ -10,6 +10,7 @@ public class AI {
     private static boolean won;
     private static int gameCounter = 2000;
     //    public static boolean aristocrat;
+//    private static List<ArrayList<Integer>> moves;
     private static List<int[]> moves;
     private final BoardController boardController;
     private final HashMap<Integer, Move> possibleMoves;

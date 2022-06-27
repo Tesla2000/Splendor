@@ -50,6 +50,22 @@ public class BoardController {
         return goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD);
         }
 
+    public HashMap<Gem, Integer> lackingGems(Tier tier, int index, Board board, Player currentPlayer) {
+        Card card = board.getTradeRow().getCard(tier, index);
+        if (card == null) return null;
+        HashMap<Gem, Integer> cost = new HashMap<>();
+        int goldNeeded = 0;
+        for (Gem gem: card.getCost().keySet()) {
+            cost.put(gem, Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
+                    - currentPlayer.getProduction().getOrDefault(gem,0), 0));
+            goldNeeded += Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
+                    - currentPlayer.getProduction().getOrDefault(gem,0), 0);
+        }
+        if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD))
+        return new HashMap<>();
+        return cost;
+        }
+
     public void collectGem(Gem gem, Board board, Player currentPlayer){
         currentPlayer.changeGem(gem, -1);
         board.changeStored(gem, -1);
