@@ -1,7 +1,6 @@
 package edu.ib.splendor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class BoardController {
@@ -50,19 +49,19 @@ public class BoardController {
         return goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD);
         }
 
-    public HashMap<Gem, Integer> lackingGems(Tier tier, int index, Board board, Player currentPlayer) {
+    public ArrayList<GemAmountPair> lackingGems(Tier tier, int index, Board board, Player currentPlayer) {
         Card card = board.getTradeRow().getCard(tier, index);
         if (card == null) return null;
-        HashMap<Gem, Integer> cost = new HashMap<>();
+        ArrayList<GemAmountPair> cost = new ArrayList<>();
         int goldNeeded = 0;
         for (Gem gem: card.getCost().keySet()) {
-            cost.put(gem, Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
-                    - currentPlayer.getProduction().getOrDefault(gem,0), 0));
+            cost.add(new GemAmountPair((Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
+                                - currentPlayer.getProduction().getOrDefault(gem,0), 0)), gem));
             goldNeeded += Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
                     - currentPlayer.getProduction().getOrDefault(gem,0), 0);
         }
         if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD))
-        return new HashMap<>();
+        return new ArrayList<>();
         return cost;
         }
 
