@@ -14,6 +14,8 @@ public class AITwoPlayers {
     private final HashMap<Integer, BuildBuilding> possibleMoves;
     private final ArrayList<Player> players;
     private final Board board;
+    private int moveFirst = 0;
+    private int moveSecond = 0;
 
     public AITwoPlayers(BoardController boardController, ArrayList<Player> players, Board board) {
         this.boardController = boardController;
@@ -152,10 +154,17 @@ public class AITwoPlayers {
         } catch (IllegalArgumentException e) {
             lost = true;
         }
+        state.add(0, moveFirst);
+        state.add(1, moveSecond);
+//        if (player.getName().equals("DeepBlue")){
+//            boolean b = true;
+//        }
         moves.add(state);
     }
 
     private boolean playMove(HashMap<Double, Integer> order, Player player) {
+        moveFirst = 0;
+        moveSecond = 0;
         ArrayList<Integer> sequence = convertToSequence(order);
         int playersResource = player.getPossession().values().stream().reduce(0, Integer::sum);
         if (playersResource == 10) {
@@ -187,6 +196,8 @@ public class AITwoPlayers {
                     i++;
                     continue;
                 }
+                if (moveFirst == 0) moveFirst = i;
+                else if (moveSecond == 0) moveSecond = i;
                 if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 0) {
                     boardController.collectGem(lack.get(0).gem, board, player);
                     boardController.collectGem(lack.get(0).gem, board, player);
@@ -222,8 +233,8 @@ public class AITwoPlayers {
     }
 
     private static void saveToFile() throws IOException {
-        if (moves.size()/2 <= 25) {
-            System.out.println(moves.size());
+//        if (moves.size()/2 <= 25) {
+//            System.out.println(moves.size());
             File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\two\\" + moves.size()/2 + "\\" + gameCounter + ".txt");
             FileWriter writer = null;
             gameCounter++;
@@ -243,7 +254,7 @@ public class AITwoPlayers {
                     writer.close();
                 }
             }
-        }
+//        }
     }
 
 
