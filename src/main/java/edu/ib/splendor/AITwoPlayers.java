@@ -1,8 +1,6 @@
 package edu.ib.splendor;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class AITwoPlayers {
@@ -40,7 +38,9 @@ public class AITwoPlayers {
     public static void main(String[] args) throws IOException {
         int wonCounter = 0;
         int lostCounter = 0;
-        while (gameCounter < 1000) {
+        int blueCounter = 0;
+        int skyCounter = 0;
+        while (gameCounter < 4000) {
             won = false;
             lost = false;
             ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
@@ -50,15 +50,22 @@ public class AITwoPlayers {
             players.add(new Player("DeepBlue"));
             AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
             while (true) {
-                ai.playTurn();
+                ai.playTurn(!players.get(0).getName().equals("DeepBlue"));
                 if (lost) {
-                    if (lostCounter % 1000 == 0) System.out.println("Lost: " + lostCounter);
+                    if (lostCounter % 100 == 0) System.out.println("Lost: " + lostCounter);
                     lostCounter++;
                     break;
                 }
                 if (won) {
-                    saveToFile();
-                    if (wonCounter % 1000 == 0) System.out.println("Won: " + wonCounter);
+                    if (players.get(0).getName().equals("DeepBlue")) {
+                        saveToFile();
+                        if (blueCounter % 100 == 0) System.out.println("Blue won: " + blueCounter);
+                        blueCounter++;
+                    } else {
+                        if (skyCounter % 100 == 0) System.out.println("Sky won: " + skyCounter);
+                        skyCounter++;
+                    }
+                    if (wonCounter % 100 == 0) System.out.println("Won: " + wonCounter);
                     wonCounter++;
                     break;
                 }
@@ -66,7 +73,7 @@ public class AITwoPlayers {
         }
     }
 
-    public void playTurn() {
+    public void playTurn(boolean AIGenerated) throws IOException {
         Random random = new Random();
         Player player = players.get(0);
         ArrayList<Integer> state = new ArrayList<>();
@@ -77,13 +84,8 @@ public class AITwoPlayers {
         state.add(board.getStored(Gem.WHITE));
         state.add(board.getStored(Gem.GOLD));
         HashMap<Double, Integer> order = new HashMap<>();
-        double[] keys = new double[12];
-        for (int i = 0; i < keys.length; i++) {
-            double value = random.nextDouble();
-            order.put(value, i);
-            keys[i] = value;
-        }
-        Arrays.sort(keys);
+//        double[] keys = new double[12];
+//        Arrays.sort(keys);
         for (Player p: players) {
             state.add(p.getPoints());
             state.add(p.getReserveNumber());
@@ -153,6 +155,14 @@ public class AITwoPlayers {
         }
 //        for (double key : keys)
 //            state.add(order.get(key));
+        if (!AIGenerated) {
+            for (int i = 0; i < 12; i++) {
+                double value = random.nextDouble();
+                order.put(value, i);
+            }
+        } else {
+            order = generateOrder("1", state);
+        }
         try {
             playMove(order, player);
             if (player.getPoints() >= 15) {
@@ -169,6 +179,25 @@ public class AITwoPlayers {
 //            boolean b = true;
 //        }
         moves.add(state);
+    }
+
+    private HashMap<Double, Integer> generateOrder(String number, ArrayList<Integer> state) throws IOException {
+        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\two\\coefitents\\" + number);
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        String st;
+        HashMap<Double, Integer> result = new HashMap<>();
+        int counter = 0;
+        while ((st = bufferedReader.readLine()) != null){
+            String[] coefficients = st.split(",");
+            double value = 0;
+            for (int i=0;i<state.size(); i++){
+                value += Double.parseDouble(coefficients[i])*state.get(i);
+            }
+            value += Double.parseDouble(coefficients[state.size()]);
+            result.put(value, counter);
+            counter++;
+        }
+        return result;
     }
 
     private boolean playMove(HashMap<Double, Integer> order, Player player) {
@@ -243,14 +272,12 @@ public class AITwoPlayers {
         return results;
     }
 
-    private static void saveToFile() throws IOException {
-        if (moves.size()/2 <= 30) {
+    private static void saveToFile() {
+//        if (moves.size()/2 <= 30) {
             File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\two\\1\\" + gameCounter + ".txt");
-            FileWriter writer = null;
             gameCounter++;
-            try {
-                writer = new FileWriter(file);
-                for (int i= (moves.size()+1)%2; i < moves.size(); i+=2) {
+            try (FileWriter writer = new FileWriter(file)) {
+                for (int i = (moves.size() + 1) % 2; i < moves.size(); i += 2) {
                     for (int element : moves.get(i)) {
                         writer.write(String.valueOf(element));
                         writer.write(",");
@@ -259,12 +286,8 @@ public class AITwoPlayers {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                if (writer != null) {
-                    writer.close();
-                }
             }
-        }
+//        }
     }
 
 
