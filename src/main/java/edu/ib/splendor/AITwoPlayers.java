@@ -2,6 +2,7 @@ package edu.ib.splendor;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AITwoPlayers {
     private static boolean lost;
@@ -40,18 +41,25 @@ public class AITwoPlayers {
         int lostCounter = 0;
         int blueCounter = 0;
         int skyCounter = 0;
-        while (true) {
+        Random random = new Random();
+        while (gameCounter<1500) {
             won = false;
             lost = false;
             ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
             TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
             ArrayList<Player> players = new ArrayList<>();
-            players.add(new Player("Skynet"));
-            players.add(new Player("DeepBlue"));
+            if (random.nextBoolean()) {
+                players.add(new Player("Skynet"));
+                players.add(new Player("DeepBlue"));
+            } else {
+                players.add(new Player("DeepBlue"));
+                players.add(new Player("Skynet"));
+            }
             AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
             while (true) {
-                ai.playTurn(!players.get(0).getName().equals("DeepBlue"));
+//                ai.playTurn(players.get(0).getName().equals("Skynet"));
 //                ai.playTurn(false);
+                ai.playTurn(true);
                 if (lost) {
                     if (lostCounter % 100 == 0) System.out.println("Lost: " + lostCounter);
                     lostCounter++;
@@ -60,10 +68,11 @@ public class AITwoPlayers {
                 if (won) {
 //                    saveToFile();
                     if (players.get(1).getName().equals("DeepBlue")) {
-                        saveToFile();
+//                        saveToFile();
 //                        if (blueCounter % 100 == 0) System.out.println("Blue won: " + blueCounter);
                         blueCounter++;
                     } else {
+//                        saveToFile();
 //                        if (skyCounter % 100 == 0) System.out.println("Sky won: " + skyCounter);
                         skyCounter++;
                     }
@@ -122,25 +131,35 @@ public class AITwoPlayers {
                 }
             }
             for (int i = 0; i < 4; i++) {
-                state.add(board.getTradeRow().getTierSecondVisible()[i].getPoints());
-                for (Gem gem : Gem.values()) {
-                    if (!gem.equals(Gem.GOLD)) {
-                        if (board.getTradeRow().getTierSecondVisible()[i].getProduction() == gem) state.add(1);
-                        else state.add(0);
-                        state.add(Math.max(0, board.getTradeRow().getTierSecondVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
-                        state.add(board.getTradeRow().getTierSecondVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
+                if (board.getTradeRow().getTierSecondVisible()[i] != null) {
+                    state.add(board.getTradeRow().getTierSecondVisible()[i].getPoints());
+                    for (Gem gem : Gem.values()) {
+                        if (!gem.equals(Gem.GOLD)) {
+                            if (board.getTradeRow().getTierSecondVisible()[i].getProduction() == gem) state.add(1);
+                            else state.add(0);
+                            state.add(Math.max(0, board.getTradeRow().getTierSecondVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
+                            state.add(board.getTradeRow().getTierSecondVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
+                        }
                     }
+                } else {
+                    for (int j = 0; j < 16; j++)
+                        state.add(0);
                 }
             }
             for (int i = 0; i < 4; i++) {
-                state.add(board.getTradeRow().getTierThirdVisible()[i].getPoints());
-                for (Gem gem : Gem.values()) {
-                    if (!gem.equals(Gem.GOLD)) {
-                        if (board.getTradeRow().getTierThirdVisible()[i].getProduction() == gem) state.add(1);
-                        else state.add(0);
-                        state.add(Math.max(0, board.getTradeRow().getTierThirdVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
-                        state.add(board.getTradeRow().getTierThirdVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
+                if (board.getTradeRow().getTierSecondVisible()[i] != null) {
+                    state.add(board.getTradeRow().getTierThirdVisible()[i].getPoints());
+                    for (Gem gem : Gem.values()) {
+                        if (!gem.equals(Gem.GOLD)) {
+                            if (board.getTradeRow().getTierThirdVisible()[i].getProduction() == gem) state.add(1);
+                            else state.add(0);
+                            state.add(Math.max(0, board.getTradeRow().getTierThirdVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
+                            state.add(board.getTradeRow().getTierThirdVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
+                        }
                     }
+                } else {
+                    for (int j = 0; j < 16; j++)
+                        state.add(0);
                 }
             }
             for (int i = 0; i < board.getAristocrats().size(); i++) {
@@ -166,7 +185,8 @@ public class AITwoPlayers {
                 order.put(value, i);
             }
         } else {
-            order = generateOrder("1", state);
+            if (player.getName().equals("Skynet")) order = generateOrder("1", state);
+            else order = generateOrder("2", state);
         }
         try {
 //            if (player.getName().equals("Skynet")){ //lookup
@@ -237,14 +257,20 @@ public class AITwoPlayers {
                     i++;
                     continue;
                 }
+                lack = (ArrayList<GemAmountPair>) lack.stream().filter(l->l.integer!=0).collect(Collectors.toList());
                 lack.sort((e1, e2) -> e2.integer - e1.integer);
                 if (lack.size() == 0) {
-                    i++;
-                    continue;
+                    if (gotten.size() == 0){
+                        boardController.buyEstate(possibleMoves.get(sequence.get(i)).getTier(), possibleMoves.get(sequence.get(i)).getIndex(), board, player);
+                        return true;
+                    }else {
+                        i++;
+                        continue;
+                    }
                 }
                 if (moveFirst == -1) moveFirst = sequence.get(i);
                 else if (moveSecond == -1) moveSecond = sequence.get(i);
-                if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 0) {
+                if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4) {
                     boardController.collectGem(lack.get(0).gem, board, player);
                     boardController.collectGem(lack.get(0).gem, board, player);
                     break;
@@ -256,7 +282,7 @@ public class AITwoPlayers {
                             break;
                         } else {
                             lack = boardController.lackingGems(possibleMoves.get(sequence.get(i)).getTier(), possibleMoves.get(sequence.get(i)).getIndex(), board, player);
-                            if (lack.stream().map(e -> e.integer).reduce(0, Integer::sum) == 10 - playersResource)
+                            if (lack.stream().map(e -> e.integer).reduce(0, Integer::sum) == 10 - playersResource && gotten.size() != 0)
                                 return false;
                             i++;
                             break;
@@ -281,7 +307,7 @@ public class AITwoPlayers {
     private static void saveToFile() {
 //        if (moves.size()/2 <= 25) {
 //            File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\one\\"+moves.size()/2+"\\" + gameCounter + ".txt");
-            File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\two\\1\\" + gameCounter + ".txt");
+            File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\two\\2\\" + gameCounter + ".txt");
             gameCounter++;
 //            System.out.println(gameCounter);
             try (FileWriter writer = new FileWriter(file)) {
