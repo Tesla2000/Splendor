@@ -40,7 +40,7 @@ public class AITwoPlayers {
         int lostCounter = 0;
         int blueCounter = 0;
         int skyCounter = 0;
-        while (gameCounter < 4000) {
+        while (true) {
             won = false;
             lost = false;
             ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
@@ -51,22 +51,27 @@ public class AITwoPlayers {
             AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
             while (true) {
                 ai.playTurn(!players.get(0).getName().equals("DeepBlue"));
+//                ai.playTurn(false);
                 if (lost) {
                     if (lostCounter % 100 == 0) System.out.println("Lost: " + lostCounter);
                     lostCounter++;
                     break;
                 }
                 if (won) {
-                    if (players.get(0).getName().equals("DeepBlue")) {
+//                    saveToFile();
+                    if (players.get(1).getName().equals("DeepBlue")) {
                         saveToFile();
-                        if (blueCounter % 100 == 0) System.out.println("Blue won: " + blueCounter);
+//                        if (blueCounter % 100 == 0) System.out.println("Blue won: " + blueCounter);
                         blueCounter++;
                     } else {
-                        if (skyCounter % 100 == 0) System.out.println("Sky won: " + skyCounter);
+//                        if (skyCounter % 100 == 0) System.out.println("Sky won: " + skyCounter);
                         skyCounter++;
                     }
-                    if (wonCounter % 100 == 0) System.out.println("Won: " + wonCounter);
                     wonCounter++;
+                    if (wonCounter % 100 == 0) {
+                        System.out.println("Finished: " + wonCounter);
+                        System.out.println("Sky/Blue = " + skyCounter + "/" + blueCounter);
+                    }
                     break;
                 }
             }
@@ -164,6 +169,10 @@ public class AITwoPlayers {
             order = generateOrder("1", state);
         }
         try {
+//            if (player.getName().equals("Skynet")){ //lookup
+//                int points = players.stream().filter(player1 -> player1.getName().equals("DeepBlue")).toList().get(0).getPoints();
+//                boolean b = true;
+//            }
             playMove(order, player);
             if (player.getPoints() >= 15) {
                 won = true;
@@ -175,9 +184,6 @@ public class AITwoPlayers {
         }
         state.add(0, moveFirst);
         state.add(1, moveSecond);
-//        if (player.getName().equals("DeepBlue")){
-//            boolean b = true;
-//        }
         moves.add(state);
     }
 
@@ -273,9 +279,11 @@ public class AITwoPlayers {
     }
 
     private static void saveToFile() {
-//        if (moves.size()/2 <= 30) {
+//        if (moves.size()/2 <= 25) {
+//            File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\one\\"+moves.size()/2+"\\" + gameCounter + ".txt");
             File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\two\\1\\" + gameCounter + ".txt");
             gameCounter++;
+//            System.out.println(gameCounter);
             try (FileWriter writer = new FileWriter(file)) {
                 for (int i = (moves.size() + 1) % 2; i < moves.size(); i += 2) {
                     for (int element : moves.get(i)) {
@@ -286,8 +294,8 @@ public class AITwoPlayers {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-//        }
+//            }
+        }
     }
 
 
