@@ -5,8 +5,15 @@ import java.util.HashMap;
 
 public class BoardController {
 
+    public Card getCard(Tier tier, int index, Board board, Player currentPlayer){
+        Card card = null;
+        if (!tier.equals(Tier.RESERVE)) card = board.getTradeRow().getCard(tier, index);
+        else if (currentPlayer.getReserve().size() > index) card = currentPlayer.getReserve().get(index);
+        return card;
+    }
+
     public void buyEstate(Tier tier, int index, Board board, Player currentPlayer) {
-        Card card = board.getTradeRow().getCard(tier, index);
+        Card card = getCard(tier, index, board, currentPlayer);
         HashMap<Gem, Integer> cost = new HashMap<>();
         int goldNeeded = 0;
         for (Gem gem: card.getCost().keySet()) {
@@ -25,7 +32,7 @@ public class BoardController {
             }
             for (Gem gem: cost.keySet())
                 board.changeStored(gem, cost.get(gem));
-            if (!card.getTier().equals(Tier.RESERVE))
+            if (!tier.equals(Tier.RESERVE))
                 currentPlayer.addCard(board.getTradeRow().takeCard(card.getTier(), index));
             else {
                 currentPlayer.addCard(card);
@@ -36,8 +43,10 @@ public class BoardController {
     }
 
     public boolean canBuy(Tier tier, int index, Board board, Player currentPlayer) {
-        Card card = board.getTradeRow().getCard(tier, index);
-        if (card == null) return false;
+        Card card = getCard(tier, index, board, currentPlayer);
+        if (card == null) {
+            return false;
+        }
         HashMap<Gem, Integer> cost = new HashMap<>();
         int goldNeeded = 0;
         for (Gem gem: card.getCost().keySet()) {

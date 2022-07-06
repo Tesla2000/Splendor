@@ -84,7 +84,7 @@ public class AITwoPlayers {
         return result;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, GameLostException {
         Random random = new Random();
         double[] scores = new double[16];
         int best = 0;
@@ -175,14 +175,14 @@ public class AITwoPlayers {
     private static void saveAsMaster(String id) throws IOException {
         String st;
         StringBuilder builder = new StringBuilder();
-        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".pickle");
+        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         while ((st= reader.readLine()) != null){
             builder.append(st).append("\n");
         }
         reader.close();
         masterCounter++;
-        file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\pickles\\master"+masterCounter+".pickle");
+        file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\"+masterCounter+".txt");
         FileWriter writer = new FileWriter(file);
         writer.write(builder.toString());
         writer.close();
@@ -218,7 +218,7 @@ public class AITwoPlayers {
         return total;
     }
 
-    public void playTurn(ArrayList<Node> nodes) {
+    public void playTurn(ArrayList<Node> nodes) throws GameLostException {
         Player player = players.get(0);
         ArrayList<Integer> state = new ArrayList<>();
         for (Gem gem: Gem.values()) state.add(board.getStored(gem));
@@ -280,20 +280,20 @@ public class AITwoPlayers {
 //            else order = generateOrder("2", state);
 //        }
         ArrayList<MoveValuePair> order = convertNodesToOutput(nodes, state);
-        try {
-//            if (player.getName().equals("Skynet")){ //lookup
+        //            if (player.getName().equals("Skynet")){ //lookup
 //                int points = players.stream().filter(player1 -> player1.getName().equals("DeepBlue")).toList().get(0).getPoints();
 //                boolean b = true;
 //            }
+        try {
             playMove(order, player);
-            if (player.getPoints() >= 15) {
-                won = true;
-            }
-            boardController.endTurn(board, player);
-            players.add(players.remove(0));
-        } catch (RuntimeException e) {
+        } catch (GameLostException e){
             lost = true;
         }
+        if (player.getPoints() >= 15) {
+            won = true;
+        }
+        boardController.endTurn(board, player);
+        players.add(players.remove(0));
         moves.add(state);
     }
 
@@ -316,14 +316,14 @@ public class AITwoPlayers {
         return result;
     }
 
-    private boolean playMove(HashMap<Double, Integer> order, Player player) {
+    private boolean playMove(HashMap<Double, Integer> order, Player player) throws GameLostException {
         moveFirst = -1;
         moveSecond = -1;
         List<Integer> sequence = convertToSequence(order);
         return playMove(player, sequence);
     }
 
-    private boolean playMove(Player player, List<Integer> sequence){
+    private boolean playMove(Player player, List<Integer> sequence) throws GameLostException {
         int playersResource = player.getPossession().values().stream().reduce(0, Integer::sum);
         for (int index: sequence){
             if (!(possibleMoves.get(index) instanceof ReserveBuilding)) break;
@@ -337,15 +337,13 @@ public class AITwoPlayers {
             for (Integer option : sequence) {
                 if (boardController.canBuy(((BuildBuilding)possibleMoves.get(option)).getTier(), ((BuildBuilding)possibleMoves.get(option)).getIndex(), board, player)) {
                     boardController.buyEstate(((BuildBuilding)possibleMoves.get(option)).getTier(), ((BuildBuilding)possibleMoves.get(option)).getIndex(), board, player);
-                    moveFirst = option;
                     return true;
                 }
             }
-            throw new IllegalArgumentException();
+            throw new GameLostException();
         }
         if (boardController.canBuy(((BuildBuilding)possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(0))).getIndex(), board, player)) {
             boardController.buyEstate(((BuildBuilding)possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(0))).getIndex(), board, player);
-            moveFirst = sequence.get(0);
             return true;
         } else {
             List<Gem> gotten = new ArrayList<>();
@@ -363,7 +361,7 @@ public class AITwoPlayers {
                 lack = (ArrayList<GemAmountPair>) lack.stream().filter(l->l.integer!=0).collect(Collectors.toList());
                 lack.sort((e1, e2) -> e2.integer - e1.integer);
                 if (lack.size() == 0) {
-                    if (gotten.size() == 0){
+                    if (gotten.size() == 0 && boardController.getCard(((BuildBuilding)possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(i))).getIndex(), board, player)!= null){
                         boardController.buyEstate(((BuildBuilding)possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(i))).getIndex(), board, player);
                         return true;
                     }else {
@@ -400,7 +398,7 @@ public class AITwoPlayers {
         return false;
     }
 
-    private boolean playMove(ArrayList<MoveValuePair> order, Player player) {
+    private boolean playMove(ArrayList<MoveValuePair> order, Player player) throws GameLostException {
         List<Integer> sequence = order.stream().sorted((e1,e2)-> Double.compare(e2.value(),e1.value())).map(MoveValuePair::move).toList();
         return playMove(player, sequence);
     }

@@ -32,7 +32,7 @@ public class TradeRow {
         if (index == -1) card = cardsHidden.get(tier).remove(0);
         else if (cardsVisible.get(tier).size()>index) {
             card = cardsVisible.get(tier).remove(index);
-            cardsVisible.get(tier).add(cardsHidden.get(tier).remove(0));
+            if (cardsHidden.get(tier).size() > 0) cardsVisible.get(tier).add(cardsHidden.get(tier).remove(0));
         }
         return card;
     }
@@ -43,5 +43,13 @@ public class TradeRow {
         if (index == -1) card = cardsHidden.get(tier).remove(0);
         else if (cardsVisible.get(tier).size()>index) card = cardsVisible.get(tier).get(index);
         return card ;
+    }
+
+    public HashMap<Tier, ArrayList<Card>> getCardsVisible() {
+        return cardsVisible;
+    }
+
+    public HashMap<Tier, ArrayList<Card>> getCardsHidden() {
+        return cardsHidden;
     }
 }
