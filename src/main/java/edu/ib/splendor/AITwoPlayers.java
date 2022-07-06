@@ -248,12 +248,13 @@ public class AITwoPlayers {
         } else {
             List<Gem> gotten = new ArrayList<>();
             int i = 0;
-            while (player.getPossession().values().stream().reduce(0, Integer::sum) < 10 && gotten.size() < 3) {
+            int canBeTaken = 3;
+            while (player.getPossession().values().stream().reduce(0, Integer::sum) < 10 && gotten.size() < 3 && canBeTaken > 0) {
                 if (i >= order.size()) {
                     break;
                 }
                 ArrayList<GemAmountPair> lack = boardController.lackingGems(possibleMoves.get(sequence.get(i)).getTier(), possibleMoves.get(sequence.get(i)).getIndex(), board, player);
-                if (lack==null || lack.stream().map(e -> e.integer).reduce(0, Integer::sum) > 10 - playersResource) {
+                if (lack==null || !canBeTaken(lack, player.getPossession())) {
                     i++;
                     continue;
                 }
@@ -270,28 +271,35 @@ public class AITwoPlayers {
                 }
                 if (moveFirst == -1) moveFirst = sequence.get(i);
                 else if (moveSecond == -1) moveSecond = sequence.get(i);
-                if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4) {
+                if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4 && canBeTaken >= 2 && !gotten.contains(lack.get(0).gem)) {
                     boardController.collectGem(lack.get(0).gem, board, player);
                     boardController.collectGem(lack.get(0).gem, board, player);
                     break;
                 } else {
                     for (GemAmountPair gemAmountPair : lack) {
-                        if (!gotten.contains(gemAmountPair.gem) && board.getStored(gemAmountPair.gem) > 0) {
+                        if (!gotten.contains(gemAmountPair.gem) && board.getStored(gemAmountPair.gem) > 0 && gotten.size()<3 && canBeTaken > 0) {
                             boardController.collectGem(gemAmountPair.gem, board, player);
                             gotten.add(gemAmountPair.gem);
-                            break;
-                        } else {
-                            lack = boardController.lackingGems(possibleMoves.get(sequence.get(i)).getTier(), possibleMoves.get(sequence.get(i)).getIndex(), board, player);
-                            if (lack.stream().map(e -> e.integer).reduce(0, Integer::sum) == 10 - playersResource && gotten.size() != 0)
-                                return false;
-                            i++;
-                            break;
+                            if (i != 0) canBeTaken--;
                         }
                     }
+                    lack = boardController.lackingGems(possibleMoves.get(sequence.get(0)).getTier(), possibleMoves.get(sequence.get(0)).getIndex(), board, player);
+                    canBeTaken = 10 - playersResource - lack.stream().map(e -> e.integer).reduce(0, Integer::sum);
+                    if (canBeTaken == 0 && gotten.size() != 0)
+                        return false;
+                    i++;
                 }
             }
         }
         return false;
+    }
+
+    private boolean canBeTaken(ArrayList<GemAmountPair> lack, HashMap<Gem, Integer> possession) {
+        if (lack.stream().map(e -> e.integer).reduce(0, Integer::sum) > 10 - possession.values().stream().reduce(0, Integer::sum)) return false;
+        for (GemAmountPair gemAmountPair: lack){
+            if (board.getStored(gemAmountPair.gem) < gemAmountPair.integer) return false;
+        }
+        return true;
     }
 
     private ArrayList<Integer> convertToSequence(HashMap<Double, Integer> order) {
