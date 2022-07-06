@@ -98,7 +98,6 @@ public class BoardController {
                     aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
                     aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
             ) {
-//                AI.aristocrat = true;
                 toRemove.add(aristocrat);
                 currentPlayer.addAristocrat(aristocrat);
             }

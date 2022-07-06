@@ -116,7 +116,7 @@ public class AITwoPlayers {
                             break;
                         }
                         if (won) {
-                            if (currentPlayers.get(1).player().getName().equals("Pretender")) {
+                            if (currentPlayers.get(0).player().getName().equals("Pretender")) {
                                 scores[id] = scores[id] + 1 + 1.0 / moves.size() / 50;
                                 if (scores[id] > bestScore) {
                                     best = id;
@@ -150,12 +150,15 @@ public class AITwoPlayers {
                         break;
                     }
                     if (won) {
-                        bestScore++;
+                        if (currentPlayers.get(0).player().getName().equals("Pretender")) {
+                            bestScore++;
+                        }
                         break;
                     }
 
                 }
                 if (bestScore > i / 2.0 && factorial(i) / factorial((int) Math.round(bestScore)) / Math.pow(2.0, i) < 0.05) {
+                    System.out.println((int) Math.round(bestScore) + "/" + i);
                     saveAsMaster(best);
                     break;
                 }
@@ -299,7 +302,7 @@ public class AITwoPlayers {
             int i = 0;
             int canBeTaken = 3;
             while (player.getPossession().values().stream().reduce(0, Integer::sum) < 10 && gotten.size() < 3 && canBeTaken > 0) {
-                if (i >= 14) {
+                if (i >= sequence.size()) {
                     break;
                 }
                 ArrayList<GemAmountPair> lack = boardController.lackingGems(((BuildBuilding)possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(i))).getIndex(), board, player);
