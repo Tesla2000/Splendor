@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 public class AITwoPlayers {
     private static List<ArrayList<Integer>> moves;
-    private static int gameCounter = 0;
     private static boolean won;
     private static int masterCounter = 1;
     private static boolean lost;
@@ -14,8 +13,6 @@ public class AITwoPlayers {
     private final HashMap<Integer, Move> possibleMoves;
     private final ArrayList<Player> players;
     private final Board board;
-    private int moveFirst = 0;
-    private int moveSecond = 0;
 
     public AITwoPlayers(BoardController boardController, ArrayList<Player> players, Board board) {
         this.boardController = boardController;
@@ -85,91 +82,87 @@ public class AITwoPlayers {
     }
 
     public static void main(String[] args) throws IOException, GameLostException {
-        Random random = new Random();
-        double[] scores = new double[16];
-        int best = 0;
-        double bestScore = 0;
-        waitForMyTurn();
-        ArrayList<ArrayList<Node>> allPlayers = new ArrayList<>();
-        for (int id = 0; id < 16; id++){
-            allPlayers.add(readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\"+id+".txt"));
-        }
-        ArrayList<Node> master = readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\"+masterCounter+".txt");
-        ArrayList<PlayerWithNodes> currentPlayers;
-        for (int id=0;id<allPlayers.size();id++) {
-            for (int i=0;i<16;i++) {
-                lost = false;
+        while (true) {
+            Random random = new Random();
+            double[] scores = new double[16];
+            int best = 0;
+            double bestScore = 0;
+            waitForMyTurn();
+            ArrayList<ArrayList<Node>> allPlayers = new ArrayList<>();
+            for (int id = 0; id < 16; id++) {
+                allPlayers.add(readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt"));
+            }
+            ArrayList<Node> master = readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + masterCounter + ".txt");
+            ArrayList<PlayerWithNodes> currentPlayers;
+            for (int id = 0; id < allPlayers.size(); id++) {
+                for (int i = 0; i < 16; i++) {
+                    lost = false;
+                    won = false;
+                    currentPlayers = new ArrayList<>();
+                    ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
+                    TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
+                    if (random.nextBoolean()) {
+                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
+                        currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+                    } else {
+                        currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
+                    }
+                    ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::player).toList());
+                    AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
+                    while (true) {
+                        ai.playTurn(currentPlayers.get(0).nodes());
+                        if (lost) {
+                            break;
+                        }
+                        if (won) {
+                            if (currentPlayers.get(1).player().getName().equals("Pretender")) {
+                                scores[id] = scores[id] + 1 + 1.0 / moves.size() / 50;
+                                if (scores[id] > bestScore) {
+                                    best = id;
+                                    bestScore = scores[id];
+                                }
+                            }
+                            break;
+                        }
+                        currentPlayers.add(currentPlayers.remove(0));
+                    }
+                }
+            }
+            for (int i = 16; i < 100; i++) {
                 won = false;
-                currentPlayers = new ArrayList<>();
+                lost = false;
                 ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
                 TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
+                currentPlayers = new ArrayList<>();
                 if (random.nextBoolean()) {
                     currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
                 } else {
-                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
                     currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
                 }
                 ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::player).toList());
                 AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
                 while (true) {
-                    if (players.get(0).getName().equals("Master")){
-                        var possession = players.get(0).getPossession();
-                        var size = players.get(0).getDeck().size();
-                        boolean b= true;
-                    }
                     ai.playTurn(currentPlayers.get(0).nodes());
                     if (lost) {
                         break;
                     }
                     if (won) {
-                        if (currentPlayers.get(1).player().getName().equals("Pretender")) {
-                            scores[id] = scores[id] + 1 + 1.0 / moves.size() / 50;
-                            if (scores[id]>bestScore) {
-                                best = id;
-                                bestScore = scores[id];
-                            }
-                        }
+                        bestScore++;
                         break;
                     }
-                    currentPlayers.add(currentPlayers.remove(0));
-//                    players.add(players.remove(0));
-                }
-            }
-        }
-        for (int i = 16; i<100; i++){
-            won = false;
-            lost = false;
-            ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
-            TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
-            currentPlayers = new ArrayList<>();
-            if (random.nextBoolean()) {
-                currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-                currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
-            } else {
-                currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
-                currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-            }
-            ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::player).toList());
-            AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
-            while (true) {
-                ai.playTurn(currentPlayers.get(0).nodes());
-                if (lost) {
-                    break;
-                }
-                if (won) {
-                    bestScore++;
-                    break;
-                }
 
+                }
+                if (bestScore > i / 2.0 && factorial(i) / factorial((int) Math.round(bestScore)) / Math.pow(2.0, i) < 0.05) {
+                    saveAsMaster(best);
+                    break;
+                }
             }
-            if (bestScore > i/2 && factorial(i)/factorial((int) Math.round(bestScore))/Math.pow(2.0, i)<0.05){
-                saveAsMaster(best);
-                break;
-            }
+            respondToPython(scores);
+            passToPython();
         }
-        respondToPython(scores);
-        passToPython();
     }
 
     private static void saveAsMaster(String id) throws IOException {
@@ -218,12 +211,10 @@ public class AITwoPlayers {
         return total;
     }
 
-    public void playTurn(ArrayList<Node> nodes) throws GameLostException {
+    public void playTurn(ArrayList<Node> nodes) {
         Player player = players.get(0);
         ArrayList<Integer> state = new ArrayList<>();
         for (Gem gem: Gem.values()) state.add(board.getStored(gem));
-//        double[] keys = new double[12];
-//        Arrays.sort(keys);
         for (Player p: players) {
             state.add(p.getPoints());
             state.add(p.getReserve().size());
@@ -268,22 +259,7 @@ public class AITwoPlayers {
                 state.add(0);
             }
         }
-//        for (double key : keys)
-//            state.add(order.get(key));
-//        if (!AIGenerated) {
-//            for (int i = 0; i < 12; i++) {
-//                double value = random.nextDouble();
-//                order.put(value, i);
-//            }
-//        } else {
-//            if (player.getName().equals("Skynet")) order = generateOrder("1", state);
-//            else order = generateOrder("2", state);
-//        }
         ArrayList<MoveValuePair> order = convertNodesToOutput(nodes, state);
-        //            if (player.getName().equals("Skynet")){ //lookup
-//                int points = players.stream().filter(player1 -> player1.getName().equals("DeepBlue")).toList().get(0).getPoints();
-//                boolean b = true;
-//            }
         try {
             playMove(order, player);
         } catch (GameLostException e){
@@ -297,39 +273,13 @@ public class AITwoPlayers {
         moves.add(state);
     }
 
-    private HashMap<Double, Integer> generateOrder(String number, ArrayList<Integer> state) throws IOException {
-        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\two\\coefitents\\" + number);
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-        String st;
-        HashMap<Double, Integer> result = new HashMap<>();
-        int counter = 0;
-        while ((st = bufferedReader.readLine()) != null){
-            String[] coefficients = st.split(",");
-            double value = 0;
-            for (int i=0;i<state.size(); i++){
-                value += Double.parseDouble(coefficients[i])*state.get(i);
-            }
-            value += Double.parseDouble(coefficients[state.size()]);
-            result.put(value, counter);
-            counter++;
-        }
-        return result;
-    }
-
-    private boolean playMove(HashMap<Double, Integer> order, Player player) throws GameLostException {
-        moveFirst = -1;
-        moveSecond = -1;
-        List<Integer> sequence = convertToSequence(order);
-        return playMove(player, sequence);
-    }
-
-    private boolean playMove(Player player, List<Integer> sequence) throws GameLostException {
+    private void playMove(Player player, List<Integer> sequence) throws GameLostException {
         int playersResource = player.getPossession().values().stream().reduce(0, Integer::sum);
         for (int index: sequence){
             if (!(possibleMoves.get(index) instanceof ReserveBuilding)) break;
             if (boardController.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())){
                 boardController.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
-                return true;
+                return ;
             }
         }
         sequence = sequence.stream().filter(elem->possibleMoves.get(elem) instanceof BuildBuilding).toList();
@@ -337,20 +287,19 @@ public class AITwoPlayers {
             for (Integer option : sequence) {
                 if (boardController.canBuy(((BuildBuilding)possibleMoves.get(option)).getTier(), ((BuildBuilding)possibleMoves.get(option)).getIndex(), board, player)) {
                     boardController.buyEstate(((BuildBuilding)possibleMoves.get(option)).getTier(), ((BuildBuilding)possibleMoves.get(option)).getIndex(), board, player);
-                    return true;
+                    return ;
                 }
             }
             throw new GameLostException();
         }
         if (boardController.canBuy(((BuildBuilding)possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(0))).getIndex(), board, player)) {
             boardController.buyEstate(((BuildBuilding)possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(0))).getIndex(), board, player);
-            return true;
         } else {
             List<Gem> gotten = new ArrayList<>();
             int i = 0;
             int canBeTaken = 3;
             while (player.getPossession().values().stream().reduce(0, Integer::sum) < 10 && gotten.size() < 3 && canBeTaken > 0) {
-                if (i >= 15) {
+                if (i >= 14) {
                     break;
                 }
                 ArrayList<GemAmountPair> lack = boardController.lackingGems(((BuildBuilding)possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(i))).getIndex(), board, player);
@@ -363,14 +312,12 @@ public class AITwoPlayers {
                 if (lack.size() == 0) {
                     if (gotten.size() == 0 && boardController.getCard(((BuildBuilding)possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(i))).getIndex(), board, player)!= null){
                         boardController.buyEstate(((BuildBuilding)possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(i))).getIndex(), board, player);
-                        return true;
+                        return ;
                     }else {
                         i++;
                         continue;
                     }
                 }
-                if (moveFirst == -1) moveFirst = sequence.get(i);
-                else if (moveSecond == -1) moveSecond = sequence.get(i);
                 if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4 && canBeTaken >= 2 && !gotten.contains(lack.get(0).gem)) {
                     boardController.collectGem(lack.get(0).gem, board, player);
                     boardController.collectGem(lack.get(0).gem, board, player);
@@ -390,17 +337,16 @@ public class AITwoPlayers {
                     }
                     canBeTaken = 10 - playersResource - lack.stream().map(e -> e.integer).reduce(0, Integer::sum);
                     if (canBeTaken == 0 && gotten.size() != 0)
-                        return false;
+                        return ;
                     i++;
                 }
             }
         }
-        return false;
     }
 
-    private boolean playMove(ArrayList<MoveValuePair> order, Player player) throws GameLostException {
+    private void playMove(ArrayList<MoveValuePair> order, Player player) throws GameLostException {
         List<Integer> sequence = order.stream().sorted((e1,e2)-> Double.compare(e2.value(),e1.value())).map(MoveValuePair::move).toList();
-        return playMove(player, sequence);
+        playMove(player, sequence);
     }
 
     private boolean canBeTaken(ArrayList<GemAmountPair> lack, HashMap<Gem, Integer> possession) {
@@ -420,26 +366,4 @@ public class AITwoPlayers {
         }
         return results;
     }
-
-    private static void saveToFile() {
-//        if (moves.size()/2 <= 25) {
-//            File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\one\\"+moves.size()/2+"\\" + gameCounter + ".txt");
-            File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\results\\two\\2\\" + gameCounter + ".txt");
-            gameCounter++;
-//            System.out.println(gameCounter);
-            try (FileWriter writer = new FileWriter(file)) {
-                for (int i = (moves.size() + 1) % 2; i < moves.size(); i += 2) {
-                    for (int element : moves.get(i)) {
-                        writer.write(String.valueOf(element));
-                        writer.write(",");
-                    }
-                    writer.write("\n");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-//            }
-        }
-    }
-
-
 }
