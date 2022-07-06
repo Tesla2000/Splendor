@@ -12,13 +12,16 @@ public class TradeRow {
         this.cardsHidden.put(Tier.FIRST, tierFirstHidden);
         this.cardsHidden.put(Tier.SECOND, tierSecondHidden);
         this.cardsHidden.put(Tier.THIRD, tierThirdHidden);
+        cardsVisible.put(Tier.FIRST, new ArrayList<>());
+        cardsVisible.put(Tier.SECOND, new ArrayList<>());
+        cardsVisible.put(Tier.THIRD, new ArrayList<>());
         Random random = new Random();
         int index;
         for (int i = 0; i < 4; i++) {
             for (Tier tier : Tier.values())
                 if (!tier.equals(Tier.RESERVE)) {
-                    index = random.nextInt(tierFirstHidden.size());
-                    cardsVisible.get(Tier.FIRST).add(cardsHidden.get(Tier.FIRST).remove(index));
+                    index = random.nextInt(cardsHidden.get(tier).size());
+                    cardsVisible.get(tier).add(cardsHidden.get(tier).remove(index));
                 }
         }
     }
@@ -27,7 +30,10 @@ public class TradeRow {
         if (tier.equals(Tier.RESERVE)) throw new IllegalArgumentException("Tier can't be reserve");
         Card card = null;
         if (index == -1) card = cardsHidden.get(tier).remove(0);
-        else if (cardsVisible.get(tier).size()>index) card = cardsVisible.get(tier).remove(index);
+        else if (cardsVisible.get(tier).size()>index) {
+            card = cardsVisible.get(tier).remove(index);
+            cardsVisible.get(tier).add(cardsHidden.get(tier).remove(0));
+        }
         return card;
     }
 

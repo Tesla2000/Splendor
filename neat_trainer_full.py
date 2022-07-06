@@ -24,9 +24,11 @@ def run(config_file):
 
 
 def score_in_java(genomes, config):
-    for index, genome_id, genome in enumerate(genomes):
+    index = 0
+    for genome_id, genome in genomes:
         net = neat.nn.FeedForwardNetwork.create(genome, config)
-        save_neat_as_coefficients(NeatElement(genome, net, genome_id), str(index) + ".txt")
+        save_neat_as_coefficients(NeatElement(genome, net, genome_id), "coefficients/"+str(index) + ".txt")
+        index += 1
     with open("communication.txt", 'w') as f:
         f.write("java")
     while True:
@@ -52,12 +54,8 @@ def save_neat_as_coefficients(neatElement, name):
     for index, coef in enumerate(coefficients):
         to_save.append(coef + [biases[index]])
     with open(name, 'w') as file:
-        for line in to_save:
-            file.write(",".join(tuple(map(lambda elem: str(elem), line))))
-        file.write("\n")
+        file.write("\n".join(",".join(tuple(map(lambda elem: str(elem), line))) for line in to_save))
 
 
 if __name__ == '__main__':
-    with open("pickles/master1.pickle", 'rb') as file:
-        master = pickle.load(file)
-    save_neat_as_coefficients(master, "coefficients/master_coefs.txt")
+    run("configuration_full.txt")

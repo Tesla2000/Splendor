@@ -33,8 +33,10 @@ public class AITwoPlayers {
                 counter++;
             }
             for (int i=0;i<4;i++){
-                possibleMoves.put(counter, new ReserveBuilding(boardController, tier, i));
-                counter++;
+                if (!tier.equals(Tier.RESERVE)) {
+                    possibleMoves.put(counter, new ReserveBuilding(boardController, tier, i));
+                    counter++;
+                }
             }
         }
     }
@@ -58,9 +60,9 @@ public class AITwoPlayers {
         File file = new File(path);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         while ((st = reader.readLine()) != null) {
-            List<Double> list = Arrays.stream(st.split(",")).map(Double::parseDouble).toList();
-            double bias = list.remove(list.size()-1);
-            nodes.add(new Node((ArrayList<Double>) list, bias));
+            ArrayList<Double> list = new ArrayList<>(Arrays.stream(st.split(",")).map(Double::parseDouble).toList());
+            double bias = list.remove(list.size() - 1);
+            nodes.add(new Node(list, bias));
         }
         return nodes;
     }
@@ -90,14 +92,15 @@ public class AITwoPlayers {
         waitForMyTurn();
         ArrayList<ArrayList<Node>> allPlayers = new ArrayList<>();
         for (int id = 0; id < 16; id++){
-            allPlayers.add(readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\pickles\\"+id+".pickle"));
+            allPlayers.add(readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\"+id+".txt"));
         }
-        ArrayList<Node> master = readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\pickles\\master.pickle");
-        ArrayList<PlayerWithNodes> currentPlayers = new ArrayList<>();
+        ArrayList<Node> master = readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\"+masterCounter+".txt");
+        ArrayList<PlayerWithNodes> currentPlayers;
         for (int id=0;id<allPlayers.size();id++) {
             for (int i=0;i<16;i++) {
-                won = false;
                 lost = false;
+                won = false;
+                currentPlayers = new ArrayList<>();
                 ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
                 TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
                 if (random.nextBoolean()) {
@@ -107,8 +110,14 @@ public class AITwoPlayers {
                     currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
                     currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
                 }
-                AITwoPlayers ai = new AITwoPlayers(new BoardController(), (ArrayList<Player>) currentPlayers.stream().map(PlayerWithNodes::player).toList(), new Board(tradeRow, (ArrayList<Player>) currentPlayers.stream().map(PlayerWithNodes::player).toList(), 7, 7, 7, 7, 7, 5));
+                ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::player).toList());
+                AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
                 while (true) {
+                    if (players.get(0).getName().equals("Master")){
+                        var possession = players.get(0).getPossession();
+                        var size = players.get(0).getDeck().size();
+                        boolean b= true;
+                    }
                     ai.playTurn(currentPlayers.get(0).nodes());
                     if (lost) {
                         break;
@@ -123,6 +132,8 @@ public class AITwoPlayers {
                         }
                         break;
                     }
+                    currentPlayers.add(currentPlayers.remove(0));
+//                    players.add(players.remove(0));
                 }
             }
         }
@@ -131,6 +142,7 @@ public class AITwoPlayers {
             lost = false;
             ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
             TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
+            currentPlayers = new ArrayList<>();
             if (random.nextBoolean()) {
                 currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
                 currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
@@ -138,7 +150,8 @@ public class AITwoPlayers {
                 currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
                 currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
             }
-            AITwoPlayers ai = new AITwoPlayers(new BoardController(), (ArrayList<Player>) currentPlayers.stream().map(PlayerWithNodes::player).toList(), new Board(tradeRow, (ArrayList<Player>) currentPlayers.stream().map(PlayerWithNodes::player).toList(), 7, 7, 7, 7, 7, 5));
+            ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::player).toList());
+            AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
             while (true) {
                 ai.playTurn(currentPlayers.get(0).nodes());
                 if (lost) {
@@ -148,6 +161,7 @@ public class AITwoPlayers {
                     bestScore++;
                     break;
                 }
+
             }
             if (bestScore > i/2 && factorial(i)/factorial((int) Math.round(bestScore))/Math.pow(2.0, i)<0.05){
                 saveAsMaster(best);
@@ -273,15 +287,13 @@ public class AITwoPlayers {
 //            }
             playMove(order, player);
             if (player.getPoints() >= 15) {
-                boolean won = true;
+                won = true;
             }
             boardController.endTurn(board, player);
             players.add(players.remove(0));
-        } catch (IllegalArgumentException e) {
-            boolean lost = true;
+        } catch (RuntimeException e) {
+            lost = true;
         }
-        state.add(0, moveFirst);
-        state.add(1, moveSecond);
         moves.add(state);
     }
 
@@ -320,7 +332,7 @@ public class AITwoPlayers {
                 return true;
             }
         }
-        sequence = sequence.stream().filter(elem->elem>=15).toList();
+        sequence = sequence.stream().filter(elem->possibleMoves.get(elem) instanceof BuildBuilding).toList();
         if (playersResource == 10) {
             for (Integer option : sequence) {
                 if (boardController.canBuy(((BuildBuilding)possibleMoves.get(option)).getTier(), ((BuildBuilding)possibleMoves.get(option)).getIndex(), board, player)) {
@@ -331,8 +343,8 @@ public class AITwoPlayers {
             }
             throw new IllegalArgumentException();
         }
-        if (boardController.canBuy(((BuildBuilding)possibleMoves.get(0)).getTier(), ((BuildBuilding)possibleMoves.get(0)).getIndex(), board, player)) {
-            boardController.buyEstate(((BuildBuilding)possibleMoves.get(0)).getTier(), ((BuildBuilding)possibleMoves.get(0)).getIndex(), board, player);
+        if (boardController.canBuy(((BuildBuilding)possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(0))).getIndex(), board, player)) {
+            boardController.buyEstate(((BuildBuilding)possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(0))).getIndex(), board, player);
             moveFirst = sequence.get(0);
             return true;
         } else {
@@ -343,7 +355,7 @@ public class AITwoPlayers {
                 if (i >= 15) {
                     break;
                 }
-                ArrayList<GemAmountPair> lack = boardController.lackingGems(((BuildBuilding)possibleMoves.get(i)).getTier(), ((BuildBuilding)possibleMoves.get(i)).getIndex(), board, player);
+                ArrayList<GemAmountPair> lack = boardController.lackingGems(((BuildBuilding)possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(i))).getIndex(), board, player);
                 if (lack==null || !canBeTaken(lack, player.getPossession())) {
                     i++;
                     continue;
@@ -352,7 +364,7 @@ public class AITwoPlayers {
                 lack.sort((e1, e2) -> e2.integer - e1.integer);
                 if (lack.size() == 0) {
                     if (gotten.size() == 0){
-                        boardController.buyEstate(((BuildBuilding)possibleMoves.get(i)).getTier(), ((BuildBuilding)possibleMoves.get(i)).getIndex(), board, player);
+                        boardController.buyEstate(((BuildBuilding)possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(i))).getIndex(), board, player);
                         return true;
                     }else {
                         i++;
@@ -373,7 +385,11 @@ public class AITwoPlayers {
                             if (i != 0) canBeTaken--;
                         }
                     }
-                    lack = boardController.lackingGems(((BuildBuilding)possibleMoves.get(0)).getTier(), ((BuildBuilding)possibleMoves.get(0)).getIndex(), board, player);
+                    lack = boardController.lackingGems(((BuildBuilding)possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding)possibleMoves.get(sequence.get(0))).getIndex(), board, player);
+                    if (lack == null) {
+                        i++;
+                        continue;
+                    }
                     canBeTaken = 10 - playersResource - lack.stream().map(e -> e.integer).reduce(0, Integer::sum);
                     if (canBeTaken == 0 && gotten.size() != 0)
                         return false;
@@ -385,9 +401,7 @@ public class AITwoPlayers {
     }
 
     private boolean playMove(ArrayList<MoveValuePair> order, Player player) {
-        moveFirst = -1;
-        moveSecond = -1;
-        List<Integer> sequence = order.stream().sorted((e1,e2)-> Double.compare(e2.value(),e1.value())).map(e->e.move()).toList();
+        List<Integer> sequence = order.stream().sorted((e1,e2)-> Double.compare(e2.value(),e1.value())).map(MoveValuePair::move).toList();
         return playMove(player, sequence);
     }
 

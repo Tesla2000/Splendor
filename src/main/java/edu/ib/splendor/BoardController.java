@@ -26,7 +26,7 @@ public class BoardController {
             for (Gem gem: cost.keySet())
                 board.changeStored(gem, cost.get(gem));
             if (!card.getTier().equals(Tier.RESERVE))
-                currentPlayer.getDeck().add(board.getTradeRow().takeCard(card.getTier(), index));
+                currentPlayer.addCard(board.getTradeRow().takeCard(card.getTier(), index));
             else {
                 currentPlayer.addCard(card);
                 currentPlayer.removeReserve(card);
@@ -50,7 +50,9 @@ public class BoardController {
         }
 
     public ArrayList<GemAmountPair> lackingGems(Tier tier, int index, Board board, Player currentPlayer) {
-        Card card = board.getTradeRow().getCard(tier, index);
+        Card card =null;
+        if (!tier.equals(Tier.RESERVE)) card = board.getTradeRow().getCard(tier, index);
+        else if (currentPlayer.getReserve().size()>index) card = currentPlayer.getReserve().get(index);
         if (card == null) return null;
         ArrayList<GemAmountPair> cost = new ArrayList<>();
         int goldNeeded = 0;
