@@ -20,13 +20,23 @@ def run(config_file):
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
     p.add_reporter(neat.Checkpointer(10))
-    p.run(get_results_java, 100)
+    p.run(score_in_java, 100)
 
 
-def get_results_java(genomes, config):
+def score_in_java(genomes, config):
     for index, genome_id, genome in enumerate(genomes):
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         save_neat_as_coefficients(NeatElement(genome, net, genome_id), str(index) + ".txt")
+    with open("communication.txt", 'w') as f:
+        f.write("java")
+    while True:
+        with open("communication.txt") as f:
+            if f.read() == "python":
+                break
+    with open("response.txt") as f:
+        scores = f.read().split(',')
+    for index, genome_id, genome in enumerate(genomes):
+        genome.genome.fitness = float(scores[index])
 
 
 def save_neat_as_coefficients(neatElement, name):

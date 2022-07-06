@@ -52,13 +52,6 @@ public class AITwoPlayers {
         } while (!stop);
     }
 
-    private static void endMyTurn() throws IOException {
-        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\communication.txt");
-        FileWriter writer = new FileWriter(file);
-        writer.write("python");
-        writer.close();
-    }
-
     public static ArrayList<Node> readNodesFromFile(String path) throws IOException {
         String st;
         ArrayList<Node> nodes = new ArrayList<>();
@@ -94,6 +87,7 @@ public class AITwoPlayers {
         double[] scores = new double[16];
         int best = 0;
         double bestScore = 0;
+        waitForMyTurn();
         ArrayList<ArrayList<Node>> allPlayers = new ArrayList<>();
         for (int id = 0; id < 16; id++){
             allPlayers.add(readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\pickles\\"+id+".pickle"));
@@ -161,7 +155,7 @@ public class AITwoPlayers {
             }
         }
         respondToPython(scores);
-
+        passToPython();
     }
 
     private static void saveAsMaster(String id) throws IOException {
@@ -188,6 +182,13 @@ public class AITwoPlayers {
         String st = builder.toString();
         st = st.substring(0, st.length()-1);
         writer.write(st);
+        writer.close();
+    }
+
+    private static void passToPython() throws IOException {
+        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\communication.txt");
+        FileWriter writer = new FileWriter(file);
+        writer.write("python");
         writer.close();
     }
 
