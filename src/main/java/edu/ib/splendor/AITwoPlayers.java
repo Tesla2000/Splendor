@@ -10,7 +10,7 @@ public class AITwoPlayers {
     private static List<ArrayList<Integer>> moves;
     private static int gameCounter = 0;
     private final BoardController boardController;
-    private final HashMap<Integer, BuildBuilding> possibleMoves;
+    private final HashMap<Integer, Move> possibleMoves;
     private final ArrayList<Player> players;
     private final Board board;
     private int moveFirst = 0;
@@ -22,18 +22,20 @@ public class AITwoPlayers {
         this.board = board;
         moves = new ArrayList<>();
         possibleMoves = new HashMap<>();
-        possibleMoves.put(0, new BuildBuilding(boardController, Tier.FIRST, 1));
-        possibleMoves.put(1, new BuildBuilding(boardController, Tier.FIRST, 2));
-        possibleMoves.put(2, new BuildBuilding(boardController, Tier.FIRST, 3));
-        possibleMoves.put(3, new BuildBuilding(boardController, Tier.FIRST, 0));
-        possibleMoves.put(4, new BuildBuilding(boardController, Tier.SECOND, 1));
-        possibleMoves.put(5, new BuildBuilding(boardController, Tier.SECOND, 2));
-        possibleMoves.put(6, new BuildBuilding(boardController, Tier.SECOND, 3));
-        possibleMoves.put(7, new BuildBuilding(boardController, Tier.SECOND, 0));
-        possibleMoves.put(8, new BuildBuilding(boardController, Tier.THIRD, 1));
-        possibleMoves.put(9, new BuildBuilding(boardController, Tier.THIRD, 2));
-        possibleMoves.put(10, new BuildBuilding(boardController, Tier.THIRD, 3));
-        possibleMoves.put(11, new BuildBuilding(boardController, Tier.THIRD, 0));
+        int counter = 0;
+        for (Tier tier: Tier.values()){
+            int loops;
+            if (tier.equals(Tier.RESERVE)) loops = 3;
+            else loops = 4;
+            for (int i=0;i<loops;i++){
+                possibleMoves.put(counter, new BuildBuilding(boardController, tier, i));
+                counter++;
+            }
+            for (int i=0;i<4;i++){
+                possibleMoves.put(counter, new ReserveBuilding(boardController, tier, i));
+                counter++;
+            }
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -91,77 +93,39 @@ public class AITwoPlayers {
         Random random = new Random();
         Player player = players.get(0);
         ArrayList<Integer> state = new ArrayList<>();
-        state.add(board.getStored(Gem.BLUE));
-        state.add(board.getStored(Gem.BROWN));
-        state.add(board.getStored(Gem.GREEN));
-        state.add(board.getStored(Gem.RED));
-        state.add(board.getStored(Gem.WHITE));
-        state.add(board.getStored(Gem.GOLD));
+        for (Gem gem: Gem.values()) state.add(board.getStored(gem));
         HashMap<Double, Integer> order = new HashMap<>();
 //        double[] keys = new double[12];
 //        Arrays.sort(keys);
         for (Player p: players) {
             state.add(p.getPoints());
-            state.add(p.getReserveNumber());
-            state.add(p.getPossession().get(Gem.BLUE));
-            state.add(p.getPossession().get(Gem.BROWN));
-            state.add(p.getPossession().get(Gem.GREEN));
-            state.add(p.getPossession().get(Gem.RED));
-            state.add(p.getPossession().get(Gem.WHITE));
-            state.add(p.getPossession().get(Gem.GOLD));
-            state.add(p.getProduction().getOrDefault(Gem.BLUE, 0));
-            state.add(p.getProduction().getOrDefault(Gem.BROWN, 0));
-            state.add(p.getProduction().getOrDefault(Gem.GREEN, 0));
-            state.add(p.getProduction().getOrDefault(Gem.RED, 0));
-            state.add(p.getProduction().getOrDefault(Gem.WHITE, 0));
-            for (int i = 0; i < 4; i++) {
-                if (board.getTradeRow().getTierFirstVisible()[i] != null) {
-                    state.add(board.getTradeRow().getTierFirstVisible()[i].getPoints());
-                    for (Gem gem : Gem.values()) {
-                        if (!gem.equals(Gem.GOLD)) {
-                            if (board.getTradeRow().getTierFirstVisible()[i].getProduction() == gem) state.add(1);
-                            else state.add(0);
-                            state.add(Math.max(0, board.getTradeRow().getTierFirstVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
-                            state.add(board.getTradeRow().getTierFirstVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
-                        }
-                    }
-                } else {
-                    for (int j = 0; j < 16; j++)
-                        state.add(0);
+            state.add(p.getReserve().size());
+            for (Gem gem:Gem.values()) {
+                state.add(p.getPossession().get(gem));
+                if (!gem.equals(Gem.GOLD)){
+                    state.add(p.getProduction().getOrDefault(gem, 0));
                 }
             }
-            for (int i = 0; i < 4; i++) {
-                if (board.getTradeRow().getTierSecondVisible()[i] != null) {
-                    state.add(board.getTradeRow().getTierSecondVisible()[i].getPoints());
-                    for (Gem gem : Gem.values()) {
-                        if (!gem.equals(Gem.GOLD)) {
-                            if (board.getTradeRow().getTierSecondVisible()[i].getProduction() == gem) state.add(1);
-                            else state.add(0);
-                            state.add(Math.max(0, board.getTradeRow().getTierSecondVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
-                            state.add(board.getTradeRow().getTierSecondVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
+            for (Tier tier: Tier.values())
+                if (!tier.equals(Tier.RESERVE)) {
+                    for (int i = 0; i < 4; i++) {
+                        if (board.getTradeRow().getCard(tier, i) != null) {
+                            state.add(board.getTradeRow().getCard(tier, i).getPoints());
+                            for (Gem gem : Gem.values()) {
+                                if (!gem.equals(Gem.GOLD)) {
+                                    if (board.getTradeRow().getCard(tier, i).getProduction() == gem)
+                                        state.add(1);
+                                    else state.add(0);
+                                    state.add(Math.max(0, board.getTradeRow().getCard(tier, i).getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
+                                    state.add(board.getTradeRow().getCard(tier, i).getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
+                                }
+                            }
+                        } else {
+                            for (int j = 0; j < 16; j++)
+                                state.add(0);
                         }
                     }
-                } else {
-                    for (int j = 0; j < 16; j++)
-                        state.add(0);
                 }
-            }
-            for (int i = 0; i < 4; i++) {
-                if (board.getTradeRow().getTierSecondVisible()[i] != null) {
-                    state.add(board.getTradeRow().getTierThirdVisible()[i].getPoints());
-                    for (Gem gem : Gem.values()) {
-                        if (!gem.equals(Gem.GOLD)) {
-                            if (board.getTradeRow().getTierThirdVisible()[i].getProduction() == gem) state.add(1);
-                            else state.add(0);
-                            state.add(Math.max(0, board.getTradeRow().getTierThirdVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
-                            state.add(board.getTradeRow().getTierThirdVisible()[i].getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
-                        }
-                    }
-                } else {
-                    for (int j = 0; j < 16; j++)
-                        state.add(0);
-                }
-            }
             for (int i = 0; i < board.getAristocrats().size(); i++) {
                 state.add(board.getAristocrats().get(i).getBlue());
                 state.add(board.getAristocrats().get(i).getBrown());
@@ -231,18 +195,26 @@ public class AITwoPlayers {
         moveSecond = -1;
         ArrayList<Integer> sequence = convertToSequence(order);
         int playersResource = player.getPossession().values().stream().reduce(0, Integer::sum);
+        for (int index: sequence){
+            if (!(possibleMoves.get(index) instanceof ReserveBuilding)) break;
+            if (boardController.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())){
+                boardController.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
+                return true;
+            }
+        }
+        sequence = (ArrayList<Integer>) sequence.stream().filter(elem->elem>=15).toList();
         if (playersResource == 10) {
             for (Integer option : sequence) {
-                if (boardController.canBuy(possibleMoves.get(option).getTier(), possibleMoves.get(option).getIndex(), board, player)) {
-                    boardController.buyEstate(possibleMoves.get(option).getTier(), possibleMoves.get(option).getIndex(), board, player);
+                if (boardController.canBuy(((BuildBuilding)possibleMoves.get(option)).getTier(), ((BuildBuilding)possibleMoves.get(option)).getIndex(), board, player)) {
+                    boardController.buyEstate(((BuildBuilding)possibleMoves.get(option)).getTier(), ((BuildBuilding)possibleMoves.get(option)).getIndex(), board, player);
                     moveFirst = option;
                     return true;
                 }
             }
             throw new IllegalArgumentException();
         }
-        if (boardController.canBuy(possibleMoves.get(sequence.get(0)).getTier(), possibleMoves.get(sequence.get(0)).getIndex(), board, player)) {
-            boardController.buyEstate(possibleMoves.get(sequence.get(0)).getTier(), possibleMoves.get(sequence.get(0)).getIndex(), board, player);
+        if (boardController.canBuy(((BuildBuilding)possibleMoves.get(0)).getTier(), ((BuildBuilding)possibleMoves.get(0)).getIndex(), board, player)) {
+            boardController.buyEstate(((BuildBuilding)possibleMoves.get(0)).getTier(), ((BuildBuilding)possibleMoves.get(0)).getIndex(), board, player);
             moveFirst = sequence.get(0);
             return true;
         } else {
@@ -253,7 +225,7 @@ public class AITwoPlayers {
                 if (i >= order.size()) {
                     break;
                 }
-                ArrayList<GemAmountPair> lack = boardController.lackingGems(possibleMoves.get(sequence.get(i)).getTier(), possibleMoves.get(sequence.get(i)).getIndex(), board, player);
+                ArrayList<GemAmountPair> lack = boardController.lackingGems(((BuildBuilding)possibleMoves.get(i)).getTier(), ((BuildBuilding)possibleMoves.get(i)).getIndex(), board, player);
                 if (lack==null || !canBeTaken(lack, player.getPossession())) {
                     i++;
                     continue;
@@ -262,7 +234,7 @@ public class AITwoPlayers {
                 lack.sort((e1, e2) -> e2.integer - e1.integer);
                 if (lack.size() == 0) {
                     if (gotten.size() == 0){
-                        boardController.buyEstate(possibleMoves.get(sequence.get(i)).getTier(), possibleMoves.get(sequence.get(i)).getIndex(), board, player);
+                        boardController.buyEstate(((BuildBuilding)possibleMoves.get(i)).getTier(), ((BuildBuilding)possibleMoves.get(i)).getIndex(), board, player);
                         return true;
                     }else {
                         i++;
@@ -283,7 +255,7 @@ public class AITwoPlayers {
                             if (i != 0) canBeTaken--;
                         }
                     }
-                    lack = boardController.lackingGems(possibleMoves.get(sequence.get(0)).getTier(), possibleMoves.get(sequence.get(0)).getIndex(), board, player);
+                    lack = boardController.lackingGems(((BuildBuilding)possibleMoves.get(0)).getTier(), ((BuildBuilding)possibleMoves.get(0)).getIndex(), board, player);
                     canBeTaken = 10 - playersResource - lack.stream().map(e -> e.integer).reduce(0, Integer::sum);
                     if (canBeTaken == 0 && gotten.size() != 0)
                         return false;

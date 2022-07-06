@@ -7,9 +7,9 @@ import java.util.Objects;
 
 public class Player {
     private ArrayList<Card> deck = new ArrayList<>();
-    private Card[] reserve = new Card[3];
-    private ArrayList<Aristocrat> aristocrats = new ArrayList<>();
-    private HashMap<Gem, Integer> possession = new HashMap<>();
+    private ArrayList<Card> reserve = new ArrayList<>();
+    private final ArrayList<Aristocrat> aristocrats = new ArrayList<>();
+    private final HashMap<Gem, Integer> possession = new HashMap<>();
     private HashMap<Gem, Integer> production = new HashMap<>();
     private int points = 0;
     private String name = "";
@@ -26,6 +26,22 @@ public class Player {
 
     public void clearTaken(){
         taken = new HashMap<>();
+    }
+
+    public void addGem(Gem gem, int amount){
+        possession.put(gem, possession.getOrDefault(gem, 0) + amount);
+    }
+
+    public void addGem(Gem gem){
+        addGem(gem, 1);
+    }
+
+    public void removeGem(Gem gem, int amount){
+        possession.put(gem, possession.getOrDefault(gem, 0) - amount);
+    }
+
+    public void removeGem(Gem gem){
+        removeGem(gem, 1);
     }
 
     public Player() {
@@ -83,41 +99,17 @@ public class Player {
         return total;
     }
 
-    public Card[] getReserve(){
+    public ArrayList<Card> getReserve(){
         return reserve;
     }
 
-    public int getReserveNumber(){
-        return (int) (3 - Arrays.stream(reserve).filter(Objects::isNull).count());
-    }
-
-    public void insertReserve(Card card){
-        for (int i = 0; i<3; i++){
-            if (reserve[i] == null){
-                reserve[i] = card;
-                break;
-            }
-        }
+    public void addReserve(Card card){
+        if (reserve.size()<3) reserve.add(card);
     }
     public void removeReserve(Card card){
-        Card[] newReserve = new Card[3];
-        int j = 0;
-        for (int i = 0; i<3; i++){
-            if (reserve[i] != null && !reserve[i].equals(card)){
-                newReserve[j] = reserve[i];
-                j++;
-            }
-        }
-        reserve = newReserve;
+        reserve.remove(card);
     }
-    public void addReserve(Card card){
-        for (int i = 0; i<3; i++){
-            if (reserve[i] == null){
-                reserve[i] = card;
-                break;
-            }
-        }
-    }
+
 
     private void updateStates(){
         points = 0;
@@ -139,10 +131,6 @@ public class Player {
         updateStates();
     }
 
-    public void setDeck(ArrayList<Card> deck) {
-        this.deck = deck;
-    }
-
     public HashMap<Gem, Integer> getPossession() {
         return possession;
     }
@@ -154,11 +142,6 @@ public class Player {
     public int getPoints() {
         return points;
     }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
     public int getCollectLimit() {
         return collectLimit;
     }

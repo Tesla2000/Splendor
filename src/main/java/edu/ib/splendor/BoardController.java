@@ -26,7 +26,7 @@ public class BoardController {
             for (Gem gem: cost.keySet())
                 board.changeStored(gem, cost.get(gem));
             if (!card.getTier().equals(Tier.RESERVE))
-                board.getTradeRow().takeCard(card.getTier(), index, currentPlayer);
+                currentPlayer.getDeck().add(board.getTradeRow().takeCard(card.getTier(), index));
             else {
                 currentPlayer.addCard(card);
                 currentPlayer.removeReserve(card);
@@ -93,6 +93,17 @@ public class BoardController {
             }
         for (Aristocrat aristocrat: toRemove){
             board.removeAristocrat(aristocrat);
+        }
+    }
+
+    public boolean can_card_be_reserved(Player player, Board board, Tier tier, int index){
+        return player.getReserve().size() < 3 && board.getTradeRow().getCard(tier, index) != null;
+    }
+
+    public void reserveCard(Player player, Board board, Tier tier, int index){
+        player.addReserve(board.getTradeRow().takeCard(tier, index));
+        if (player.getPossession().values().stream().reduce(Integer::sum).stream().toList().get(0) < 10){
+            player.addGem(Gem.GOLD);
         }
     }
 }

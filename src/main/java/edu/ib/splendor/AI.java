@@ -87,7 +87,7 @@ public class AI {
         }
         int[] state = new int[172];
         state[1] = player.getPoints();
-        state[2] = player.getReserveNumber();
+        state[2] = player.getReserve().size();
         state[3] = player.getPossession().get(Gem.BLUE);
         state[4] = player.getPossession().get(Gem.BROWN);
         state[5] = player.getPossession().get(Gem.GREEN);
@@ -105,60 +105,33 @@ public class AI {
         state[17] = board.getStored(Gem.RED);
         state[18] = board.getStored(Gem.WHITE);
         state[19] = board.getStored(Gem.GOLD);
-        for (int i = 0; i < 4; i++) {
-            state[20 + 11 * i] = board.getTradeRow().getTierFirstVisible()[i].getPoints();
-            if (board.getTradeRow().getTierFirstVisible()[i].getProduction() == Gem.BLUE) state[21 + 11 * i] = 1;
-            else state[21 + 11 * i] = 0;
-            if (board.getTradeRow().getTierFirstVisible()[i].getProduction() == Gem.BROWN) state[22 + 11 * i] = 1;
-            else state[22 + 11 * i] = 0;
-            if (board.getTradeRow().getTierFirstVisible()[i].getProduction() == Gem.GREEN) state[23 + 11 * i] = 1;
-            else state[23 + 11 * i] = 0;
-            if (board.getTradeRow().getTierFirstVisible()[i].getProduction() == Gem.RED) state[24 + 11 * i] = 1;
-            else state[24 + 11 * i] = 0;
-            if (board.getTradeRow().getTierFirstVisible()[i].getProduction() == Gem.WHITE) state[25 + 11 * i] = 1;
-            else state[25 + 11 * i] = 0;
-            state[26 + 11 * i] = board.getTradeRow().getTierFirstVisible()[i].getCost().get(Gem.BLUE);
-            state[27 + 11 * i] = board.getTradeRow().getTierFirstVisible()[i].getCost().get(Gem.BROWN);
-            state[28 + 11 * i] = board.getTradeRow().getTierFirstVisible()[i].getCost().get(Gem.GREEN);
-            state[29 + 11 * i] = board.getTradeRow().getTierFirstVisible()[i].getCost().get(Gem.RED);
-            state[30 + 11 * i] = board.getTradeRow().getTierFirstVisible()[i].getCost().get(Gem.WHITE);
-        }
-        for (int i = 0; i < 4; i++) {
-            state[64 + 11 * i] = board.getTradeRow().getTierSecondVisible()[i].getPoints();
-            if (board.getTradeRow().getTierSecondVisible()[i].getProduction() == Gem.BLUE) state[65 + 11 * i] = 1;
-            else state[65 + 11 * i] = 0;
-            if (board.getTradeRow().getTierSecondVisible()[i].getProduction() == Gem.BROWN) state[66 + 11 * i] = 1;
-            else state[66 + 11 * i] = 0;
-            if (board.getTradeRow().getTierSecondVisible()[i].getProduction() == Gem.GREEN) state[67 + 11 * i] = 1;
-            else state[67 + 11 * i] = 0;
-            if (board.getTradeRow().getTierSecondVisible()[i].getProduction() == Gem.RED) state[68 + 11 * i] = 1;
-            else state[68 + 11 * i] = 0;
-            if (board.getTradeRow().getTierSecondVisible()[i].getProduction() == Gem.WHITE) state[69 + 11 * i] = 1;
-            else state[69 + 11 * i] = 0;
-            state[70 + 11 * i] = board.getTradeRow().getTierSecondVisible()[i].getCost().get(Gem.BLUE);
-            state[71 + 11 * i] = board.getTradeRow().getTierSecondVisible()[i].getCost().get(Gem.BROWN);
-            state[72 + 11 * i] = board.getTradeRow().getTierSecondVisible()[i].getCost().get(Gem.GREEN);
-            state[73 + 11 * i] = board.getTradeRow().getTierSecondVisible()[i].getCost().get(Gem.RED);
-            state[74 + 11 * i] = board.getTradeRow().getTierSecondVisible()[i].getCost().get(Gem.WHITE);
-        }
-        for (int i = 0; i < 4; i++) {
-            state[108 + 11 * i] = board.getTradeRow().getTierThirdVisible()[i].getPoints();
-            if (board.getTradeRow().getTierThirdVisible()[i].getProduction() == Gem.BLUE) state[109 + 11 * i] = 1;
-            else state[109 + 11 * i] = 0;
-            if (board.getTradeRow().getTierThirdVisible()[i].getProduction() == Gem.BROWN) state[110 + 11 * i] = 1;
-            else state[110 + 11 * i] = 0;
-            if (board.getTradeRow().getTierThirdVisible()[i].getProduction() == Gem.GREEN) state[111 + 11 * i] = 1;
-            else state[111 + 11 * i] = 0;
-            if (board.getTradeRow().getTierThirdVisible()[i].getProduction() == Gem.RED) state[112 + 11 * i] = 1;
-            else state[112 + 11 * i] = 0;
-            if (board.getTradeRow().getTierThirdVisible()[i].getProduction() == Gem.WHITE) state[113 + 11 * i] = 1;
-            else state[113 + 11 * i] = 0;
-            state[114 + 11 * i] = board.getTradeRow().getTierThirdVisible()[i].getCost().get(Gem.BLUE);
-            state[115 + 11 * i] = board.getTradeRow().getTierThirdVisible()[i].getCost().get(Gem.BROWN);
-            state[116 + 11 * i] = board.getTradeRow().getTierThirdVisible()[i].getCost().get(Gem.GREEN);
-            state[117 + 11 * i] = board.getTradeRow().getTierThirdVisible()[i].getCost().get(Gem.RED);
-            state[118 + 11 * i] = board.getTradeRow().getTierThirdVisible()[i].getCost().get(Gem.WHITE);
-        }
+        int t = 0;
+        for (Tier tier : Tier.values())
+            if (!tier.equals(Tier.RESERVE)) {
+                for (int i = 0; i < 4; i++) {
+                    state[20 + 11 * i + 44 * t] = board.getTradeRow().getCard(tier, i).getPoints();
+                    if (board.getTradeRow().getCard(tier, i).getProduction() == Gem.BLUE)
+                        state[21 + 11 * i + 44 * t] = 1;
+                    else state[21 + 11 * i + 44 * t] = 0;
+                    if (board.getTradeRow().getCard(tier, i).getProduction() == Gem.BROWN)
+                        state[22 + 11 * i + 44 * t] = 1;
+                    else state[22 + 11 * i + 44 * t] = 0;
+                    if (board.getTradeRow().getCard(tier, i).getProduction() == Gem.GREEN)
+                        state[23 + 11 * i + 44 * t] = 1;
+                    else state[23 + 11 * i + 44 * t] = 0;
+                    if (board.getTradeRow().getCard(tier, i).getProduction() == Gem.RED) state[24 + 11 * i] = 1;
+                    else state[24 + 11 * i + 44 * t] = 0;
+                    if (board.getTradeRow().getCard(tier, i).getProduction() == Gem.WHITE)
+                        state[25 + 11 * i + 44 * t] = 1;
+                    else state[25 + 11 * i + 44 * t] = 0;
+                    state[26 + 11 * i + 44 * t] = board.getTradeRow().getCard(tier, i).getCost().get(Gem.BLUE);
+                    state[27 + 11 * i + 44 * t] = board.getTradeRow().getCard(tier, i).getCost().get(Gem.BROWN);
+                    state[28 + 11 * i + 44 * t] = board.getTradeRow().getCard(tier, i).getCost().get(Gem.GREEN);
+                    state[29 + 11 * i + 44 * t] = board.getTradeRow().getCard(tier, i).getCost().get(Gem.RED);
+                    state[30 + 11 * i + 44 * t] = board.getTradeRow().getCard(tier, i).getCost().get(Gem.WHITE);
+                }
+                t++;
+            }
         for (int i = 0; i < board.getAristocrats().size(); i++) {
             state[152 + 5 * i] = board.getAristocrats().get(i).getBlue();
             state[153 + 5 * i] = board.getAristocrats().get(i).getBrown();
@@ -174,20 +147,20 @@ public class AI {
                     return;
                 }
             } else {
-                    Scanner scanner = new Scanner(System.in);
-                    System.out.print("Play the next move: ");
-                    int move = scanner.nextInt();
-                    playMove(move);
-                    scanner.close();
-                    state[0] = move;
-                    moves.add(state);
-                    System.out.print("[");
-                    for (int s : state) {
-                        System.out.print(s + ", ");
-                    }
-                    System.out.print("]");
-                    return;
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Play the next move: ");
+                int move = scanner.nextInt();
+                playMove(move);
+                scanner.close();
+                state[0] = move;
+                moves.add(state);
+                System.out.print("[");
+                for (int s : state) {
+                    System.out.print(s + ", ");
                 }
+                System.out.print("]");
+                return;
+            }
         }
 //        throw new IllegalArgumentException("No possible moves");
         lost = true;
@@ -238,9 +211,9 @@ public class AI {
         }
         for (int i = 0; i < 12; i++) {
             for (int k = 0; k < 5; k++) {
-                if (MachineInput.get(21 + k + 11 * i) != 0){
+                if (MachineInput.get(21 + k + 11 * i) != 0) {
                     MachineInput.set(21 + k + 11 * i, 0);
-                    for (int j=0; j<12; j++){
+                    for (int j = 0; j < 12; j++) {
                         if (MachineInput.get(26 + 11 * j + k) != 0)
                             MachineInput.set(21 + k + 11 * i, MachineInput.get(26 + 11 * j + k) + 1);
                     }
@@ -249,10 +222,10 @@ public class AI {
         }
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 5; j++) {
-                if (MachineInput.get(21 + j + 11 * i) != 0){
+                if (MachineInput.get(21 + j + 11 * i) != 0) {
                     int sum = 0;
-                    for (int k=0; k<4; k++){
-                        if (MachineInput.get(150 + j + 5*k) - MachineInput.get(9 + j)>0)
+                    for (int k = 0; k < 4; k++) {
+                        if (MachineInput.get(150 + j + 5 * k) - MachineInput.get(9 + j) > 0)
                             sum++;
                     }
                     MachineInput.add(sum);
@@ -263,8 +236,8 @@ public class AI {
         }
         int move = MachineInput.get(0);
         MachineInput.remove(0);
-        for (int i=0;i<27;i++)
-        MachineInput.add(0, 0);
+        for (int i = 0; i < 27; i++)
+            MachineInput.add(0, 0);
         MachineInput.set(move, 1);
         return MachineInput.toArray(new Integer[0]);
     }
