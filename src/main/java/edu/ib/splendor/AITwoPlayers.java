@@ -81,7 +81,7 @@ public class AITwoPlayers {
         return result;
     }
 
-    public static void main(String[] args) throws IOException, GameLostException {
+    public static void main(String[] args) throws IOException {
         while (true) {
             Random random = new Random();
             double[] scores = new double[16];
@@ -129,7 +129,8 @@ public class AITwoPlayers {
                     }
                 }
             }
-            for (int i = 16; i < 100; i++) {
+            bestScore = 0;
+            for (int i = 0; i < 100; i++) {
                 won = false;
                 lost = false;
                 ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
@@ -155,14 +156,14 @@ public class AITwoPlayers {
                         }
                         break;
                     }
-
-                }
-                if (bestScore > i / 2.0 && factorial(i) / factorial((int) Math.round(bestScore)) / Math.pow(2.0, i) < 0.05) {
-                    System.out.println((int) Math.round(bestScore) + "/" + i);
-                    saveAsMaster(best);
-                    break;
+                    currentPlayers.add(currentPlayers.remove(0));
                 }
             }
+            if (bestScore > 60) {
+                System.out.println("New master "+(masterCounter+1)+": " + (int) Math.round(bestScore) + "/" + 100);
+                saveAsMaster(best);
+            }
+            System.out.println("Best pretender: " + (int) Math.round(bestScore) + "/" + 100);
             respondToPython(scores);
             passToPython();
         }
@@ -234,9 +235,15 @@ public class AITwoPlayers {
                             state.add(board.getTradeRow().getCard(tier, i).getPoints());
                             for (Gem gem : Gem.values()) {
                                 if (!gem.equals(Gem.GOLD)) {
-                                    if (board.getTradeRow().getCard(tier, i).getProduction() == gem)
-                                        state.add(1);
-                                    else state.add(0);
+                                    if (board.getTradeRow().getCard(tier, i).getProduction() == gem) {
+                                        int sum = 0;
+                                        for (Tier tier1: Tier.values()){
+                                            if (!tier1.equals(Tier.RESERVE)) {
+                                                sum += Math.min(1, Math.max(0, board.getTradeRow().getCard(tier, i).getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
+                                            }
+                                        }
+                                        state.add(sum);
+                                    }else state.add(0);
                                     state.add(Math.max(0, board.getTradeRow().getCard(tier, i).getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0)));
                                     state.add(board.getTradeRow().getCard(tier, i).getCost().getOrDefault(gem, 0) - p.getProduction().getOrDefault(gem, 0) - p.getPossession().getOrDefault(gem, 0));
                                 }
