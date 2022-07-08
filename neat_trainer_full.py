@@ -14,13 +14,13 @@ def run(config_file):
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation,
                                 config_file)
-    # p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-13')
-    p = neat.Population(config)
+    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-175')
+    # p = neat.Population(config)
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
-    p.add_reporter(neat.Checkpointer(10))
-    p.run(score_in_java, 100)
+    p.add_reporter(neat.Checkpointer(50))
+    p.run(score_in_java, 10000)
 
 
 def score_in_java(genomes, config):
@@ -37,8 +37,10 @@ def score_in_java(genomes, config):
                 break
     with open("response.txt") as f:
         scores = f.read().split(',')
-    for index, genome_id, genome in enumerate(genomes):
-        genome.genome.fitness = float(scores[index])
+    index = 0
+    for genome_id, genome in genomes:
+        genome.fitness = float(scores[index])
+        index += 1
 
 
 def save_neat_as_coefficients(neatElement, name):
