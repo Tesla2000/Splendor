@@ -18,4 +18,9 @@ public class PlayerWithNodes extends Player {
     public Player getPlayer() {
         return player;
     }
+
+    @Override
+    public String getName() {
+        return player.getName();
+    }
 }

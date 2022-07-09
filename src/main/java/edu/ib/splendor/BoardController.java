@@ -16,22 +16,9 @@ public class BoardController {
         Card card = getCard(tier, index, board, currentPlayer);
         HashMap<Gem, Integer> cost = new HashMap<>();
         int goldNeeded = 0;
-        for (Gem gem: card.getCost().keySet()) {
-            cost.put(gem, -Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
-                    - currentPlayer.getProduction().getOrDefault(gem,0), 0));
-            goldNeeded += Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
-                    - currentPlayer.getProduction().getOrDefault(gem,0), 0);
-        }
+        goldNeeded = GameController.getGoldNeeded(card, cost, goldNeeded, currentPlayer);
         if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD)) {
-            currentPlayer.changeGem(Gem.GOLD, goldNeeded);
-            cost.put(Gem.GOLD, goldNeeded);
-            for (Gem gem: card.getCost().keySet()) {
-                Integer paid = Math.max(0, card.getCost().getOrDefault(gem,0) - currentPlayer.getProduction().getOrDefault(gem,0));
-                currentPlayer.changeGem(gem, paid);
-                cost.put(gem, cost.getOrDefault(gem,0)+paid);
-            }
-            for (Gem gem: cost.keySet())
-                board.changeStored(gem, cost.get(gem));
+            GameController.pay(card, cost, goldNeeded, currentPlayer, board);
             if (!tier.equals(Tier.RESERVE))
                 currentPlayer.addCard(board.getTradeRow().takeCard(card.getTier(), index));
             else {
@@ -49,12 +36,7 @@ public class BoardController {
         }
         HashMap<Gem, Integer> cost = new HashMap<>();
         int goldNeeded = 0;
-        for (Gem gem: card.getCost().keySet()) {
-            cost.put(gem, -Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
-                    - currentPlayer.getProduction().getOrDefault(gem,0), 0));
-            goldNeeded += Math.max(card.getCost().getOrDefault(gem,0) - currentPlayer.getPossession().getOrDefault(gem,0)
-                    - currentPlayer.getProduction().getOrDefault(gem,0), 0);
-        }
+        goldNeeded = GameController.getGoldNeeded(card, cost, goldNeeded, currentPlayer);
         return goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD);
         }
 

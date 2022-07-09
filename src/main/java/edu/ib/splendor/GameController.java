@@ -20,7 +20,7 @@ import javafx.scene.text.Text;
 
 public class GameController {
     private AITwoPlayers aiTwoPlayers;
-    private LocalDateTime block;
+    private LocalDateTime block = LocalDateTime.now();
     private Player currentPlayer;
     private Board board;
     private BoardController boardController;
@@ -373,24 +373,11 @@ public class GameController {
                     i--;
                     card = board.getTradeRow().getCard(tier, i);
                 } else card = currentPlayer.getReserve().get(i);
-                for (Gem gem : card.getCost().keySet()) {
-                    cost.put(gem, -Math.max(card.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
-                            - currentPlayer.getProduction().getOrDefault(gem, 0), 0));
-                    goldNeeded += Math.max(card.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
-                            - currentPlayer.getProduction().getOrDefault(gem, 0), 0);
-                }
+                goldNeeded = getGoldNeeded(card, cost, goldNeeded, currentPlayer);
                 if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD)) {
-                    currentPlayer.changeGem(Gem.GOLD, goldNeeded);
-                    cost.put(Gem.GOLD, goldNeeded);
-                    for (Gem gem : card.getCost().keySet()) {
-                        Integer paid = Math.max(0, card.getCost().getOrDefault(gem, 0) - currentPlayer.getProduction().getOrDefault(gem, 0));
-                        currentPlayer.changeGem(gem, paid);
-                        cost.put(gem, cost.getOrDefault(gem, 0) + paid);
-                    }
-                    for (Gem gem : cost.keySet())
-                        board.changeStored(gem, cost.get(gem));
+                    pay(card, cost, goldNeeded, currentPlayer, board);
                     if (!tier.equals(Tier.RESERVE))
-                        currentPlayer.getDeck().add(board.getTradeRow().takeCard(tier, i));
+                        currentPlayer.addCard(board.getTradeRow().takeCard(tier, i));
                     else {
                         currentPlayer.addCard(card);
                         currentPlayer.removeReserve(card);
@@ -399,7 +386,7 @@ public class GameController {
                 }
             }
             if (reserve.isSelected()) {
-                boardController.reserveCard(currentPlayer, board, tier, i);
+//                boardController.reserveCard(currentPlayer, board, tier, i);
                 i--;
                 if (i >= 0)
                     card = board.getTradeRow().getCard(tier, i);
@@ -416,6 +403,28 @@ public class GameController {
                 }
             }
         }
+    }
+
+    static void pay(Card card, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer, Board board) {
+        currentPlayer.changeGem(Gem.GOLD, goldNeeded);
+        cost.put(Gem.GOLD, goldNeeded);
+        for (Gem gem : card.getCost().keySet()) {
+            Integer paid = Math.max(0, card.getCost().getOrDefault(gem, 0) - currentPlayer.getProduction().getOrDefault(gem, 0));
+            currentPlayer.changeGem(gem, paid);
+            cost.put(gem, cost.getOrDefault(gem, 0) + paid);
+        }
+        for (Gem gem : cost.keySet())
+            board.changeStored(gem, cost.get(gem));
+    }
+
+    static int getGoldNeeded(Card card, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer) {
+        for (Gem gem : card.getCost().keySet()) {
+            cost.put(gem, -Math.max(card.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
+                    - currentPlayer.getProduction().getOrDefault(gem, 0), 0));
+            goldNeeded += Math.max(card.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
+                    - currentPlayer.getProduction().getOrDefault(gem, 0), 0);
+        }
+        return goldNeeded;
     }
 
     private void collectGem(Gem gem){
