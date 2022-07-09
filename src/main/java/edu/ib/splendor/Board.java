@@ -24,12 +24,6 @@ public class Board {
         stored.put(Gem.WHITE, white);
         stored.put(Gem.GOLD, gold);
     }
-    public void turn(){
-        ArrayList<Player> holder = new ArrayList<>();
-        holder.add(players.get(players.size()-1));
-        for (int i=0; i<players.size()-1; i++)  holder.add(players.get(i));
-        players = holder;
-    }
 
     public Integer getStored(Gem gem){
         return stored.get(gem);
