@@ -14,7 +14,7 @@ def run(config_file):
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation,
                                 config_file)
-    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-175')
+    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-4627')
     # p = neat.Population(config)
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
