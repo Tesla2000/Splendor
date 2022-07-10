@@ -5,8 +5,8 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -290,6 +290,9 @@ public class GameController {
 
     @FXML
     private VBox redsLeft;
+
+    @FXML
+    private ImageView endTurnButton;
 
     @FXML
     private StackPane redsPane;
@@ -1038,12 +1041,13 @@ public class GameController {
     }
 
     @FXML
-    void end(ActionEvent event) {
+    void end(MouseEvent event) {
         endTurn();
     }
 
     @FXML
     void initialize() throws IOException {
+        assert endTurnButton != null : "fx:id=\"endTurnButon\" was not injected: check your FXML file 'board.fxml'.";
         assert blue != null : "fx:id=\"blue\" was not injected: check your FXML file 'board.fxml'.";
         assert blues != null : "fx:id=\"blues\" was not injected: check your FXML file 'board.fxml'.";
         assert blues1 != null : "fx:id=\"blues1\" was not injected: check your FXML file 'board.fxml'.";
@@ -1105,6 +1109,7 @@ public class GameController {
         boardController = new BoardController();
         setPictures();
         currentPlayer = players.get(0);
+        endTurnButton.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\end_turn.png"));
         red.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red7.png"));
         green.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green7.png"));
         blue.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue7.png"));
