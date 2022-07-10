@@ -24,11 +24,6 @@ public class GameController {
     private Player currentPlayer;
     private Board board;
     private BoardController boardController;
-    private Text redResource;
-    private Text greenResource;
-    private Text blueResource;
-    private Text brownResource;
-    private Text whiteResource;
     private Text goldResource;
     private Text redsResource;
     private Text greensResource;
@@ -386,7 +381,6 @@ public class GameController {
                 }
             }
             if (reserve.isSelected()) {
-//                boardController.reserveCard(currentPlayer, board, tier, i);
                 i--;
                 if (i >= 0)
                     card = board.getTradeRow().getCard(tier, i);
@@ -398,7 +392,7 @@ public class GameController {
                         board.changeStored(Gem.GOLD, -1);
                     }
                     board.getTradeRow().takeCard(tier, i);
-                    block = LocalDateTime.now().plusNanos(500_000);
+                    block = LocalDateTime.now().plusSeconds(1);
                     endTurn();
                 }
             }
@@ -430,24 +424,25 @@ public class GameController {
     private void collectGem(Gem gem){
         if (currentPlayer.getCollectLimit() == 0)
             currentPlayer.setCollectLimit(3);
-        if (getTwo.isSelected() && currentPlayer.getCollectLimit()==3 && board.getStored(gem)>=3) {
+        if (getTwo.isSelected() && currentPlayer.getCollectLimit()==3 && board.getStored(gem)>3) {
             int amount = Math.min(2, 10 - currentPlayer.allGems());
             currentPlayer.changeGem(gem, -amount);
             board.changeStored(gem, -amount);
-            block = LocalDateTime.now().plusNanos(500_000);
+            block = LocalDateTime.now().plusSeconds(1);
             endTurn();
         }
         else if (board.getStored(gem)>0 && !currentPlayer.gemInTaken(gem)){
             if (currentPlayer.allGems() >= 10) {
-                block = LocalDateTime.now().plusNanos(500_000);
+                block = LocalDateTime.now().plusSeconds(1);
                 endTurn();
             }
+            getThree.setSelected(true);
             currentPlayer.changeGem(gem, -1);
             board.changeStored(gem, -1);
             currentPlayer.setCollectLimit(currentPlayer.getCollectLimit()-1);
             currentPlayer.addToTaken(gem);
             if (currentPlayer.getCollectLimit()==0 || currentPlayer.allGems() >= 10) {
-                block = LocalDateTime.now().plusNanos(500_000);
+                block = LocalDateTime.now().plusSeconds(1);
                 endTurn();
             }
             else updateFields();
@@ -609,45 +604,50 @@ public class GameController {
         String string;
         string =  board.getStored(Gem.RED).toString();
         Font font = new Font("Verdana", 20);
-        if (redResource == null) {
-            Text text = new Text(red.getX(), red.getY(), string);
-            text.setFont(font);
-            redResource = text;
-            redPane.getChildren().add(redResource);
-        }
-        else redResource.setText(string);
+//        if (redResource == null) {
+//            Text text = new Text(red.getX(), red.getY(), string);
+//            text.setFont(font);
+//            redResource = text;
+//            redPane.getChildren().add(redResource);
+//        }
+//        else redResource.setText(string);
+        red.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red" + string + ".png"));
         string =  board.getStored(Gem.GREEN).toString();
-        if (greenResource == null) {
-            Text text = new Text(green.getX(), green.getY(), string);
-            text.setFont(font);
-            greenResource = text;
-            greenPane.getChildren().add(greenResource);
-        }
-        else greenResource.setText(string);
+//        if (greenResource == null) {
+//            Text text = new Text(green.getX(), green.getY(), string);
+//            text.setFont(font);
+//            greenResource = text;
+//            greenPane.getChildren().add(greenResource);
+//        }
+//        else greenResource.setText(string);
+        green.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green" + string + ".png"));
         string =  board.getStored(Gem.BLUE).toString();
-        if (blueResource == null) {
-            Text text = new Text(blue.getX(), blue.getY(), string);
-            text.setFont(font);
-            blueResource = text;
-            bluePane.getChildren().add(blueResource);
-        }
-        else blueResource.setText(string);
+//        if (blueResource == null) {
+//            Text text = new Text(blue.getX(), blue.getY(), string);
+//            text.setFont(font);
+//            blueResource = text;
+//            bluePane.getChildren().add(blueResource);
+//        }
+//        else blueResource.setText(string);
+        blue.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue" + string + ".png"));
         string =  board.getStored(Gem.BROWN).toString();
-        if (brownResource == null) {
-            Text text = new Text(brown.getX(), brown.getY(), string);
-            text.setFont(font);
-            brownResource = text;
-            brownPane.getChildren().add(brownResource);
-        }
-        else brownResource.setText(string);
+//        if (brownResource == null) {
+//            Text text = new Text(brown.getX(), brown.getY(), string);
+//            text.setFont(font);
+//            brownResource = text;
+//            brownPane.getChildren().add(brownResource);
+//        }
+//        else brownResource.setText(string);
+        brown.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown" + string + ".png"));
         string =  board.getStored(Gem.WHITE).toString();
-        if (whiteResource == null) {
-            Text text = new Text(white.getX(), white.getY(), string);
-            text.setFont(font);
-            whiteResource = text;
-            whitePane.getChildren().add(whiteResource);
-        }
-        else whiteResource.setText(string);
+//        if (whiteResource == null) {
+//            Text text = new Text(white.getX(), white.getY(), string);
+//            text.setFont(font);
+//            whiteResource = text;
+//            whitePane.getChildren().add(whiteResource);
+//        }
+//        else whiteResource.setText(string);
+        white.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white" + string + ".png"));
         string =  board.getStored(Gem.GOLD).toString();
         if (goldResource == null) {
             Text text = new Text(gold.getX(), gold.getY(), string);
@@ -661,33 +661,46 @@ public class GameController {
     private void updateFields() {
         showResources();
         Font font = new Font("Verdana", 20);
-        String string = currentPlayer.getPossession().getOrDefault(Gem.RED, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.RED, 0);
+        String string = currentPlayer.getPossession().getOrDefault(Gem.RED, 0).toString();
+        if (currentPlayer.getProduction().getOrDefault(Gem.RED, 0)!=0)
+            string = currentPlayer.getPossession().getOrDefault(Gem.RED, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.RED, 0);
         if (redsResource == null) {
             redsResource = new Text(reds.getX(), reds.getY(), string);
             redsResource.setFont(font);
             redsPane.getChildren().add(redsResource);
         } else redsResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.GREEN, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.GREEN,0);
+        string = currentPlayer.getPossession().getOrDefault(Gem.GREEN, 0).toString();
+        if (currentPlayer.getProduction().getOrDefault(Gem.GREEN,0)!=0)
+            string = currentPlayer.getPossession().getOrDefault(Gem.GREEN, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.GREEN,0);
         if (greensResource==null) {
             greensResource = new Text(greens.getX(), greens.getY(), string);
             greensResource.setFont(font);
             greensPane.getChildren().add(greensResource);
         } else greensResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.BLUE, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.BLUE,0);
+        string = currentPlayer.getPossession().getOrDefault(Gem.BLUE, 0).toString();
+        if (currentPlayer.getProduction().getOrDefault(Gem.BLUE,0)!=0)
+            string = currentPlayer.getPossession().getOrDefault(Gem.BLUE, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.BLUE,0);
         if (bluesResource == null) {
-            bluesResource = new Text(blues.getX(), blues.getY(), currentPlayer.getPossession().getOrDefault(Gem.BLUE, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.BLUE, 0));
+            bluesResource = new Text(blues.getX(), blues.getY(), currentPlayer.getPossession().getOrDefault(Gem.BLUE, 0).toString());
+            bluesResource = new Text(blues.getX(), blues.getY(), string);
             bluesResource.setFont(font);
             bluesPane.getChildren().add(bluesResource);
         } else bluesResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.BROWN, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.BROWN,0);
+        string = currentPlayer.getPossession().getOrDefault(Gem.BROWN, 0).toString();
+        if (currentPlayer.getProduction().getOrDefault(Gem.BROWN,0)!=0)
+            string = currentPlayer.getPossession().getOrDefault(Gem.BROWN, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.BROWN,0);
         if (brownsResource == null) {
-            brownsResource = new Text(browns.getX(), browns.getY(), currentPlayer.getPossession().getOrDefault(Gem.BROWN, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.BROWN, 0));
+            brownsResource = new Text(browns.getX(), browns.getY(), currentPlayer.getPossession().getOrDefault(Gem.BROWN, 0).toString());
+            brownsResource = new Text(browns.getX(), browns.getY(), string);
             brownsResource.setFont(font);
             brownsPane.getChildren().add(brownsResource);
         } else brownsResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.WHITE, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.WHITE,0);
+        string = currentPlayer.getPossession().getOrDefault(Gem.WHITE, 0).toString();
+        if (currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)!=0)
+            string = currentPlayer.getPossession().getOrDefault(Gem.WHITE, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.WHITE,0);
         if (whitesResource==null) {
-            whitesResource = new Text(whites.getX(), whites.getY(), currentPlayer.getPossession().getOrDefault(Gem.WHITE, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.WHITE, 0));
+            whitesResource = new Text(whites.getX(), whites.getY(), currentPlayer.getPossession().getOrDefault(Gem.WHITE, 0).toString());
+            whitesResource = new Text(whites.getX(), whites.getY(), string);
             whitesResource.setFont(font);
             whitesPane.getChildren().add(whitesResource);
         } else whitesResource.setText(string);
@@ -706,39 +719,49 @@ public class GameController {
         if (currentPlayer.getReserve().size()>2)
             res3.setImage(new Image(currentPlayer.getReserve().get(2).getPicture()));
         if (board.getPlayers().size()==2){
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.RED, 0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.RED, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.RED, 0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.RED, 0);
             if (redsResource11 == null) {
                 redsResource11 = new Text(reds.getX(), reds.getY(), string);
                 redsResource11.setFont(font);
                 redsPane11.getChildren().add(redsResource11);
             } else redsResource11.setText(string);
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.GREEN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.GREEN,0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.GREEN, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.GREEN,0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.GREEN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.GREEN,0);
             if (greensResource11==null) {
                 greensResource11 = new Text(greens.getX(), greens.getY(), string);
                 greensResource11.setFont(font);
                 greensPane11.getChildren().add(greensResource11);
             } else greensResource11.setText(string);
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BLUE,0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BLUE, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.BLUE,0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BLUE,0);
             if (bluesResource11 == null) {
-                bluesResource11 = new Text(blues.getX(), blues.getY(), board.getPlayers().get(1).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BLUE, 0));
+                bluesResource11 = new Text(blues.getX(), blues.getY(), string);;
                 bluesResource11.setFont(font);
                 bluesPane11.getChildren().add(bluesResource11);
             } else bluesResource11.setText(string);
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BROWN,0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BROWN, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.BROWN,0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BROWN,0);
             if (brownsResource11 == null) {
-                brownsResource11 = new Text(browns.getX(), browns.getY(), board.getPlayers().get(1).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BROWN, 0));
+                brownsResource11 = new Text(browns.getX(), browns.getY(), string);;
                 brownsResource11.setFont(font);
                 brownsPane11.getChildren().add(brownsResource11);
             } else brownsResource11.setText(string);
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.WHITE,0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.WHITE, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.WHITE,0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.WHITE,0);
             if (whitesResource11==null) {
-                whitesResource11 = new Text(whites.getX(), whites.getY(), board.getPlayers().get(1).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.WHITE, 0));
+                whitesResource11 = new Text(whites.getX(), whites.getY(), string);;
                 whitesResource11.setFont(font);
                 whitesPane11.getChildren().add(whitesResource11);
             } else whitesResource11.setText(string);
             string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.GOLD, 0).toString();
             if (goldsResource11==null) {
-                goldsResource11 = new Text(golds.getX(), golds.getY(), board.getPlayers().get(1).getPossession().getOrDefault(Gem.GOLD, 0).toString());
+                goldsResource11 = new Text(golds.getX(), golds.getY(), string);;
                 goldsResource11.setFont(font);
                 goldsPane11.getChildren().add(goldsResource11);
             } else goldsResource11.setText(string);
@@ -746,75 +769,95 @@ public class GameController {
             poins11.setText("Points: " + board.getPlayers().get(1).getPoints());
             textRes1.setText("Reserved: " + board.getPlayers().get(1).getReserve().size());
         } else {
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.RED, 0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.RED, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.RED, 0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.RED, 0);
             if (redsResource1 == null) {
                 redsResource1 = new Text(reds.getX(), reds.getY(), string);
                 redsResource1.setFont(font);
                 redsPane1.getChildren().add(redsResource1);
             } else redsResource1.setText(string);
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.GREEN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.GREEN,0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.GREEN, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.GREEN,0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.GREEN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.GREEN,0);
             if (greensResource1==null) {
                 greensResource1 = new Text(greens.getX(), greens.getY(), string);
                 greensResource1.setFont(font);
                 greensPane1.getChildren().add(greensResource1);
             } else greensResource1.setText(string);
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BLUE,0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BLUE, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.BLUE,0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BLUE,0);
             if (bluesResource1 == null) {
-                bluesResource1 = new Text(blues.getX(), blues.getY(), board.getPlayers().get(1).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BLUE, 0));
+                bluesResource1 = new Text(blues.getX(), blues.getY(), string);;
                 bluesResource1.setFont(font);
                 bluesPane1.getChildren().add(bluesResource1);
             } else bluesResource1.setText(string);
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BROWN,0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BROWN, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.BROWN,0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BROWN,0);
             if (brownsResource1 == null) {
-                brownsResource1 = new Text(browns.getX(), browns.getY(), board.getPlayers().get(1).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.BROWN, 0));
+                brownsResource1 = new Text(browns.getX(), browns.getY(), string);;
                 brownsResource1.setFont(font);
                 brownsPane1.getChildren().add(brownsResource1);
             } else bluesResource1.setText(string);
-            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.WHITE,0);
+            string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.WHITE, 0).toString();
+            if (board.getPlayers().get(1).getProduction().getOrDefault(Gem.WHITE,0)!=0)
+                string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.WHITE,0);
             if (whitesResource1==null) {
-                whitesResource1 = new Text(whites.getX(), whites.getY(), board.getPlayers().get(1).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(Gem.WHITE, 0));
+                whitesResource1 = new Text(whites.getX(), whites.getY(), string);;
                 whitesResource1.setFont(font);
                 whitesPane1.getChildren().add(whitesResource1);
             } else whitesResource1.setText(string);
             string = board.getPlayers().get(1).getPossession().getOrDefault(Gem.GOLD, 0).toString();
             if (goldsResource1==null) {
-                goldsResource1 = new Text(golds.getX(), golds.getY(), board.getPlayers().get(1).getPossession().getOrDefault(Gem.GOLD, 0).toString());
+                goldsResource1 = new Text(golds.getX(), golds.getY(), string);;
                 goldsResource1.setFont(font);
                 goldsPane1.getChildren().add(goldsResource1);
             } else goldsResource1.setText(string);
-            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.RED, 0);
+            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.RED, 0).toString();
+            if (board.getPlayers().get(2).getProduction().getOrDefault(Gem.RED, 0)!=0)
+                string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.RED, 0);
             if (redsResource11 == null) {
                 redsResource11 = new Text(reds.getX(), reds.getY(), string);
                 redsResource11.setFont(font);
                 redsPane11.getChildren().add(redsResource11);
             } else redsResource11.setText(string);
-            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.GREEN, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.GREEN,0);
+            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.GREEN, 0).toString();
+            if (board.getPlayers().get(2).getProduction().getOrDefault(Gem.GREEN,0)!=0)
+                string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.GREEN, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.GREEN,0);
             if (greensResource11==null) {
                 greensResource11 = new Text(greens.getX(), greens.getY(), string);
                 greensResource11.setFont(font);
                 greensPane11.getChildren().add(greensResource11);
             } else greensResource11.setText(string);
-            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.BLUE,0);
+            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.BLUE, 0).toString();
+            if (board.getPlayers().get(2).getProduction().getOrDefault(Gem.BLUE,0)!=0)
+                string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.BLUE,0);
             if (bluesResource11 == null) {
-                bluesResource11 = new Text(blues.getX(), blues.getY(), board.getPlayers().get(2).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.BLUE, 0));
+                bluesResource11 = new Text(blues.getX(), blues.getY(), string);;
                 bluesResource11.setFont(font);
                 bluesPane11.getChildren().add(bluesResource11);
             } else bluesResource11.setText(string);
-            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.BROWN,0);
+            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.BROWN, 0).toString();
+            if (board.getPlayers().get(2).getProduction().getOrDefault(Gem.BROWN,0)!=0)
+                string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.BROWN,0);
             if (brownsResource11 == null) {
-                brownsResource11 = new Text(browns.getX(), browns.getY(), board.getPlayers().get(2).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.BROWN, 0));
+                brownsResource11 = new Text(browns.getX(), browns.getY(), string);;
                 brownsResource11.setFont(font);
                 brownsPane11.getChildren().add(brownsResource11);
             } else brownsResource11.setText(string);
-            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.WHITE,0);
+            string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.WHITE, 0).toString();
+            if (board.getPlayers().get(2).getProduction().getOrDefault(Gem.WHITE,0)!=0)
+                string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.WHITE,0);
             if (whitesResource11==null) {
-                whitesResource11 = new Text(whites.getX(), whites.getY(), board.getPlayers().get(2).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(2).getProduction().getOrDefault(Gem.WHITE, 0));
+                whitesResource11 = new Text(whites.getX(), whites.getY(), string);;
                 whitesResource11.setFont(font);
                 whitesPane11.getChildren().add(whitesResource11);
             } else whitesResource11.setText(string);
             string = board.getPlayers().get(2).getPossession().getOrDefault(Gem.GOLD, 0).toString();
             if (goldsResource11==null) {
-                goldsResource11 = new Text(golds.getX(), golds.getY(), board.getPlayers().get(2).getPossession().getOrDefault(Gem.GOLD, 0).toString());
+                goldsResource11 = new Text(golds.getX(), golds.getY(), string);;
                 goldsResource11.setFont(font);
                 goldsPane11.getChildren().add(goldsResource11);
             } else goldsResource11.setText(string);
@@ -825,39 +868,49 @@ public class GameController {
             playerName11.setText(board.getPlayers().get(2).getName());
         }
         if (board.getPlayers().size()==4) {
-            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.RED, 0);
+            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.RED, 0).toString();
+            if (board.getPlayers().get(3).getProduction().getOrDefault(Gem.RED, 0)!=0)
+                string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.RED, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.RED, 0);
             if (redsResource111 == null) {
                 redsResource111 = new Text(reds.getX(), reds.getY(), string);
                 redsResource111.setFont(font);
                 redsPane111.getChildren().add(redsResource111);
             } else redsResource111.setText(string);
-            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.GREEN, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.GREEN,0);
+            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.GREEN, 0).toString();
+            if (board.getPlayers().get(3).getProduction().getOrDefault(Gem.GREEN,0)!=0)
+                string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.GREEN, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.GREEN,0);
             if (greensResource111==null) {
                 greensResource111 = new Text(greens.getX(), greens.getY(), string);
                 greensResource111.setFont(font);
                 greensPane111.getChildren().add(greensResource111);
             } else greensResource111.setText(string);
-            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.BLUE,0);
+            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.BLUE, 0).toString();
+            if (board.getPlayers().get(3).getProduction().getOrDefault(Gem.BLUE,0)!=0)
+                string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.BLUE,0);
             if (bluesResource111 == null) {
-                bluesResource111 = new Text(blues.getX(), blues.getY(), board.getPlayers().get(3).getPossession().getOrDefault(Gem.BLUE, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.BLUE, 0));
+                bluesResource111 = new Text(blues.getX(), blues.getY(), string);;
                 bluesResource111.setFont(font);
                 bluesPane111.getChildren().add(bluesResource111);
             } else bluesResource111.setText(string);
-            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.BROWN,0);
+            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.BROWN, 0).toString();
+            if (board.getPlayers().get(3).getProduction().getOrDefault(Gem.BROWN,0)!=0)
+                string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.BROWN,0);
             if (brownsResource111 == null) {
-                brownsResource111 = new Text(browns.getX(), browns.getY(), board.getPlayers().get(3).getPossession().getOrDefault(Gem.BROWN, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.BROWN, 0));
+                brownsResource111 = new Text(browns.getX(), browns.getY(), string);;
                 brownsResource111.setFont(font);
                 brownsPane111.getChildren().add(brownsResource111);
             } else brownsResource111.setText(string);
-            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.WHITE,0);
+            string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.WHITE, 0).toString();
+            if (board.getPlayers().get(3).getProduction().getOrDefault(Gem.WHITE,0)!=0)
+                string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.WHITE,0);
             if (whitesResource111==null) {
-                whitesResource111 = new Text(whites.getX(), whites.getY(), board.getPlayers().get(3).getPossession().getOrDefault(Gem.WHITE, 0) + "+" + board.getPlayers().get(3).getProduction().getOrDefault(Gem.WHITE, 0));
+                whitesResource111 = new Text(whites.getX(), whites.getY(), string);;
                 whitesResource111.setFont(font);
                 whitesPane111.getChildren().add(whitesResource111);
             } else whitesResource111.setText(string);
             string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.GOLD, 0).toString();
             if (goldsResource111==null) {
-                goldsResource111 = new Text(golds.getX(), golds.getY(), board.getPlayers().get(3).getPossession().getOrDefault(Gem.GOLD, 0).toString());
+                goldsResource111 = new Text(golds.getX(), golds.getY(), string);;
                 goldsResource111.setFont(font);
                 goldsPane111.getChildren().add(goldsResource111);
             } else goldsResource111.setText(string);
@@ -1051,11 +1104,11 @@ public class GameController {
         boardController = new BoardController();
         setPictures();
         currentPlayer = players.get(0);
-        red.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"));
-        green.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"));
-        blue.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue.png"));
-        brown.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown.png"));
-        white.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white.png"));
+        red.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red7.png"));
+        green.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green7.png"));
+        blue.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue7.png"));
+        brown.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown7.png"));
+        white.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white7.png"));
         gold.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold.png"));
         reds.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"));
         greens.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"));
