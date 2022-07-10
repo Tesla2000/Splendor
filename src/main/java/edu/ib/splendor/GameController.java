@@ -603,7 +603,7 @@ public class GameController {
     private void showResources(){
         String string;
         string =  board.getStored(Gem.RED).toString();
-        Font font = new Font("Verdana", 20);
+//        Font font = new Font("Verdana", 20);
 //        if (redResource == null) {
 //            Text text = new Text(red.getX(), red.getY(), string);
 //            text.setFont(font);
@@ -649,13 +649,14 @@ public class GameController {
 //        else whiteResource.setText(string);
         white.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white" + string + ".png"));
         string =  board.getStored(Gem.GOLD).toString();
-        if (goldResource == null) {
-            Text text = new Text(gold.getX(), gold.getY(), string);
-            text.setFont(font);
-            goldResource = text;
-            goldPane.getChildren().add(goldResource);
-        }
-        else goldResource.setText(string);
+//        if (goldResource == null) {
+//            Text text = new Text(gold.getX(), gold.getY(), string);
+//            text.setFont(font);
+//            goldResource = text;
+//            goldPane.getChildren().add(goldResource);
+//        }
+//        else goldResource.setText(string);
+        gold.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold" + string + ".png"));
     }
 
     private void updateFields() {
