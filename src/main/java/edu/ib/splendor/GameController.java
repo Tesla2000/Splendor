@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -23,6 +22,8 @@ public class GameController {
     private LocalDateTime block = LocalDateTime.now();
     private Player currentPlayer;
     private Board board;
+    private ArrayList<HashMap<Gem, Text>> playersResource;
+    private ArrayList<HashMap<Gem, StackPane>> playersPanes;
     private BoardController boardController;
     private Text goldResource;
     private Text redsResource;
@@ -665,55 +666,17 @@ public class GameController {
     private void updateFields() {
         showResources();
         Font font = new Font("Verdana", 20);
-        String string = currentPlayer.getPossession().getOrDefault(Gem.RED, 0).toString();
-        if (currentPlayer.getProduction().getOrDefault(Gem.RED, 0)!=0)
-            string = currentPlayer.getPossession().getOrDefault(Gem.RED, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.RED, 0);
-        if (redsResource == null) {
-            redsResource = new Text(reds.getX(), reds.getY(), string);
-            redsResource.setFont(font);
-            redsPane.getChildren().add(redsResource);
-        } else redsResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.GREEN, 0).toString();
-        if (currentPlayer.getProduction().getOrDefault(Gem.GREEN,0)!=0)
-            string = currentPlayer.getPossession().getOrDefault(Gem.GREEN, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.GREEN,0);
-        if (greensResource==null) {
-            greensResource = new Text(greens.getX(), greens.getY(), string);
-            greensResource.setFont(font);
-            greensPane.getChildren().add(greensResource);
-        } else greensResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.BLUE, 0).toString();
-        if (currentPlayer.getProduction().getOrDefault(Gem.BLUE,0)!=0)
-            string = currentPlayer.getPossession().getOrDefault(Gem.BLUE, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.BLUE,0);
-        if (bluesResource == null) {
-            bluesResource = new Text(blues.getX(), blues.getY(), currentPlayer.getPossession().getOrDefault(Gem.BLUE, 0).toString());
-            bluesResource = new Text(blues.getX(), blues.getY(), string);
-            bluesResource.setFont(font);
-            bluesPane.getChildren().add(bluesResource);
-        } else bluesResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.BROWN, 0).toString();
-        if (currentPlayer.getProduction().getOrDefault(Gem.BROWN,0)!=0)
-            string = currentPlayer.getPossession().getOrDefault(Gem.BROWN, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.BROWN,0);
-        if (brownsResource == null) {
-            brownsResource = new Text(browns.getX(), browns.getY(), currentPlayer.getPossession().getOrDefault(Gem.BROWN, 0).toString());
-            brownsResource = new Text(browns.getX(), browns.getY(), string);
-            brownsResource.setFont(font);
-            brownsPane.getChildren().add(brownsResource);
-        } else brownsResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.WHITE, 0).toString();
-        if (currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)!=0)
-            string = currentPlayer.getPossession().getOrDefault(Gem.WHITE, 0) + "+" + currentPlayer.getProduction().getOrDefault(Gem.WHITE,0);
-        if (whitesResource==null) {
-            whitesResource = new Text(whites.getX(), whites.getY(), currentPlayer.getPossession().getOrDefault(Gem.WHITE, 0).toString());
-            whitesResource = new Text(whites.getX(), whites.getY(), string);
-            whitesResource.setFont(font);
-            whitesPane.getChildren().add(whitesResource);
-        } else whitesResource.setText(string);
-        string = currentPlayer.getPossession().getOrDefault(Gem.GOLD, 0).toString();
-        if (goldsResource==null) {
-            goldsResource = new Text(golds.getX(), golds.getY(), currentPlayer.getPossession().getOrDefault(Gem.GOLD, 0).toString());
-            goldsResource.setFont(font);
-            goldsPane.getChildren().add(goldsResource);
-        } else goldsResource.setText(string);
+        String string;
+        for (Gem gem: Gem.values()) {
+            string = currentPlayer.getPossession().getOrDefault(gem, 0).toString();
+            if (currentPlayer.getProduction().getOrDefault(gem, 0) != 0)
+                string = currentPlayer.getPossession().getOrDefault(gem, 0) + "+" + currentPlayer.getProduction().getOrDefault(gem, 0);
+            if (playersResource.get(0).get(gem) == null) {
+                playersResource.get(0).put(gem, new Text(reds.getX(), reds.getY(), string));
+                playersResource.get(0).get(gem).setFont(font);
+                playersPanes.get(0).get(gem).getChildren().add(playersResource.get(0).get(gem));
+            } else playersResource.get(0).get(gem).setText(string);
+        }
         playerName.setText(currentPlayer.getName());
         poins.setText("Points: " + currentPlayer.getPoints());
         if (currentPlayer.getReserve().size()>0)
@@ -914,7 +877,7 @@ public class GameController {
             } else whitesResource111.setText(string);
             string = board.getPlayers().get(3).getPossession().getOrDefault(Gem.GOLD, 0).toString();
             if (goldsResource111==null) {
-                goldsResource111 = new Text(golds.getX(), golds.getY(), string);;
+                goldsResource111 = new Text(golds.getX(), golds.getY(), string);
                 goldsResource111.setFont(font);
                 goldsPane111.getChildren().add(goldsResource111);
             } else goldsResource111.setText(string);
@@ -1089,6 +1052,28 @@ public class GameController {
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
         ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
+        playersResource = new ArrayList<>();
+        playersPanes = new ArrayList<>();
+        Text[][] texts = new Text[][]{
+                new Text[]{redsResource, greensResource, bluesResource, brownsResource, whitesResource, goldsResource},
+                new Text[]{redsResource1, greensResource1, bluesResource1, brownsResource1, whitesResource1, goldsResource1},
+                new Text[]{redsResource11, greensResource11, bluesResource11, brownsResource11, whitesResource11, goldsResource11},
+                new Text[]{redsResource111, greensResource111, bluesResource111, brownsResource111, whitesResource111, goldsResource111}
+        };
+        StackPane[][] panes = new StackPane[][]{
+                new StackPane[]{redsPane, greensPane, bluesPane, brownsPane, whitesPane, goldsPane},
+                new StackPane[]{redsPane1, greensPane1, bluesPane1, brownsPane1, whitesPane1, goldsPane1},
+                new StackPane[]{redsPane11, greensPane11, bluesPane11, brownsPane11, whitesPane11, goldsPane11},
+                new StackPane[]{redsPane111, greensPane111, bluesPane111, brownsPane111, whitesPane111, goldsPane111},
+        };
+        for (int player=0;player<4;player++){
+            playersResource.add(new HashMap<>());
+            playersPanes.add(new HashMap<>());
+            for (int i = 0; i < 6; i++) {
+                playersResource.get(player).put(Gem.values()[i], texts[player][i]);
+                playersPanes.get(player).put(Gem.values()[i], panes[player][i]);
+            }
+        }
         TradeRow tradeRow = new TradeRow(cards.get(0),cards.get(1),cards.get(2));
         players = new ArrayList<>();
         System.out.println("Enter number of players 2-4: ");
@@ -1115,7 +1100,7 @@ public class GameController {
         blue.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue7.png"));
         brown.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown7.png"));
         white.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white7.png"));
-        gold.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold.png"));
+        gold.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold5.png"));
         reds.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"));
         greens.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"));
         blues.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue.png"));
