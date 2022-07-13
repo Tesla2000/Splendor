@@ -1069,9 +1069,9 @@ public class GameController {
         for (int player=0;player<4;player++){
             playersResource.add(new HashMap<>());
             playersPanes.add(new HashMap<>());
-            for (int i = 0; i < 6; i++) {
-                playersResource.get(player).put(Gem.values()[i], texts[player][i]);
-                playersPanes.get(player).put(Gem.values()[i], panes[player][i]);
+            for (int gem = 0; gem < 6; gem++) {
+                playersResource.get(player).put(Gem.values()[gem], texts[player][gem]);
+                playersPanes.get(player).put(Gem.values()[gem], panes[player][gem]);
             }
         }
         TradeRow tradeRow = new TradeRow(cards.get(0),cards.get(1),cards.get(2));
