@@ -25,6 +25,7 @@ public class Player {
     }
 
     public void clearTaken(){
+        collectLimit = 3;
         taken = new HashMap<>();
     }
 

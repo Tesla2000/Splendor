@@ -455,11 +455,15 @@ public class GameController {
     }
 
     private void endTurn() {
-        currentPlayer.clearTaken();
-        getAristocrats();
-        players.add(players.remove(0));
-        currentPlayer = players.get(0);
-        updateFields();
+        try {
+            currentPlayer.clearTaken();
+            getAristocrats();
+            players.add(players.remove(0));
+            currentPlayer = players.get(0);
+            updateFields();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         if (currentPlayer instanceof PlayerWithNodes) {
             aiTwoPlayers.playTurn(((PlayerWithNodes) currentPlayer).getNodes(), board);
             endTurn();
@@ -925,6 +929,9 @@ public class GameController {
             }
         }
         updateFields();
+        if (currentPlayer instanceof PlayerWithNodes) {
+            aiTwoPlayers.playTurn(((PlayerWithNodes) currentPlayer).getNodes(), board);
+            endTurn();
+        }
     }
-
 }
