@@ -33,7 +33,7 @@ public class AIThreePlayers extends AI {
                     currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
                     currentPlayers.add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));
                     currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
-                    Collections.shuffle(list);
+                    Collections.shuffle(currentPlayers);
                     ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
                     AIThreePlayers ai = new AIThreePlayers(players, masterCounter);
                     int moves = 0;
@@ -66,13 +66,10 @@ public class AIThreePlayers extends AI {
                     ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
                     TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
                     currentPlayers = new ArrayList<>();
-                    if (random.nextBoolean()) {
-                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
-                    } else {
-                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
-                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-                    }
+                    currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
+                    currentPlayers.add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));
+                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+                    Collections.shuffle(currentPlayers);
                     ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
                     Board board = new Board(tradeRow, new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList()), 7,7,7,7,7,5);
                     AIThreePlayers ai = new AIThreePlayers(players);
