@@ -18,7 +18,7 @@ public class AITwoPlayers extends AI {
             waitForMyTurn();
             ArrayList<ArrayList<Node>> allPlayers = new ArrayList<>();
             for (int id = 0; id < 16; id++) {
-                allPlayers.add(readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt"));
+                allPlayers.add(AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt"));
             }
             ArrayList<Node> master = AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + masterCounter + ".txt");
             ArrayList<PlayerWithNodes> currentPlayers;
