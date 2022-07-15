@@ -93,19 +93,15 @@ public class AIController {
                         }
                     }
                 }
+            
             for (int i = 0; i < board.getAristocrats().size(); i++) {
-                state.add(board.getAristocrats().get(i).getBlue());
-                state.add(board.getAristocrats().get(i).getBrown());
-                state.add(board.getAristocrats().get(i).getGreen());
-                state.add(board.getAristocrats().get(i).getRed());
-                state.add(board.getAristocrats().get(i).getWhite());
+                for (Gem gem: Gem.values())
+                    if (!gem.equals(Gem.GOLD))
+                        state.add(board.getAristocrats().get(i).getCost(gem));
             }
             for (int i = board.getAristocrats().size(); i < 4; i++) {
-                state.add(0);
-                state.add(0);
-                state.add(0);
-                state.add(0);
-                state.add(0);
+                for (i=0; i<5; i++)
+                    state.add(0);
             }
         }
         return state;
