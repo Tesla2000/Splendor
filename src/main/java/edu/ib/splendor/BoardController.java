@@ -5,14 +5,14 @@ import java.util.HashMap;
 
 public class BoardController {
 
-    public Card getCard(Tier tier, int index, Board board, Player currentPlayer){
+    public static Card getCard(Tier tier, int index, Board board, Player currentPlayer){
         Card card = null;
         if (!tier.equals(Tier.RESERVE)) card = board.getTradeRow().getCard(tier, index);
         else if (currentPlayer.getReserve().size() > index) card = currentPlayer.getReserve().get(index);
         return card;
     }
 
-    public void buyEstate(Tier tier, int index, Board board, Player currentPlayer) {
+    public static void buyEstate(Tier tier, int index, Board board, Player currentPlayer) {
         Card card = getCard(tier, index, board, currentPlayer);
         HashMap<Gem, Integer> cost = new HashMap<>();
         int goldNeeded = 0;
@@ -29,7 +29,7 @@ public class BoardController {
         }
     }
 
-    public boolean canBuy(Tier tier, int index, Board board, Player currentPlayer) {
+    public static boolean canBuy(Tier tier, int index, Board board, Player currentPlayer) {
         Card card = getCard(tier, index, board, currentPlayer);
         if (card == null) {
             return false;
@@ -40,7 +40,7 @@ public class BoardController {
         return goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD);
         }
 
-    public ArrayList<GemAmountPair> lackingGems(Tier tier, int index, Board board, Player currentPlayer) {
+    public static ArrayList<GemAmountPair> lackingGems(Tier tier, int index, Board board, Player currentPlayer) {
         Card card =null;
         if (!tier.equals(Tier.RESERVE)) card = board.getTradeRow().getCard(tier, index);
         else if (currentPlayer.getReserve().size()>index) card = currentPlayer.getReserve().get(index);
@@ -58,27 +58,27 @@ public class BoardController {
         return cost;
         }
 
-    public void collectGem(Gem gem, Board board, Player currentPlayer){
+    public static void collectGem(Gem gem, Board board, Player currentPlayer){
         currentPlayer.changeGem(gem, -1);
         board.changeStored(gem, -1);
 //        endTurn(board, currentPlayer);
     }
 
-    public void endTurn(Board board, Player currentPlayer) {
+    public static void endTurn(Board board, Player currentPlayer) {
         getAristocrats(board, currentPlayer);
     }
 
 
-    public void getAristocrats(Board board, Player currentPlayer) {
+    public static void getAristocrats(Board board, Player currentPlayer) {
         ArrayList<Aristocrat> toRemove = new ArrayList<>();
 //        AI.aristocrat = false;
         for (Aristocrat aristocrat: board.getAristocrats())
             if (
-                    aristocrat.getBlue()<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
-                    aristocrat.getRed()<=currentPlayer.getProduction().getOrDefault(Gem.RED,0) &&
-                    aristocrat.getGreen()<=currentPlayer.getProduction().getOrDefault(Gem.GREEN,0) &&
-                    aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
-                    aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
+                    aristocrat.getCost().get(Gem.BLUE)<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
+                    aristocrat.getCost().get(Gem.RED)<=currentPlayer.getProduction().getOrDefault(Gem.RED,0) &&
+                    aristocrat.getCost().get(Gem.GREEN)<=currentPlayer.getProduction().getOrDefault(Gem.GREEN,0) &&
+                    aristocrat.getCost().get(Gem.BROWN)<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
+                    aristocrat.getCost().get(Gem.WHITE)<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
             ) {
                 toRemove.add(aristocrat);
                 currentPlayer.addAristocrat(aristocrat);
@@ -88,11 +88,11 @@ public class BoardController {
         }
     }
 
-    public boolean can_card_be_reserved(Player player, Board board, Tier tier, int index){
+    public static boolean can_card_be_reserved(Player player, Board board, Tier tier, int index){
         return player.getReserve().size() < 3 && board.getTradeRow().getCard(tier, index) != null;
     }
 
-    public void reserveCard(Player player, Board board, Tier tier, int index){
+    public static void reserveCard(Player player, Board board, Tier tier, int index){
         player.addReserve(board.getTradeRow().takeCard(tier, index));
         if (player.getPossession().values().stream().reduce(Integer::sum).stream().toList().get(0) < 10){
             player.addGem(Gem.GOLD);

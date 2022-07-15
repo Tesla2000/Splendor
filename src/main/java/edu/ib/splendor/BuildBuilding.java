@@ -1,11 +1,11 @@
 package edu.ib.splendor;
 
-public record BuildBuilding(BoardController boardController, Tier tier,
+public record BuildBuilding(Tier tier,
                             int index) implements Move {
 
     @Override
     public void play(Board board, Player player) {
-        boardController.buyEstate(tier, index, board, player);
+        BoardController.buyEstate(tier, index, board, player);
     }
 
     public Tier getTier() {

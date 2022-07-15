@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class communicationController {
+public class CommunicationController {
 
     public static void waitForJavaTurn() throws IOException {
         String st;

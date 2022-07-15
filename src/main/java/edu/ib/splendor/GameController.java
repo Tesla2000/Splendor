@@ -457,7 +457,7 @@ public class GameController {
     private void endTurn() {
         try {
             currentPlayer.clearTaken();
-            getAristocrats();
+            BoardController.getAristocrats(board, currentPlayer);
             players.add(players.remove(0));
             currentPlayer = players.get(0);
             updateFields();
@@ -465,7 +465,9 @@ public class GameController {
             e.printStackTrace();
         }
         if (currentPlayer instanceof PlayerWithNodes) {
-            aiTwoPlayers.playTurn(((PlayerWithNodes) currentPlayer).getNodes(), board);
+            try {
+                AIController.playTurn(players,((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
+            } catch (GameLostException ignored) {}
             endTurn();
         } else {
             setPictures();
@@ -473,23 +475,23 @@ public class GameController {
     }
 
 
-    private void getAristocrats() {
-        ArrayList<Aristocrat> toRemove = new ArrayList<>();
-        for (Aristocrat aristocrat: board.getAristocrats())
-            if (
-                    aristocrat.getBlue()<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
-                            aristocrat.getRed()<=currentPlayer.getProduction().getOrDefault(Gem.RED,0) &&
-                            aristocrat.getGreen()<=currentPlayer.getProduction().getOrDefault(Gem.GREEN,0) &&
-                            aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
-                            aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
-            ) {
-                toRemove.add(aristocrat);
-                currentPlayer.addAristocrat(aristocrat);
-            }
-        for (Aristocrat aristocrat: toRemove){
-            board.removeAristocrat(aristocrat);
-        }
-    }
+//    private void getAristocrats() {
+//        ArrayList<Aristocrat> toRemove = new ArrayList<>();
+//        for (Aristocrat aristocrat: board.getAristocrats())
+//            if (
+//                    aristocrat.getBlue()<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
+//                    aristocrat.getRed()<=currentPlayer.getProduction().getOrDefault(Gem.RED,0) &&
+//                    aristocrat.getGreen()<=currentPlayer.getProduction().getOrDefault(Gem.GREEN,0) &&
+//                    aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
+//                    aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
+//            ) {
+//                toRemove.add(aristocrat);
+//                currentPlayer.addAristocrat(aristocrat);
+//            }
+//        for (Aristocrat aristocrat: toRemove){
+//            board.removeAristocrat(aristocrat);
+//        }
+//    }
 
     private void setPictures(){
         Image image;
@@ -899,13 +901,11 @@ public class GameController {
             if (playersName.equals("Voldemort"))
                 players.add(new Player(playersName,10000));
             else if (playersName.contains("AI"))
-                players.add(new PlayerWithNodes(new Player(playersName), AITwoPlayers.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\28.txt")));
+                players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\28.txt")));
             else players.add(new Player(playersName));
         }
         scanner.close();
         board = new Board(tradeRow, players, 7,7,7,7,7,5);
-        aiTwoPlayers = new AITwoPlayers(players);
-        boardController = new BoardController();
         setPictures();
         currentPlayer = players.get(0);
         endTurnButton.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\end_turn.png"));
@@ -930,7 +930,9 @@ public class GameController {
         }
         updateFields();
         if (currentPlayer instanceof PlayerWithNodes) {
-            aiTwoPlayers.playTurn(((PlayerWithNodes) currentPlayer).getNodes(), board);
+            try {
+                AIController.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
+            } catch (GameLostException ignored) {}
             endTurn();
         }
     }

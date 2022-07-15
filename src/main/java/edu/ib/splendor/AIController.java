@@ -35,7 +35,7 @@ public class AIController {
         return result;
     }
 
-    public static void saveAsMaster(String id) throws IOException {
+    public static void saveAsMaster(String id, int masterCounter) throws IOException {
         String st;
         StringBuilder builder = new StringBuilder();
         File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt");
@@ -44,15 +44,14 @@ public class AIController {
             builder.append(st).append("\n");
         }
         reader.close();
-        masterCounter++;
         file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + masterCounter + ".txt");
         FileWriter writer = new FileWriter(file);
         writer.write(builder.toString());
         writer.close();
     }
 
-    public static void saveAsMaster(int id) throws IOException {
-        saveAsMaster(String.valueOf(id));
+    public static void saveAsMaster(int id, int masterCounter) throws IOException {
+        saveAsMaster(String.valueOf(id), masterCounter);
     }
 
     public static ArrayList<Integer> getState(Board board, ArrayList<Player> players){
@@ -97,7 +96,7 @@ public class AIController {
             for (int i = 0; i < board.getAristocrats().size(); i++) {
                 for (Gem gem: Gem.values())
                     if (!gem.equals(Gem.GOLD))
-                        state.add(board.getAristocrats().get(i).getCost(gem));
+                        state.add(board.getAristocrats().get(i).getCost().get(gem));
             }
             for (int i = board.getAristocrats().size(); i < 4; i++) {
                 for (i=0; i<5; i++)
@@ -107,37 +106,38 @@ public class AIController {
         return state;
     }
 
-    public static void playMoveAI(ArrayList<Node> nodes, Board board, ArrayList<Player> players) throws GameLostException {
+    public static void playMoveAI(ArrayList<Node> nodes, Board board, ArrayList<Player> players, HashMap<Integer, Move> possibleMoves) throws GameLostException {
         ArrayList<MoveValuePair> order = convertNodesToOutput(nodes, getState(board, players));
-        playMove(order, players.get(0), board);
+        playMove(order, players.get(0), board, possibleMoves);
     }
 
-    public static void playTurn(ArrayList<Node> nodes, Board board) throw GameLostException {
+    public static void playTurn(ArrayList<Player> players, ArrayList<Node> nodes, Board board, HashMap<Integer, Move> possibleMoves) throws GameLostException {
         Player player = players.get(0);
-        playMoveAI(nodes, board, players);oller.endTurn(board, player);
+        playMoveAI(nodes, board, players, possibleMoves);
+        BoardController.endTurn(board, player);
     }
 
-    private static void playMove(Player player, List<Integer> sequence, Board board) throws GameLostException {
+    private static void playMove(Player player, List<Integer> sequence, Board board, HashMap<Integer, Move> possibleMoves) throws GameLostException {
         int playersResource = player.getPossession().values().stream().reduce(0, Integer::sum);
         for (int index : sequence) {
             if (!(possibleMoves.get(index) instanceof ReserveBuilding)) break;
-            if (boardController.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
-                boardController.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
+            if (BoardController.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
+                BoardController.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
                 return;
             }
         }
         sequence = sequence.stream().filter(elem -> possibleMoves.get(elem) instanceof BuildBuilding).toList();
         if (playersResource == 10) {
             for (Integer option : sequence) {
-                if (boardController.canBuy(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player)) {
-                    boardController.buyEstate(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player);
+                if (BoardController.canBuy(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player)) {
+                    BoardController.buyEstate(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player);
                     return;
                 }
             }
             throw new GameLostException();
         }
-        if (boardController.canBuy(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player)) {
-            boardController.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
+        if (BoardController.canBuy(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player)) {
+            BoardController.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
         } else {
             List<Gem> gotten = new ArrayList<>();
             int i = 0;
@@ -146,7 +146,7 @@ public class AIController {
                 if (i >= sequence.size()) {
                     break;
                 }
-                ArrayList<GemAmountPair> lack = boardController.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
+                ArrayList<GemAmountPair> lack = BoardController.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
                 if (lack == null || !canBeTaken(lack, player.getPossession(), board)) {
                     i++;
                     continue;
@@ -154,8 +154,8 @@ public class AIController {
                 lack = (ArrayList<GemAmountPair>) lack.stream().filter(l -> l.integer != 0).collect(Collectors.toList());
                 lack.sort((e1, e2) -> e2.integer - e1.integer);
                 if (lack.size() == 0) {
-                    if (gotten.size() == 0 && boardController.getCard(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player) != null) {
-                        boardController.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
+                    if (gotten.size() == 0 && BoardController.getCard(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player) != null) {
+                        BoardController.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
                         return;
                     } else {
                         i++;
@@ -163,18 +163,18 @@ public class AIController {
                     }
                 }
                 if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4 && canBeTaken == 3 && !gotten.contains(lack.get(0).gem)) {
-                    boardController.collectGem(lack.get(0).gem, board, player);
-                    boardController.collectGem(lack.get(0).gem, board, player);
+                    BoardController.collectGem(lack.get(0).gem, board, player);
+                    BoardController.collectGem(lack.get(0).gem, board, player);
                     break;
                 } else {
                     for (GemAmountPair gemAmountPair : lack) {
                         if (!gotten.contains(gemAmountPair.gem) && board.getStored(gemAmountPair.gem) > 0 && gotten.size() < 3 && canBeTaken > 0) {
-                            boardController.collectGem(gemAmountPair.gem, board, player);
+                            BoardController.collectGem(gemAmountPair.gem, board, player);
                             gotten.add(gemAmountPair.gem);
                             if (i != 0) canBeTaken--;
                         }
                     }
-                    lack = boardController.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
+                    lack = BoardController.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
                     if (lack == null) {
                         i++;
                         continue;
@@ -188,9 +188,9 @@ public class AIController {
         }
     }
 
-    private static void playMove(ArrayList<MoveValuePair> order, Player player, Board board) throws GameLostException {
+    private static void playMove(ArrayList<MoveValuePair> order, Player player, Board board, HashMap<Integer, Move> possibleMoves) throws GameLostException {
         List<Integer> sequence = order.stream().sorted((e1, e2) -> Double.compare(e2.value(), e1.value())).map(MoveValuePair::move).toList();
-        playMove(player, sequence, board);
+        playMove(player, sequence, board, possibleMoves);
     }
 
     private static boolean canBeTaken(ArrayList<GemAmountPair> lack, HashMap<Gem, Integer> possession,Board board) {
