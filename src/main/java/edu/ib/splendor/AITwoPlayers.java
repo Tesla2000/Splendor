@@ -4,33 +4,9 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AITwoPlayers {
-    private static boolean won;
-    private static int masterCounter = 25;
-    private static boolean lost;
-    private static final BoardController boardController = new BoardController();
-    private static HashMap<Integer, Move> possibleMoves = null;
-    private final ArrayList<Player> players;
-
-    public AITwoPlayers(ArrayList<Player> players) {
-        this.players = players;
-        possibleMoves = new HashMap<>();
-        int counter = 0;
-        for (Tier tier : Tier.values()) {
-            int loops;
-            if (tier.equals(Tier.RESERVE)) loops = 3;
-            else loops = 4;
-            for (int i = 0; i < loops; i++) {
-                possibleMoves.put(counter, new BuildBuilding(boardController, tier, i));
-                counter++;
-            }
-            for (int i = 0; i < 4; i++) {
-                if (!tier.equals(Tier.RESERVE)) {
-                    possibleMoves.put(counter, new ReserveBuilding(boardController, tier, i));
-                    counter++;
-                }
-            }
-        }
+public class AITwoPlayers extends AI {
+    public AITwoPlayers((ArrayList<Player> players, int masterCounter)) {
+        super(players, masterCounter);
     }
 
     private static void waitForMyTurn() throws IOException {
