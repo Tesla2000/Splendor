@@ -34,7 +34,7 @@ public class AIFourPlayers extends AI {
                     currentPlayers.add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));
                     currentPlayers.add(new PlayerWithNodes(new Player("PreviousPreviousMaster"), previousMaster));
                     currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
-                    Collections.shuffle(list);
+                    Collections.shuffle(currentPlayers);
                     ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
                     AIThreePlayers ai = new AIThreePlayers(players, masterCounter);
                     int moves = 0;
@@ -71,7 +71,7 @@ public class AIFourPlayers extends AI {
                     currentPlayers.add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));
                     currentPlayers.add(new PlayerWithNodes(new Player("PreviousPreviousMaster"), previousMaster));
                     currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
-                    Collections.shuffle(list);
+                    Collections.shuffle(currentPlayers);
                     ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
                     Board board = new Board(tradeRow, new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList()), 7,7,7,7,7,5);
                     AIThreePlayers ai = new AIThreePlayers(players);
