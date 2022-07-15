@@ -24,7 +24,7 @@ public class AIThreePlayers {
                 possibleMoves.put(counter, new BuildBuilding(boardController, tier, i));
                 counter++;
             }
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 5; i++) {
                 if (!tier.equals(Tier.RESERVE)) {
                     possibleMoves.put(counter, new ReserveBuilding(boardController, tier, i));
                     counter++;
