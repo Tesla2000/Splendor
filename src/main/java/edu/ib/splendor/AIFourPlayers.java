@@ -4,12 +4,12 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AITwoPlayers extends AI {
-    public AITwoPlayers((ArrayList<Player> players, int masterCounter)) {
+public class AIFourPlayers extends AI {
+     public AIFourPlayers((ArrayList<Player> players, int masterCounter)) {
         super(players, masterCounter);
     }
-
     public static void main(String[] args) throws IOException {
+        int masterCounter = 0; 
         while (true) {
             Random random = new Random();
             double[] scores = new double[16];
@@ -21,6 +21,7 @@ public class AITwoPlayers extends AI {
                 allPlayers.add(AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt"));
             }
             ArrayList<Node> master = AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + masterCounter + ".txt");
+            ArrayList<Node> previousMaster = AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + (masterCounter-1) + ".txt");
             ArrayList<PlayerWithNodes> currentPlayers;
             for (int id = 0; id < allPlayers.size(); id++) {
                 for (int i = 0; i < 50; i++) {
@@ -29,15 +30,13 @@ public class AITwoPlayers extends AI {
                     currentPlayers = new ArrayList<>();
                     ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
                     TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
-                    if (random.nextBoolean()) {
-                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-                        currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
-                    } else {
-                        currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
-                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-                    }
+                    currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
+                    currentPlayers.add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));
+                    currentPlayers.add(new PlayerWithNodes(new Player("PreviousPreviousMaster"), previousMaster));
+                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+                    Collections.shuffle(currentPlayers);
                     ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
-                    AITwoPlayers ai = new AITwoPlayers(players);
+                    AIThreePlayers ai = new AIThreePlayers(players, masterCounter);
                     int moves = 0;
                     Board board = new Board(tradeRow, new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList()), 7,7,7,7,7,5);
                     while (true) {
@@ -68,16 +67,14 @@ public class AITwoPlayers extends AI {
                     ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
                     TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
                     currentPlayers = new ArrayList<>();
-                    if (random.nextBoolean()) {
-                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
-                    } else {
-                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(best)));
-                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-                    }
+                    currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
+                    currentPlayers.add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));
+                    currentPlayers.add(new PlayerWithNodes(new Player("PreviousPreviousMaster"), previousMaster));
+                    currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+                    Collections.shuffle(currentPlayers);
                     ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
                     Board board = new Board(tradeRow, new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList()), 7,7,7,7,7,5);
-                    AITwoPlayers ai = new AITwoPlayers(players);
+                    AIThreePlayers ai = new AIThreePlayers(players);
                     while (true) {
                         AIController.playTurn(currentPlayers.get(0).getNodes(), board);
                         if (lost) {
@@ -93,54 +90,13 @@ public class AITwoPlayers extends AI {
                         players.add(players.remove(0));
                     }
                 }
-            if (bestScore > 60) {
+            if (bestScore > 30) {  // before i find better indicator
                 System.out.println("New master "+(masterCounter+1)+": " + (int) Math.round(bestScore) + "/" + 100);
                 saveAsMaster(best);
             }
-                System.out.println("Best pretender: " + (int) Math.round(bestScore) + "/" + 100);
+            System.out.println("Best pretender: " + (int) Math.round(bestScore) + "/" + 100);
             CommunicationController.respondToPython(scores);
             CommunicationController.passToPython();
             }
     }
-
-//    public static void main(String[] args) throws IOException {
-//        Random random = new Random();
-//        for (int masterCounter = 1; masterCounter < 29; masterCounter++) {
-//            ArrayList<Node> master = readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + masterCounter + ".txt");
-//            for (int m = masterCounter+1; m < 29; m++) {
-//                int bestScore = 0;
-//                for (int i = 0; i < 1000; i++) {
-//                    won = false;
-//                    lost = false;
-//                    ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
-//                    TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
-//                    ArrayList<PlayerWithNodes> currentPlayers = new ArrayList<>();
-//                    if (random.nextBoolean()) {
-//                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-//                        currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + m + ".txt")));
-//                    } else {
-//                        currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + m + ".txt")));
-//                        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-//                    }
-//                    ArrayList<Player> players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
-//                    AITwoPlayers ai = new AITwoPlayers(new BoardController(), players, new Board(tradeRow, players, 7, 7, 7, 7, 7, 5));
-//                    while (true) {
-//                        ai.playTurn(currentPlayers.get(0).getNodes());
-//                        if (lost) {
-//                            break;
-//                        }
-//                        if (won) {
-//                            if (currentPlayers.get(0).getPlayer().getName().equals("Pretender")) {
-//                                bestScore++;
-//                            }
-//                            break;
-//                        }
-//                        players.add(players.remove(0));
-//                        currentPlayers.add(currentPlayers.remove(0));
-//                    }
-//                }
-//                System.out.println("Best pretender " + m + "/" + masterCounter + ": " + bestScore + "/" + 1000);
-//            }
-//        }
-//    }
 }
