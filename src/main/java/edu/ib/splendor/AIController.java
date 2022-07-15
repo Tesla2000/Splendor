@@ -211,4 +211,29 @@ public class AIController {
         }
         return results;
     }
+
+    public static void trainAI(AI ai, int betterIndicator) throws IOException {
+        while (true) {
+            ai.initializeTraining();
+            for (int id = 0; id < ai.getAllPlayers().size(); id++) {
+                for (int i = 0; i < 50; i++) {
+                    ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), id);
+                    ai.playGame(id);
+                }
+            }
+            ai.setBestScore(0);
+            for (int i = 0; i < 100; i++) {
+                ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), ai.getBest());
+                ai.playGame(ai.getBest());
+            }
+            if (ai.getBestScore() > betterIndicator) {
+                System.out.println("New master " + (ai.getMasterCounter() + 1) + ": " + (int) Math.round(ai.getBestScore()) + "/" + 100);
+                ai.setMasterCounter(ai.getMasterCounter() + 1);
+                AIController.saveAsMaster(ai.getBest(), ai.getMasterCounter());
+            }
+            System.out.println("Best pretender: " + (int) Math.round(ai.getBestScore()) + "/" + 100);
+            CommunicationController.respondToPython(ai.getScores());
+            CommunicationController.passToPython();
+        }
+    }
 }

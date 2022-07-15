@@ -1,11 +1,59 @@
 package edu.ib.splendor;
 
+import java.io.IOException;
 import java.util.*;
 
-public class AI {
+public abstract class AI {
     private static HashMap<Integer, Move> possibleMoves;
+    private double[] scores;
+    ArrayList<ArrayList<Node>> allPlayers;
+    private int best;
+    private int masterCounter;
+    private double bestScore;
+    private ArrayList<Player> players;
+    private ArrayList<PlayerWithNodes> currentPlayers = new ArrayList<>();
 
-    public AI() {
+    public void initializeTraining() throws IOException {
+        scores = new double[16];
+        best = 0;
+        bestScore = 0;
+        CommunicationController.waitForJavaTurn();
+        allPlayers = new ArrayList<>();
+        for (int id = 0; id < 16; id++) {
+            allPlayers.add(AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt"));
+        }
+    }
+
+    public void playGame(int id){
+        ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
+        TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
+        players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
+        Board board = new Board(tradeRow, new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList()), 7, 7, 7, 7, 7, 5);
+        int moves = 0;
+        while (true) {
+            moves++;
+            try{
+                AIController.playTurn(players, currentPlayers.get(0).getNodes(), board, getPossibleMoves());
+            } catch (GameLostException e){
+                break;
+            }
+            if (currentPlayers.get(0).getPoints()>=15) {
+                if (currentPlayers.get(0).getPlayer().getName().equals("Pretender")) {
+                    scores[id] = scores[id] + 1 + 1.0 / moves / 50;
+                    if (scores[id] > bestScore) {
+                        best = id;
+                        bestScore = scores[id];
+                    }
+                }
+                break;
+            }
+            currentPlayers.add(currentPlayers.remove(0));
+            players.add(players.remove(0));
+        }
+    }
+
+    public AI(int masterCounter) {
+        this.masterCounter = masterCounter;
         possibleMoves = new HashMap<>();
         int counter = 0;
         for (Tier tier : Tier.values()) {
@@ -28,4 +76,42 @@ public class AI {
     public static HashMap<Integer, Move> getPossibleMoves() {
         return possibleMoves;
     }
+
+    public double[] getScores() {
+        return scores;
+    }
+
+    public ArrayList<ArrayList<Node>> getAllPlayers() {
+        return allPlayers;
+    }
+
+    public int getBest() {
+        return best;
+    }
+
+    public double getBestScore() {
+        return bestScore;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public ArrayList<PlayerWithNodes> getCurrentPlayers() {
+        return currentPlayers;
+    }
+
+    public void setBestScore(double bestScore) {
+        this.bestScore = bestScore;
+    }
+
+    public int getMasterCounter() {
+        return masterCounter;
+    }
+
+    public void setMasterCounter(int masterCounter) {
+        this.masterCounter = masterCounter;
+    }
+
+    protected abstract void setOrder(ArrayList<ArrayList<Node>> allPlayers, int masterCounter, ArrayList<PlayerWithNodes> currentPlayers, int id) throws IOException;
 }
