@@ -70,9 +70,9 @@ public class DeckGenerator {
                     random.nextInt(0, Integer.MAX_VALUE),
                     random.nextInt(0, Integer.MAX_VALUE),
             };
-            System.out.println("First seed: " + seeds[0]);
-            System.out.println("Second seed: " + seeds[1]);
-            System.out.println("Third seed: " + seeds[2]);
+//            System.out.println("First seed: " + seeds[0]);
+//            System.out.println("Second seed: " + seeds[1]);
+//            System.out.println("Third seed: " + seeds[2]);
             Collections.shuffle(first, new Random(seeds[0]));
             Collections.shuffle(second, new Random(seeds[0]));
             Collections.shuffle(third, new Random(seeds[0]));
@@ -105,7 +105,7 @@ public class DeckGenerator {
         aristocrats.add(new Aristocrat(3,0,0,3,3,"30033"));
         Random random = new Random();
         int seed = random.nextInt(0, Integer.MAX_VALUE);
-        System.out.println("Aristocrats seed: " + seed);
+//        System.out.println("Aristocrats seed: " + seed);
         Collections.shuffle(aristocrats, new Random(seed));
         return aristocrats;
     }

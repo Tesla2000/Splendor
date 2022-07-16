@@ -1,6 +1,7 @@
 package edu.ib.splendor.service.AI;
 
 import edu.ib.splendor.database.entities.Node;
+import edu.ib.splendor.database.entities.NumberOfPlayers;
 import edu.ib.splendor.database.entities.Player;
 import edu.ib.splendor.database.entities.PlayerWithNodes;
 
@@ -13,18 +14,19 @@ public class AIThreePlayers extends AI {
     }
 
     public static void main(String[] args) throws IOException {
-        AIThreePlayers ai = new AIThreePlayers(0);
+        AIThreePlayers ai = new AIThreePlayers(1);
         int betterIndicator = 41;
-        AIController.trainAI(ai, betterIndicator);
+        AIController.trainAI(ai, betterIndicator, NumberOfPlayers.three);
     }
 
     @Override
     protected void setOrder(ArrayList<ArrayList<Node>> allPlayers, int masterCounter, ArrayList<PlayerWithNodes> currentPlayers, int id) throws IOException {
-        ArrayList<Node> master = AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + masterCounter + ".txt");
-        ArrayList<Node> previousMaster = AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + (masterCounter-1) + ".txt");
-        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-        currentPlayers.add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));
-        currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
-        Collections.shuffle(currentPlayers);
+        ArrayList<Node> master = AIController.readNodesFromFile("masters/three/" + masterCounter + ".txt");
+        ArrayList<Node> previousMaster = AIController.readNodesFromFile("masters/three/" + Math.max(0,masterCounter-1) + ".txt");
+        setCurrentPlayers(new ArrayList<>());
+        getCurrentPlayers().add(new PlayerWithNodes(new Player("Master"), master));
+        getCurrentPlayers().add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));
+        getCurrentPlayers().add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+        Collections.shuffle(getCurrentPlayers());
     }
 }

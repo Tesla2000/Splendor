@@ -35,7 +35,7 @@ public abstract class AI {
     private int masterCounter;
     private double bestScore;
     private ArrayList<Player> players;
-    private ArrayList<PlayerWithNodes> currentPlayers = new ArrayList<>();
+    private ArrayList<PlayerWithNodes> currentPlayers;
 
     public void initializeTraining() throws IOException {
         scores = new double[16];
@@ -44,7 +44,7 @@ public abstract class AI {
         CommunicationController.waitForJavaTurn();
         allPlayers = new ArrayList<>();
         for (int id = 0; id < 16; id++) {
-            allPlayers.add(AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt"));
+            allPlayers.add(AIController.readNodesFromFile("coefficients/" + id + ".txt"));
         }
     }
 
@@ -61,7 +61,7 @@ public abstract class AI {
             } catch (GameLostException e){
                 break;
             }
-            if (currentPlayers.get(0).getPoints()>=15) {
+            if (currentPlayers.get(0).getPlayer().getPoints()>=15) {
                 if (currentPlayers.get(0).getPlayer().getName().equals("Pretender")) {
                     scores[id] = scores[id] + 1 + 1.0 / moves / 50;
                     if (scores[id] > bestScore) {
@@ -118,6 +118,10 @@ public abstract class AI {
 
     public void setMasterCounter(int masterCounter) {
         this.masterCounter = masterCounter;
+    }
+
+    public void setCurrentPlayers(ArrayList<PlayerWithNodes> currentPlayers) {
+        this.currentPlayers = currentPlayers;
     }
 
     protected abstract void setOrder(ArrayList<ArrayList<Node>> allPlayers, int masterCounter, ArrayList<PlayerWithNodes> currentPlayers, int id) throws IOException;

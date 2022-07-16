@@ -1,6 +1,7 @@
 package edu.ib.splendor.service.AI;
 
 import edu.ib.splendor.database.entities.Node;
+import edu.ib.splendor.database.entities.NumberOfPlayers;
 import edu.ib.splendor.database.entities.Player;
 import edu.ib.splendor.database.entities.PlayerWithNodes;
 import edu.ib.splendor.service.CommunicationController;
@@ -17,16 +18,17 @@ public class AITwoPlayers extends AI {
     public static void main(String[] args) throws IOException {
         AITwoPlayers ai = new AITwoPlayers(28);
         int betterIndicator = 61;
-        while (true) {
-            ai.initializeTraining();
-            for (int id = 0; id < ai.getAllPlayers().size(); id++) {
-                for (int i = 0; i < 50; i++) {
-                    ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), id);
-                    ai.playGame(id);
-                }
-            }
-            ai.setBestScore(0);
-            for (int i = 0; i < 100; i++) {
+        AIController.trainAI(ai, betterIndicator, NumberOfPlayers.two);
+//        while (true) {
+//            ai.initializeTraining();
+//            for (int id = 0; id < ai.getAllPlayers().size(); id++) {
+//                for (int i = 0; i < 50; i++) {
+//                    ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), id);
+//                    ai.playGame(id);
+//                }
+//            }
+//            ai.setBestScore(0);
+//            for (int i = 0; i < 100; i++) {
 //                ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
 //                TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
 //                currentPlayers = new ArrayList<>();
@@ -47,26 +49,27 @@ public class AITwoPlayers extends AI {
 //                    }
 //                    currentPlayers.add(currentPlayers.remove(0));
 //                    players.add(players.remove(0));
-                ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), ai.getBest());
-                ai.playGame(ai.getBest());
-            }
-            if (ai.getBestScore() > betterIndicator) {
-                System.out.println("New master " + (ai.getMasterCounter() + 1) + ": " + (int) Math.round(ai.getBestScore()) + "/" + 100);
-                ai.setMasterCounter(ai.getMasterCounter() + 1);
-                AIController.saveAsMaster(ai.getBest(), ai.getMasterCounter());
-            }
-            System.out.println("Best pretender: " + (int) Math.round(ai.getBestScore()) + "/" + 100);
-            CommunicationController.respondToPython(ai.getScores());
-            CommunicationController.passToPython();
-        }
+//                ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), ai.getBest());
+//                ai.playGame(ai.getBest());
+//            }
+//            if (ai.getBestScore() > betterIndicator) {
+//                System.out.println("New master " + (ai.getMasterCounter() + 1) + ": " + (int) Math.round(ai.getBestScore()) + "/" + 100);
+//                ai.setMasterCounter(ai.getMasterCounter() + 1);
+//                AIController.saveAsMaster(ai.getBest(), ai.getMasterCounter());
+//            }
+//            System.out.println("Best pretender: " + (int) Math.round(ai.getBestScore()) + "/" + 100);
+//            CommunicationController.respondToPython(ai.getScores());
+//            CommunicationController.passToPython();
+//        }
     }
 
     @Override
     protected void setOrder(ArrayList<ArrayList<Node>> allPlayers, int masterCounter, ArrayList<PlayerWithNodes> currentPlayers, int id) throws IOException {
-        ArrayList<Node> master = AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + masterCounter + ".txt");
-        currentPlayers.add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
-        currentPlayers.add(new PlayerWithNodes(new Player("Master"), master));
-        Collections.shuffle(currentPlayers);
+        ArrayList<Node> master = AIController.readNodesFromFile("masters/two/" + masterCounter + ".txt");
+        setCurrentPlayers(new ArrayList<>());
+        getCurrentPlayers().add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
+        getCurrentPlayers().add(new PlayerWithNodes(new Player("Master"), master));
+        Collections.shuffle(getCurrentPlayers());
     }
 
 //    public static void main(String[] args) throws IOException {

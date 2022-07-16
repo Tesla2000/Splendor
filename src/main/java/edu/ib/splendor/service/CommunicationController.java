@@ -10,7 +10,7 @@ public class CommunicationController {
         String st;
         boolean stop = false;
         do {
-            File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\communication.txt");
+            File file = new File("communication.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             while ((st = reader.readLine()) != null) {
                 if (st.equals("java")) stop = true;
@@ -20,7 +20,7 @@ public class CommunicationController {
     }
 
     public static void respondToPython(double[] scores) throws IOException {
-        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\response.txt");
+        File file = new File("response.txt");
         FileWriter writer = new FileWriter(file);
         StringBuilder builder = new StringBuilder();
         for (double score : scores) builder.append(score).append(",");
@@ -31,7 +31,7 @@ public class CommunicationController {
     }
 
     public static void passToPython() throws IOException {
-        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\communication.txt");
+        File file = new File("communication.txt");
         FileWriter writer = new FileWriter(file);
         writer.write("python");
         writer.close();

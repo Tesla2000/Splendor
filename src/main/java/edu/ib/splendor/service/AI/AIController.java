@@ -40,23 +40,23 @@ public class AIController {
         return result;
     }
 
-    public static void saveAsMaster(String id, int masterCounter) throws IOException {
+    public static void saveAsMaster(String id, int masterCounter, NumberOfPlayers numberOfPlayers) throws IOException {
         String st;
         StringBuilder builder = new StringBuilder();
-        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\coefficients\\" + id + ".txt");
+        File file = new File("coefficients/" + id + ".txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         while ((st = reader.readLine()) != null) {
             builder.append(st).append("\n");
         }
         reader.close();
-        file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\" + masterCounter + ".txt");
+        file = new File("masters/"+numberOfPlayers+"/" + (masterCounter + 1) + ".txt");
         FileWriter writer = new FileWriter(file);
         writer.write(builder.toString());
         writer.close();
     }
 
-    public static void saveAsMaster(int id, int masterCounter) throws IOException {
-        saveAsMaster(String.valueOf(id), masterCounter);
+    public static void saveAsMaster(int id, int masterCounter, NumberOfPlayers numberOfPlayers) throws IOException {
+        saveAsMaster(String.valueOf(id), masterCounter, numberOfPlayers);
     }
 
     public static ArrayList<Integer> getState(Board board, ArrayList<Player> players){
@@ -217,7 +217,7 @@ public class AIController {
         return results;
     }
 
-    public static void trainAI(AI ai, int betterIndicator) throws IOException {
+    public static void trainAI(AI ai, int betterIndicator, NumberOfPlayers numberOfPlayers) throws IOException {
         while (true) {
             ai.initializeTraining();
             for (int id = 0; id < ai.getAllPlayers().size(); id++) {
@@ -234,7 +234,7 @@ public class AIController {
             if (ai.getBestScore() > betterIndicator) {
                 System.out.println("New master " + (ai.getMasterCounter() + 1) + ": " + (int) Math.round(ai.getBestScore()) + "/" + 100);
                 ai.setMasterCounter(ai.getMasterCounter() + 1);
-                AIController.saveAsMaster(ai.getBest(), ai.getMasterCounter());
+                saveAsMaster(ai.getBest(), ai.getMasterCounter(), numberOfPlayers);
             }
             System.out.println("Best pretender: " + (int) Math.round(ai.getBestScore()) + "/" + 100);
             CommunicationController.respondToPython(ai.getScores());
