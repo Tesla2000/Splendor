@@ -1,8 +1,9 @@
-package edu.ib.splendor;
+package edu.ib.splendor.database.entities;
+
+import edu.ib.splendor.service.DeckGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 public class Board {
     private TradeRow tradeRow;

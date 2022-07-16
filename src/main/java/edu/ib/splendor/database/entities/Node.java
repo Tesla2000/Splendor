@@ -1,4 +1,4 @@
-package edu.ib.splendor;
+package edu.ib.splendor.database.entities;
 
 import java.util.ArrayList;
 

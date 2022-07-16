@@ -1,16 +1,19 @@
-package edu.ib.splendor;
+package edu.ib.splendor.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import edu.ib.splendor.database.entities.*;
+import edu.ib.splendor.service.AI.AI;
+import edu.ib.splendor.service.AI.AIController;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -18,13 +21,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class GameController {
-    private AITwoPlayers aiTwoPlayers;
     private LocalDateTime block = LocalDateTime.now();
     private Player currentPlayer;
     private Board board;
     private ArrayList<HashMap<Gem, Text>> playersResource;
     private ArrayList<HashMap<Gem, StackPane>> playersPanes;
-    private BoardController boardController;
     private Text goldResource;
     private Text redsResource;
     private Text greensResource;
@@ -474,156 +475,137 @@ public class GameController {
         }
     }
 
-
-//    private void getAristocrats() {
-//        ArrayList<Aristocrat> toRemove = new ArrayList<>();
-//        for (Aristocrat aristocrat: board.getAristocrats())
-//            if (
-//                    aristocrat.getBlue()<=currentPlayer.getProduction().getOrDefault(Gem.BLUE,0) &&
-//                    aristocrat.getRed()<=currentPlayer.getProduction().getOrDefault(Gem.RED,0) &&
-//                    aristocrat.getGreen()<=currentPlayer.getProduction().getOrDefault(Gem.GREEN,0) &&
-//                    aristocrat.getBrown()<=currentPlayer.getProduction().getOrDefault(Gem.BROWN,0) &&
-//                    aristocrat.getWhite()<=currentPlayer.getProduction().getOrDefault(Gem.WHITE,0)
-//            ) {
-//                toRemove.add(aristocrat);
-//                currentPlayer.addAristocrat(aristocrat);
-//            }
-//        for (Aristocrat aristocrat: toRemove){
-//            board.removeAristocrat(aristocrat);
-//        }
-//    }
-
     private void setPictures(){
         Image image;
         try{
             image = new Image(currentPlayer.getReserve().get(0).getPicture());
             res1.setImage(image);
         } catch (Exception e){
-            res1.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\reserve.png"));
+            res1.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try{
             image = new Image(currentPlayer.getReserve().get(1).getPicture());
             res2.setImage(image);
         } catch (Exception e){
-            res2.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\reserve.png"));
+            res2.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try{
             image = new Image(currentPlayer.getReserve().get(2).getPicture());
             res3.setImage(image);
         } catch (Exception e){
-            res3.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\reserve.png"));
+            res3.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 0).getPicture());
             building11.setImage(image);
         } catch (Exception e){
-            building11.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_1.png"));
+            building11.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 0).getPicture());
             building21.setImage(image);
         } catch (Exception e){
-            building21.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_2.png"));
+            building21.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 0).getPicture());
             building31.setImage(image);
         } catch (Exception e){
-            building31.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_3.png"));
+            building31.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 1).getPicture());
             building12.setImage(image);
         } catch (Exception e){
-            building12.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_1.png"));
+            building12.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 1).getPicture());
             building22.setImage(image);
         } catch (Exception e){
-            building22.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_2.png"));
+            building22.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 1).getPicture());
             building32.setImage(image);
         } catch (Exception e){
-            building32.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_3.png"));
+            building32.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 2).getPicture());
             building13.setImage(image);
         } catch (Exception e){
-            building13.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_1.png"));
+            building13.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 2).getPicture());
             building23.setImage(image);
         } catch (Exception e){
-            building23.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_2.png"));
+            building23.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 2).getPicture());
             building33.setImage(image);
         } catch (Exception e){
-            building33.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_3.png"));
+            building33.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 3).getPicture());
             building14.setImage(image);
         } catch (Exception e){
-            building14.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_1.png"));
+            building14.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 3).getPicture());
             building24.setImage(image);
         } catch (Exception e){
-            building24.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_2.png"));
+            building24.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
         }
         try{
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 3).getPicture());
             building34.setImage(image);
         } catch (Exception e){
-            building34.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_3.png"));
+            building34.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
         }
-        building30.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_3.png"));
-        building20.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_2.png"));
-        building10.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\tier_1.png"));
+        building30.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
+        building20.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
+        building10.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         try {
             aristocrat0.setImage(new Image(board.getAristocrats().get(0).getImage()));
         }catch (Exception e) {
-            aristocrat0.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\reserve.png"));
+            aristocrat0.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try {
             aristocrat1.setImage(new Image(board.getAristocrats().get(1).getImage()));
         }catch (Exception e) {
-            aristocrat1.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\reserve.png"));
+            aristocrat1.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try {
             aristocrat2.setImage(new Image(board.getAristocrats().get(2).getImage()));
         }catch (Exception e) {
-            aristocrat2.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\reserve.png"));
+            aristocrat2.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try {
             aristocrat3.setImage(new Image(board.getAristocrats().get(3).getImage()));
         }catch (Exception e) {
-            aristocrat3.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\reserve.png"));
+            aristocrat3.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
 
     }
     private void showResources(){
         String string;
         string =  board.getStored(Gem.RED).toString();
-        red.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red" + string + ".png"));
+        red.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/red"+string+".png").getAbsolutePath()));
         string =  board.getStored(Gem.GREEN).toString();
-        green.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green" + string + ".png"));
+        green.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/green"+string+".png").getAbsolutePath()));
         string =  board.getStored(Gem.BLUE).toString();
-        blue.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue" + string + ".png"));
+        blue.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/blue"+string+".png").getAbsolutePath()));
         string =  board.getStored(Gem.BROWN).toString();
-        brown.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown" + string + ".png"));
+        brown.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/brown"+string+".png").getAbsolutePath()));
         string =  board.getStored(Gem.WHITE).toString();
-        white.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white" + string + ".png"));
+        white.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/white"+string+".png").getAbsolutePath()));
         string =  board.getStored(Gem.GOLD).toString();
-        gold.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold" + string + ".png"));
+        gold.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/gold"+string+".png").getAbsolutePath()));
     }
 
     private void updateFields() {
@@ -690,123 +672,123 @@ public class GameController {
     }
 
     @FXML
-    void actionAccess01(MouseEvent event) {
+    void actionAccess01() {
         buyEstate(Tier.RESERVE, 0);
     }
 
 
     @FXML
-    void actionAccess02(MouseEvent event) {
+    void actionAccess02() {
         buyEstate(Tier.RESERVE, 1);
     }
 
     @FXML
-    void actionAccess03(MouseEvent event) {
+    void actionAccess03() {
         buyEstate(Tier.RESERVE, 2);
     }
 
     @FXML
-    void actionAccess10(MouseEvent event) {
+    void actionAccess10() {
         buyEstate(Tier.FIRST, 0);
     }
 
     @FXML
-    void actionAccess11(MouseEvent event) {
+    void actionAccess11() {
         buyEstate(Tier.FIRST, 1);
     }
 
     @FXML
-    void actionAccess12(MouseEvent event) {
+    void actionAccess12() {
         buyEstate(Tier.FIRST, 2);
     }
 
     @FXML
-    void actionAccess13(MouseEvent event) {
+    void actionAccess13() {
         buyEstate(Tier.FIRST, 3);
     }
 
     @FXML
-    void actionAccess14(MouseEvent event) {
+    void actionAccess14() {
         buyEstate(Tier.FIRST, 4);
     }
 
     @FXML
-    void actionAccess20(MouseEvent event) {
+    void actionAccess20() {
         buyEstate(Tier.SECOND, 0);
     }
 
     @FXML
-    void actionAccess21(MouseEvent event) {
+    void actionAccess21() {
         buyEstate(Tier.SECOND, 1);
     }
 
     @FXML
-    void actionAccess22(MouseEvent event) {
+    void actionAccess22() {
         buyEstate(Tier.SECOND, 2);
     }
 
     @FXML
-    void actionAccess23(MouseEvent event) {
+    void actionAccess23() {
         buyEstate(Tier.SECOND, 3);
     }
 
     @FXML
-    void actionAccess24(MouseEvent event) {
+    void actionAccess24() {
         buyEstate(Tier.SECOND, 4);
     }
 
     @FXML
-    void actionAccess30(MouseEvent event) {
+    void actionAccess30() {
         buyEstate(Tier.THIRD, 0);
     }
 
     @FXML
-    void actionAccess31(MouseEvent event) {
+    void actionAccess31() {
         buyEstate(Tier.THIRD, 1);
     }
 
     @FXML
-    void actionAccess32(MouseEvent event) {
+    void actionAccess32() {
         buyEstate(Tier.THIRD, 2);
     }
 
     @FXML
-    void actionAccess33(MouseEvent event) {
+    void actionAccess33() {
         buyEstate(Tier.THIRD, 3);
     }
 
     @FXML
-    void actionAccess34(MouseEvent event) {
+    void actionAccess34() {
         buyEstate(Tier.THIRD, 4);
     }
 
     @FXML
-    void collectBlue(MouseEvent event) {
+    void collectBlue() {
         collectGem(Gem.BLUE);
     }
 
     @FXML
-    void collectBrown(MouseEvent event) {
+    void collectBrown() {
         collectGem(Gem.BROWN);
     }
 
     @FXML
-    void collectGreen(MouseEvent event) {
+    void collectGreen() {
         collectGem(Gem.GREEN);
     }
 
     @FXML
-    void collectRed(MouseEvent event) {
+    void collectRed() {
         collectGem(Gem.RED);
     }
 
     @FXML
-    void collectWhite(MouseEvent event) {
+    void collectWhite() {
         collectGem(Gem.WHITE);
     }
 
     @FXML
-    void end(MouseEvent event) {
+    void end() {
         endTurn();
     }
 
@@ -863,12 +845,12 @@ public class GameController {
                 new ImageView[]{reds111, greens111, blues111, browns111, whites111, golds111},
         };
         Image[] images = new Image[]{
-                new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\red.png"),
-                new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\green.png"),
-                new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\blue.png"),
-                new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\brown.png"),
-                new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\white.png"),
-                new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\gold.png"),
+                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/red.png").getAbsolutePath()),
+                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/green.png").getAbsolutePath()),
+                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/blue.png").getAbsolutePath()),
+                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/brown.png").getAbsolutePath()),
+                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/white.png").getAbsolutePath()),
+                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/gold.png").getAbsolutePath()),
         };
         Text[][] texts = new Text[][]{
                 new Text[]{redsResource, greensResource, bluesResource, brownsResource, whitesResource, goldsResource},
@@ -908,7 +890,7 @@ public class GameController {
         board = new Board(tradeRow, players, 7,7,7,7,7,5);
         setPictures();
         currentPlayer = players.get(0);
-        endTurnButton.setImage(new Image("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\end_turn.png"));
+        endTurnButton.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/end_turn.png").getAbsolutePath()));
         showResources();
         for (int i=0;i<Gem.values().length;i++){
             imageViews[0][i].setImage(images[i]);

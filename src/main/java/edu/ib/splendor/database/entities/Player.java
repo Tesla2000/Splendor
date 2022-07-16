@@ -1,9 +1,7 @@
-package edu.ib.splendor;
+package edu.ib.splendor.database.entities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class Player {
     private ArrayList<Card> deck = new ArrayList<>();

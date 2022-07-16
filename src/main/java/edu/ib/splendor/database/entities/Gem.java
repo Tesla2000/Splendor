@@ -1,4 +1,4 @@
-package edu.ib.splendor;
+package edu.ib.splendor.database.entities;
 
 public enum Gem {
     RED,

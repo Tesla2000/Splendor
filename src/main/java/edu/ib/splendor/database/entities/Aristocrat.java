@@ -1,5 +1,8 @@
-package edu.ib.splendor;
+package edu.ib.splendor.database.entities;
 
+import edu.ib.splendor.database.entities.Gem;
+
+import java.io.File;
 import java.util.HashMap;
 
 public record Aristocrat(int red, int green, int blue, int brown, int white, String image) {
@@ -18,5 +21,5 @@ public record Aristocrat(int red, int green, int blue, int brown, int white, Str
         return cost;
     }
 
-    public String getImage(){return "C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\" + image + ".png";}
+    public String getImage(){return new File("src/main/java/edu/ib/splendor/database/pictures/aristocrats/"+image+".png").getAbsolutePath();}
 }

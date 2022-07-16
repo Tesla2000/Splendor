@@ -1,4 +1,6 @@
-package edu.ib.splendor;
+package edu.ib.splendor.database.entities;
+
+import edu.ib.splendor.service.BoardController;
 
 public record BuildBuilding(Tier tier,
                             int index) implements Move {

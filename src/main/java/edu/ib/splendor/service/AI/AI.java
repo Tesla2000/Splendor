@@ -1,4 +1,9 @@
-package edu.ib.splendor;
+package edu.ib.splendor.service.AI;
+
+import edu.ib.splendor.database.entities.*;
+import edu.ib.splendor.service.CommunicationController;
+import edu.ib.splendor.service.DeckGenerator;
+import edu.ib.splendor.service.GameLostException;
 
 import java.io.IOException;
 import java.util.*;

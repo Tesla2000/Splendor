@@ -1,5 +1,6 @@
-package edu.ib.splendor;
+package edu.ib.splendor.database.entities;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class Card {
@@ -20,7 +21,7 @@ public class Card {
     }
 
     public String getPicture() {
-        return "C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\pictures\\" + picture + ".png";
+        return new File("src/main/java/edu/ib/splendor/database/pictures/buildings/"+picture+".png").getAbsolutePath();
     }
 
     private int points = 0;

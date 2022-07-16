@@ -1,4 +1,4 @@
-package edu.ib.splendor;
+package edu.ib.splendor.service;
 
 public class GameLostException extends Exception{
 }

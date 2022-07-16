@@ -1,4 +1,8 @@
-package edu.ib.splendor;
+package edu.ib.splendor.service.AI;
+
+import edu.ib.splendor.database.entities.Node;
+import edu.ib.splendor.database.entities.Player;
+import edu.ib.splendor.database.entities.PlayerWithNodes;
 
 import java.io.*;
 import java.util.*;

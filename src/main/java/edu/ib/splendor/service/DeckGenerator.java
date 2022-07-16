@@ -1,4 +1,9 @@
-package edu.ib.splendor;
+package edu.ib.splendor.service;
+
+import edu.ib.splendor.database.entities.Aristocrat;
+import edu.ib.splendor.database.entities.Card;
+import edu.ib.splendor.database.entities.Gem;
+import edu.ib.splendor.database.entities.Tier;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,7 +16,7 @@ public class DeckGenerator {
         ArrayList<Card> first = new ArrayList<>();
         ArrayList<Card> second = new ArrayList<>();
         ArrayList<Card> third = new ArrayList<>();
-        File file = new File("C:\\Users\\Dell\\IdeaProjects\\Splendor\\src\\main\\java\\edu\\ib\\splendor\\buildings.txt");
+        File file = new File("src/main/java/edu/ib/splendor/database/buildings.txt");
         try {
             FileReader reader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(reader);

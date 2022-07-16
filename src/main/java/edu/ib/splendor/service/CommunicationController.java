@@ -1,4 +1,4 @@
-package edu.ib.splendor;
+package edu.ib.splendor.service;
 
 import java.io.*;
 import java.util.*;
