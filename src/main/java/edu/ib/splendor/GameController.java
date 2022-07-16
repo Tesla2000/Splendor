@@ -853,7 +853,7 @@ public class GameController {
         assert whites1 != null : "fx:id=\"whites1\" was not injected: check your FXML file 'board.fxml'.";
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
-        ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
+        ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
         playersResource = new ArrayList<>();
         playersPanes = new ArrayList<>();
         ImageView[][] imageViews = new ImageView[][]{

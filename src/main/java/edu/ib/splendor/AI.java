@@ -4,7 +4,26 @@ import java.io.IOException;
 import java.util.*;
 
 public abstract class AI {
-    private static HashMap<Integer, Move> possibleMoves;
+    private static final HashMap<Integer, Move> possibleMoves;
+    static {
+        int counter = 0;
+        possibleMoves = new HashMap<>();
+        for (Tier tier : Tier.values()) {
+            int loops;
+            if (tier.equals(Tier.RESERVE)) loops = 3;
+            else loops = 4;
+            for (int i = 0; i < loops; i++) {
+                possibleMoves.put(counter, new BuildBuilding(tier, i));
+                counter++;
+            }
+            for (int i = 0; i < 5; i++) {
+                if (!tier.equals(Tier.RESERVE)) {
+                    possibleMoves.put(counter, new ReserveBuilding(tier, i));
+                    counter++;
+                }
+            }
+        }
+    }
     private double[] scores;
     ArrayList<ArrayList<Node>> allPlayers;
     private int best;
@@ -25,7 +44,7 @@ public abstract class AI {
     }
 
     public void playGame(int id){
-        ArrayList<ArrayList<Card>> cards = GenerateDeck.generateCards();
+        ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
         TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
         players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
         Board board = new Board(tradeRow, new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList()), 7, 7, 7, 7, 7, 5);
@@ -54,23 +73,6 @@ public abstract class AI {
 
     public AI(int masterCounter) {
         this.masterCounter = masterCounter;
-        possibleMoves = new HashMap<>();
-        int counter = 0;
-        for (Tier tier : Tier.values()) {
-            int loops;
-            if (tier.equals(Tier.RESERVE)) loops = 3;
-            else loops = 4;
-            for (int i = 0; i < loops; i++) {
-                possibleMoves.put(counter, new BuildBuilding(tier, i));
-                counter++;
-            }
-            for (int i = 0; i < 5; i++) {
-                if (!tier.equals(Tier.RESERVE)) {
-                    possibleMoves.put(counter, new ReserveBuilding(tier, i));
-                    counter++;
-                }
-            }
-        }
     }
 
     public static HashMap<Integer, Move> getPossibleMoves() {

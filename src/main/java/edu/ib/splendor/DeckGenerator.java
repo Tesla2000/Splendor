@@ -2,9 +2,10 @@ package edu.ib.splendor;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
-public class GenerateDeck {
+public class DeckGenerator {
     public static ArrayList<ArrayList<Card>> generateCards(){
         ArrayList<ArrayList<Card>> cards = new ArrayList<>();
         ArrayList<Card> first = new ArrayList<>();
@@ -58,9 +59,24 @@ public class GenerateDeck {
             }
             reader.close();
             bufferedReader.close();
-            cards.add((ArrayList<Card>) shoveArray(first));
-            cards.add((ArrayList<Card>) shoveArray(second));
-            cards.add((ArrayList<Card>) shoveArray(third));
+            Random random = new Random();
+            int[] seeds = new int[]{
+                    random.nextInt(0, Integer.MAX_VALUE),
+                    random.nextInt(0, Integer.MAX_VALUE),
+                    random.nextInt(0, Integer.MAX_VALUE),
+            };
+            System.out.println("First seed: " + seeds[0]);
+            System.out.println("Second seed: " + seeds[1]);
+            System.out.println("Third seed: " + seeds[2]);
+            Collections.shuffle(first, new Random(seeds[0]));
+            Collections.shuffle(second, new Random(seeds[0]));
+            Collections.shuffle(third, new Random(seeds[0]));
+//            Collections.shuffle(first, new Random(95478210));
+//            Collections.shuffle(second, new Random(1969018470));
+//            Collections.shuffle(third, new Random(1687456992));
+            cards.add(first);
+            cards.add(second);
+            cards.add(third);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
 
@@ -82,19 +98,10 @@ public class GenerateDeck {
         aristocrats.add(new Aristocrat(3,3,0,3,0,"33030"));
         aristocrats.add(new Aristocrat(3,3,3,0,0,"33300"));
         aristocrats.add(new Aristocrat(3,0,0,3,3,"30033"));
-        ArrayList<Aristocrat> aristocrats1 = (ArrayList<Aristocrat>) shoveArray(aristocrats);
-        return aristocrats1;
-    }
-    
-    private static ArrayList<?> shoveArray(ArrayList<?> arrayList){
-        ArrayList<Object> holder = new ArrayList<>();
         Random random = new Random();
-        int number;
-        while (arrayList.size()>0){
-            number = random.nextInt(arrayList.size());
-            holder.add(arrayList.get(number));
-            arrayList.remove(number);
-        }
-        return holder;
+        int seed = random.nextInt(0, Integer.MAX_VALUE);
+        System.out.println("Aristocrats seed: " + seed);
+        Collections.shuffle(aristocrats, new Random(seed));
+        return aristocrats;
     }
 }

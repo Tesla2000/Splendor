@@ -7,16 +7,15 @@ import java.util.Random;
 public class Board {
     private TradeRow tradeRow;
     private ArrayList<Player> players;
-    private ArrayList<Aristocrat> aristocrats;
-    private HashMap<Gem, Integer> stored = new HashMap<>();
+    private final ArrayList<Aristocrat> aristocrats;
+    private final HashMap<Gem, Integer> stored = new HashMap<>();
 
     public Board(TradeRow tradeRow, ArrayList<Player> players, int red, int green, int blue, int brown, int white, int gold) {
         this.tradeRow = tradeRow;
         this.players = players;
-        aristocrats = GenerateDeck.generateAristocrats();
-        Random random = new Random();
+        aristocrats = DeckGenerator.generateAristocrats();
         while (aristocrats.size()!=4)
-            aristocrats.remove(random.nextInt(aristocrats.size()));
+            aristocrats.remove(aristocrats.get(0));
         stored.put(Gem.RED, red);
         stored.put(Gem.GREEN, green);
         stored.put(Gem.BLUE, blue);
@@ -27,6 +26,10 @@ public class Board {
 
     public Integer getStored(Gem gem){
         return stored.get(gem);
+    }
+
+    public HashMap<Gem, Integer> getStored(){
+        return stored;
     }
 
     public void changeStored(Gem gem, Integer value){

@@ -20,8 +20,7 @@ public class TradeRow {
         for (int i = 0; i < 4; i++) {
             for (Tier tier : Tier.values())
                 if (!tier.equals(Tier.RESERVE)) {
-                    index = random.nextInt(cardsHidden.get(tier).size());
-                    cardsVisible.get(tier).add(cardsHidden.get(tier).remove(index));
+                    cardsVisible.get(tier).add(cardsHidden.get(tier).remove(0));
                 }
         }
     }

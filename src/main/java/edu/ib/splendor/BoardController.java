@@ -96,6 +96,7 @@ public class BoardController {
         player.addReserve(board.getTradeRow().takeCard(tier, index));
         if (player.getPossession().values().stream().reduce(Integer::sum).stream().toList().get(0) < 10){
             player.addGem(Gem.GOLD);
+            board.changeStored(Gem.GOLD, -1);
         }
     }
 }
