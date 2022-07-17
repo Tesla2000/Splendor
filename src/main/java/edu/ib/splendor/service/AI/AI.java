@@ -120,6 +120,10 @@ public abstract class AI {
         this.masterCounter = masterCounter;
     }
 
+    public void setScores(double[] scores) {
+        this.scores = scores;
+    }
+
     public void setCurrentPlayers(ArrayList<PlayerWithNodes> currentPlayers) {
         this.currentPlayers = currentPlayers;
     }

@@ -49,7 +49,7 @@ public class AIController {
             builder.append(st).append("\n");
         }
         reader.close();
-        file = new File("masters/"+numberOfPlayers+"/" + (masterCounter + 1) + ".txt");
+        file = new File("masters/"+numberOfPlayers+"/" + masterCounter + ".txt");
         FileWriter writer = new FileWriter(file);
         writer.write(builder.toString());
         writer.close();
@@ -97,14 +97,13 @@ public class AIController {
                         }
                     }
                 }
-            
             for (int i = 0; i < board.getAristocrats().size(); i++) {
                 for (Gem gem: Gem.values())
                     if (!gem.equals(Gem.GOLD))
                         state.add(board.getAristocrats().get(i).getCost().get(gem));
             }
             for (int i = board.getAristocrats().size(); i < 4; i++) {
-                for (i=0; i<5; i++)
+                for (int j=0; j<5; j++)
                     state.add(0);
             }
         }
@@ -226,7 +225,9 @@ public class AIController {
                     ai.playGame(id);
                 }
             }
+            CommunicationController.respondToPython(ai.getScores());
             ai.setBestScore(0);
+            ai.setScores(new double[16]);
             for (int i = 0; i < 100; i++) {
                 ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), ai.getBest());
                 ai.playGame(ai.getBest());
@@ -237,7 +238,6 @@ public class AIController {
                 saveAsMaster(ai.getBest(), ai.getMasterCounter(), numberOfPlayers);
             }
             System.out.println("Best pretender: " + (int) Math.round(ai.getBestScore()) + "/" + 100);
-            CommunicationController.respondToPython(ai.getScores());
             CommunicationController.passToPython();
         }
     }

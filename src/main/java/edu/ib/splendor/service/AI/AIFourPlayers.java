@@ -15,7 +15,7 @@ public class AIFourPlayers extends AI {
 
     public static void main(String[] args) throws IOException {
         AIFourPlayers ai = new AIFourPlayers(0);
-        int betterIndicator = 31;
+        int betterIndicator = 33;
         AIController.trainAI(ai, betterIndicator, NumberOfPlayers.four);
     }
 

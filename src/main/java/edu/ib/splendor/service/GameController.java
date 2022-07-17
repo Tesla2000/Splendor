@@ -426,17 +426,16 @@ public class GameController {
         return goldNeeded;
     }
 
-    private void collectGem(Gem gem){
+    private void collectGem(Gem gem) {
         if (currentPlayer.getCollectLimit() == 0)
             currentPlayer.setCollectLimit(3);
-        if (getTwo.isSelected() && currentPlayer.getCollectLimit()==3 && board.getStored(gem)>3) {
+        if (getTwo.isSelected() && currentPlayer.getCollectLimit() == 3 && board.getStored(gem) > 3) {
             int amount = Math.min(2, 10 - currentPlayer.allGems());
             currentPlayer.changeGem(gem, -amount);
             board.changeStored(gem, -amount);
             block = LocalDateTime.now().plusSeconds(1);
             endTurn();
-        }
-        else if (board.getStored(gem)>0 && !currentPlayer.gemInTaken(gem)){
+        } else if (board.getStored(gem) > 0 && !currentPlayer.gemInTaken(gem)) {
             if (currentPlayer.allGems() >= 10) {
                 block = LocalDateTime.now().plusSeconds(1);
                 endTurn();
@@ -444,13 +443,12 @@ public class GameController {
             getThree.setSelected(true);
             currentPlayer.changeGem(gem, -1);
             board.changeStored(gem, -1);
-            currentPlayer.setCollectLimit(currentPlayer.getCollectLimit()-1);
+            currentPlayer.setCollectLimit(currentPlayer.getCollectLimit() - 1);
             currentPlayer.addToTaken(gem);
-            if (currentPlayer.getCollectLimit()==0 || currentPlayer.allGems() >= 10) {
+            if (currentPlayer.getCollectLimit() == 0 || currentPlayer.allGems() >= 10) {
                 block = LocalDateTime.now().plusSeconds(1);
                 endTurn();
-            }
-            else updateFields();
+            } else updateFields();
         }
 
     }
@@ -462,109 +460,110 @@ public class GameController {
             players.add(players.remove(0));
             currentPlayer = players.get(0);
             updateFields();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (currentPlayer instanceof PlayerWithNodes) {
             try {
-                AIController.playTurn(players,((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
-            } catch (GameLostException ignored) {}
+                AIController.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
+            } catch (GameLostException ignored) {
+            }
             endTurn();
         } else {
             setPictures();
         }
     }
 
-    private void setPictures(){
+    private void setPictures() {
         Image image;
-        try{
+        try {
             image = new Image(currentPlayer.getReserve().get(0).getPicture());
             res1.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             res1.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(currentPlayer.getReserve().get(1).getPicture());
             res2.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             res2.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(currentPlayer.getReserve().get(2).getPicture());
             res3.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             res3.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 0).getPicture());
             building11.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building11.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 0).getPicture());
             building21.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building21.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 0).getPicture());
             building31.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building31.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 1).getPicture());
             building12.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building12.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 1).getPicture());
             building22.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building22.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 1).getPicture());
             building32.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building32.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 2).getPicture());
             building13.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building13.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 2).getPicture());
             building23.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building23.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 2).getPicture());
             building33.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building33.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.FIRST, 3).getPicture());
             building14.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building14.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.SECOND, 3).getPicture());
             building24.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building24.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
         }
-        try{
+        try {
             image = new Image(board.getTradeRow().getCard(Tier.THIRD, 3).getPicture());
             building34.setImage(image);
-        } catch (Exception e){
+        } catch (Exception e) {
             building34.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
         }
         building30.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
@@ -572,47 +571,48 @@ public class GameController {
         building10.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
         try {
             aristocrat0.setImage(new Image(board.getAristocrats().get(0).getImage()));
-        }catch (Exception e) {
+        } catch (Exception e) {
             aristocrat0.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try {
             aristocrat1.setImage(new Image(board.getAristocrats().get(1).getImage()));
-        }catch (Exception e) {
+        } catch (Exception e) {
             aristocrat1.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try {
             aristocrat2.setImage(new Image(board.getAristocrats().get(2).getImage()));
-        }catch (Exception e) {
+        } catch (Exception e) {
             aristocrat2.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
         try {
             aristocrat3.setImage(new Image(board.getAristocrats().get(3).getImage()));
-        }catch (Exception e) {
+        } catch (Exception e) {
             aristocrat3.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
         }
 
     }
-    private void showResources(){
+
+    private void showResources() {
         String string;
-        string =  board.getStored(Gem.RED).toString();
-        red.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/red"+string+".png").getAbsolutePath()));
-        string =  board.getStored(Gem.GREEN).toString();
-        green.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/green"+string+".png").getAbsolutePath()));
-        string =  board.getStored(Gem.BLUE).toString();
-        blue.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/blue"+string+".png").getAbsolutePath()));
-        string =  board.getStored(Gem.BROWN).toString();
-        brown.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/brown"+string+".png").getAbsolutePath()));
-        string =  board.getStored(Gem.WHITE).toString();
-        white.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/white"+string+".png").getAbsolutePath()));
-        string =  board.getStored(Gem.GOLD).toString();
-        gold.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/gold"+string+".png").getAbsolutePath()));
+        string = board.getStored(Gem.RED).toString();
+        red.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/red" + string + ".png").getAbsolutePath()));
+        string = board.getStored(Gem.GREEN).toString();
+        green.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/green" + string + ".png").getAbsolutePath()));
+        string = board.getStored(Gem.BLUE).toString();
+        blue.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/blue" + string + ".png").getAbsolutePath()));
+        string = board.getStored(Gem.BROWN).toString();
+        brown.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/brown" + string + ".png").getAbsolutePath()));
+        string = board.getStored(Gem.WHITE).toString();
+        white.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/white" + string + ".png").getAbsolutePath()));
+        string = board.getStored(Gem.GOLD).toString();
+        gold.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/gold" + string + ".png").getAbsolutePath()));
     }
 
     private void updateFields() {
         showResources();
         Font font = new Font("Verdana", 20);
         String string;
-        for (Gem gem: Gem.values()) {
+        for (Gem gem : Gem.values()) {
             string = currentPlayer.getPossession().getOrDefault(gem, 0).toString();
             if (currentPlayer.getProduction().getOrDefault(gem, 0) != 0)
                 string = currentPlayer.getPossession().getOrDefault(gem, 0) + "+" + currentPlayer.getProduction().getOrDefault(gem, 0);
@@ -624,14 +624,14 @@ public class GameController {
         }
         playerName.setText(currentPlayer.getName());
         poins.setText("Points: " + currentPlayer.getPoints());
-        if (currentPlayer.getReserve().size()>0)
+        if (currentPlayer.getReserve().size() > 0)
             res1.setImage(new Image(currentPlayer.getReserve().get(0).getPicture()));
-        if (currentPlayer.getReserve().size()>1)
+        if (currentPlayer.getReserve().size() > 1)
             res2.setImage(new Image(currentPlayer.getReserve().get(1).getPicture()));
-        if (currentPlayer.getReserve().size()>2)
+        if (currentPlayer.getReserve().size() > 2)
             res3.setImage(new Image(currentPlayer.getReserve().get(2).getPicture()));
-        if (board.getPlayers().size()==2){
-            for (Gem gem: Gem.values()) {
+        if (board.getPlayers().size() == 2) {
+            for (Gem gem : Gem.values()) {
                 string = board.getPlayers().get(1).getPossession().getOrDefault(gem, 0).toString();
                 if (board.getPlayers().get(1).getProduction().getOrDefault(gem, 0) != 0)
                     string = board.getPlayers().get(1).getPossession().getOrDefault(gem, 0) + "+" + board.getPlayers().get(1).getProduction().getOrDefault(gem, 0);
@@ -645,8 +645,8 @@ public class GameController {
             poins11.setText("Points: " + board.getPlayers().get(1).getPoints());
             textRes1.setText("Reserved: " + board.getPlayers().get(1).getReserve().size());
         } else {
-            for (Gem gem: Gem.values()) {
-                for (int i = 1; i<board.getPlayers().size(); i++) {
+            for (Gem gem : Gem.values()) {
+                for (int i = 1; i < board.getPlayers().size(); i++) {
                     string = board.getPlayers().get(i).getPossession().getOrDefault(gem, 0).toString();
                     if (board.getPlayers().get(i).getProduction().getOrDefault(gem, 0) != 0)
                         string = board.getPlayers().get(i).getPossession().getOrDefault(gem, 0) + "+" + board.getPlayers().get(i).getProduction().getOrDefault(gem, 0);
@@ -663,7 +663,7 @@ public class GameController {
             textRes.setText("Reserved: " + board.getPlayers().get(1).getReserve().size());
             textRes1.setText("Reserved: " + board.getPlayers().get(2).getReserve().size());
             playerName11.setText(board.getPlayers().get(2).getName());
-            if (board.getPlayers().size()==4) {
+            if (board.getPlayers().size() == 4) {
                 poins111.setText("Points: " + board.getPlayers().get(3).getPoints());
                 textRes11.setText("Reserved: " + board.getPlayers().get(3).getReserve().size());
                 playerName111.setText(board.getPlayers().get(3).getName());
@@ -864,7 +864,7 @@ public class GameController {
                 new StackPane[]{redsPane11, greensPane11, bluesPane11, brownsPane11, whitesPane11, goldsPane11},
                 new StackPane[]{redsPane111, greensPane111, bluesPane111, brownsPane111, whitesPane111, goldsPane111},
         };
-        for (int player=0;player<4;player++){
+        for (int player = 0; player < 4; player++) {
             playersResource.add(new HashMap<>());
             playersPanes.add(new HashMap<>());
             for (int gem = 0; gem < 6; gem++) {
@@ -872,41 +872,47 @@ public class GameController {
                 playersPanes.get(player).put(Gem.values()[gem], panes[player][gem]);
             }
         }
-        TradeRow tradeRow = new TradeRow(cards.get(0),cards.get(1),cards.get(2));
+        TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
         players = new ArrayList<>();
         System.out.println("Enter number of players 2-4: ");
         Scanner scanner = new Scanner(System.in);
         int numberOfPlayers = scanner.nextInt();
-        for (int i=0; i<numberOfPlayers; i++){
+        for (int i = 0; i < numberOfPlayers; i++) {
             System.out.println("Enter players name: ");
             String playersName = scanner.next();
             if (playersName.equals("Voldemort"))
-                players.add(new Player(playersName,10000));
-            else if (playersName.contains("AI"))
-                players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("C:\\Users\\Dell\\IdeaProjects\\Splendor\\masters\\28.txt")));
+                players.add(new Player(playersName, 10000));
+            else if (playersName.contains("AI")) {
+                if (numberOfPlayers == 2)
+                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/two/28.txt")));
+                if (numberOfPlayers == 3)
+                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/three/10.txt")));
+                if (numberOfPlayers == 4)
+                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/four/0.txt")));
+            }
             else players.add(new Player(playersName));
         }
         scanner.close();
-        board = new Board(tradeRow, players, 7,7,7,7,7,5);
+        board = new Board(tradeRow, players, 7, 7, 7, 7, 7, 5);
         setPictures();
         currentPlayer = players.get(0);
         endTurnButton.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/end_turn.png").getAbsolutePath()));
         showResources();
-        for (int i=0;i<Gem.values().length;i++){
+        for (int i = 0; i < Gem.values().length; i++) {
             imageViews[0][i].setImage(images[i]);
         }
-        if (board.getPlayers().size()==2){
-            for (int i=0;i<Gem.values().length;i++){
+        if (board.getPlayers().size() == 2) {
+            for (int i = 0; i < Gem.values().length; i++) {
                 imageViews[2][i].setImage(images[i]);
             }
         } else {
-            for (int i=0;i<Gem.values().length;i++){
+            for (int i = 0; i < Gem.values().length; i++) {
                 imageViews[1][i].setImage(images[i]);
                 imageViews[2][i].setImage(images[i]);
             }
         }
-        if (board.getPlayers().size()==4) {
-            for (int i=0;i<Gem.values().length;i++){
+        if (board.getPlayers().size() == 4) {
+            for (int i = 0; i < Gem.values().length; i++) {
                 imageViews[3][i].setImage(images[i]);
             }
         }
@@ -914,7 +920,8 @@ public class GameController {
         if (currentPlayer instanceof PlayerWithNodes) {
             try {
                 AIController.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
-            } catch (GameLostException ignored) {}
+            } catch (GameLostException ignored) {
+            }
             endTurn();
         }
     }
