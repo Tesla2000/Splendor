@@ -228,7 +228,7 @@ public class AIController {
             CommunicationController.respondToPython(ai.getScores());
             ai.setBestScore(0);
             ai.setScores(new double[16]);
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 1000; i++) {
                 ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), ai.getBest());
                 ai.playGame(ai.getBest());
             }

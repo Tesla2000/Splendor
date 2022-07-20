@@ -886,9 +886,9 @@ public class GameController {
                 if (numberOfPlayers == 2)
                     players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/two/28.txt")));
                 if (numberOfPlayers == 3)
-                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/three/10.txt")));
+                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/three/15.txt")));
                 if (numberOfPlayers == 4)
-                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/four/0.txt")));
+                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/four/3.txt")));
             }
             else players.add(new Player(playersName));
         }

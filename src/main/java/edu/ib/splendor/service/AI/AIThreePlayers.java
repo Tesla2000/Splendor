@@ -15,7 +15,8 @@ public class AIThreePlayers extends AI {
 
     public static void main(String[] args) throws IOException {
         AIThreePlayers ai = new AIThreePlayers(10);
-        int betterIndicator = 42;
+//        int betterIndicator = 42; // for 100 trials
+        int betterIndicator = 358; // for 1000 trails
         AIController.trainAI(ai, betterIndicator, NumberOfPlayers.three);
     }
 
