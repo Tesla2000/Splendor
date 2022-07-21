@@ -2,8 +2,14 @@ package edu.ib.splendor.database.entities;
 
 import edu.ib.splendor.service.BoardController;
 
-public record BuildBuilding(Tier tier,
-                            int index) implements Move {
+public class BuildBuilding implements Move {
+    private final Tier tier;
+    private final int index;
+
+    public BuildBuilding(Tier tier, int index) {
+        this.tier = tier;
+        this.index = index;
+    }
 
     @Override
     public void play(Board board, Player player) {

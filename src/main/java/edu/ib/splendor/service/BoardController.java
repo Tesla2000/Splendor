@@ -96,7 +96,10 @@ public class BoardController {
 
     public static void reserveCard(Player player, Board board, Tier tier, int index){
         player.addReserve(board.getTradeRow().takeCard(tier, index));
-        if (player.getPossession().values().stream().reduce(Integer::sum).stream().toList().get(0) < 10){
+        int sum = 0;
+        for (int value: player.getPossession().values())
+            sum += value;
+        if (sum < 10){
             player.addGem(Gem.GOLD);
             board.changeStored(Gem.GOLD, -1);
         }

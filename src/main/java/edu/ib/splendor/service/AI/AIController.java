@@ -16,7 +16,12 @@ public class AIController {
         File file = new File(path);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         while ((st = reader.readLine()) != null) {
-            ArrayList<Double> list = new ArrayList<>(Arrays.stream(st.split(",")).map(Double::parseDouble).toList());
+            List<Double> result = new ArrayList<>();
+            for (String s : st.split(",")) {
+                Double parseDouble = Double.parseDouble(s);
+                result.add(parseDouble);
+            }
+            ArrayList<Double> list = new ArrayList<>(result);
             double bias = list.remove(list.size() - 1);
             nodes.add(new Node(list, bias));
         }
@@ -130,7 +135,13 @@ public class AIController {
                 return;
             }
         }
-        sequence = sequence.stream().filter(elem -> possibleMoves.get(elem) instanceof BuildBuilding).toList();
+        List<Integer> list = new ArrayList<>();
+        for (Integer elem : sequence) {
+            if (possibleMoves.get(elem) instanceof BuildBuilding) {
+                list.add(elem);
+            }
+        }
+        sequence = list;
         if (playersResource == 10) {
             for (Integer option : sequence) {
                 if (BoardController.canBuy(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player)) {
@@ -193,7 +204,16 @@ public class AIController {
     }
 
     private static void playMove(ArrayList<MoveValuePair> order, Player player, Board board, HashMap<Integer, Move> possibleMoves) throws GameLostException {
-        List<Integer> sequence = order.stream().sorted((e1, e2) -> Double.compare(e2.value(), e1.value())).map(MoveValuePair::move).toList();
+        List<MoveValuePair> toSort = new ArrayList<>();
+        for (MoveValuePair moveValuePair : order) {
+            toSort.add(moveValuePair);
+        }
+        toSort.sort((e1, e2) -> Double.compare(e2.value(), e1.value()));
+        List<Integer> sequence = new ArrayList<>();
+        for (MoveValuePair moveValuePair : toSort) {
+            Integer move = moveValuePair.move();
+            sequence.add(move);
+        }
         playMove(player, sequence, board, possibleMoves);
     }
 

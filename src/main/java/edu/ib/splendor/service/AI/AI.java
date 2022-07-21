@@ -51,8 +51,18 @@ public abstract class AI {
     public void playGame(int id){
         ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
         TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
-        players = new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList());
-        Board board = new Board(tradeRow, new ArrayList<>(currentPlayers.stream().map(PlayerWithNodes::getPlayer).toList()), 7, 7, 7, 7, 7, 5);
+        List<Player> list = new ArrayList<>();
+        for (PlayerWithNodes currentPlayer : currentPlayers) {
+            Player player = currentPlayer.getPlayer();
+            list.add(player);
+        }
+        players = new ArrayList<>(list);
+        List<Player> result = new ArrayList<>();
+        for (PlayerWithNodes currentPlayer : currentPlayers) {
+            Player player = currentPlayer.getPlayer();
+            result.add(player);
+        }
+        Board board = new Board(tradeRow, new ArrayList<>(result), 7, 7, 7, 7, 7, 5);
         int moves = 0;
         while (true) {
             moves++;

@@ -5,7 +5,22 @@ import edu.ib.splendor.database.entities.Gem;
 import java.io.File;
 import java.util.HashMap;
 
-public record Aristocrat(int red, int green, int blue, int brown, int white, String image) {
+public class Aristocrat {
+    private final int red;
+    private final int green;
+    private final int blue;
+    private final int brown;
+    private final int white;
+    private final String image;
+
+    public Aristocrat(int red, int green, int blue, int brown, int white, String image) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+        this.brown = brown;
+        this.white = white;
+        this.image = image;
+    }
 
     public int getPoints() {
         return 3;
