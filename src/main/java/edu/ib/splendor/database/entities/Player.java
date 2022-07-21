@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player {
-    private ArrayList<Card> deck = new ArrayList<>();
-    private ArrayList<Card> reserve = new ArrayList<>();
+    private final ArrayList<Card> deck = new ArrayList<>();
+    private final ArrayList<Card> reserve = new ArrayList<>();
     private final ArrayList<Aristocrat> aristocrats = new ArrayList<>();
     private final HashMap<Gem, Integer> possession = new HashMap<>();
     private HashMap<Gem, Integer> production = new HashMap<>();
