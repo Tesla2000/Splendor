@@ -1,4 +1,4 @@
-package edu.ib.splendor.service;
+package edu.ib.splendor.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,9 +6,14 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import edu.ib.splendor.Mapper;
 import edu.ib.splendor.database.entities.*;
 import edu.ib.splendor.service.AI.AI;
-import edu.ib.splendor.service.AI.AIController;
+import edu.ib.splendor.service.AI.AIManager;
+import edu.ib.splendor.service.BoardManager;
+import edu.ib.splendor.service.DeckGenerator;
+import edu.ib.splendor.service.GameLostException;
+import edu.ib.splendor.service.GameMapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -19,7 +24,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class GameController {
     private LocalDateTime block = LocalDateTime.now();
     private Player currentPlayer;
@@ -52,6 +60,7 @@ public class GameController {
     private Text whitesResource111;
     private Text goldsResource111;
     private ArrayList<Player> players;
+    private GameMapper gameMapper;
 
     @FXML
     private ResourceBundle resources;
@@ -404,7 +413,7 @@ public class GameController {
         }
     }
 
-    static void pay(Card card, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer, Board board) {
+    public static void pay(Card card, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer, Board board) {
         currentPlayer.changeGem(Gem.GOLD, goldNeeded);
         cost.put(Gem.GOLD, goldNeeded);
         for (Gem gem : card.getCost().keySet()) {
@@ -416,7 +425,7 @@ public class GameController {
             board.changeStored(gem, cost.get(gem));
     }
 
-    static int getGoldNeeded(Card card, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer) {
+    public static int getGoldNeeded(Card card, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer) {
         for (Gem gem : card.getCost().keySet()) {
             cost.put(gem, -Math.max(card.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
                     - currentPlayer.getProduction().getOrDefault(gem, 0), 0));
@@ -456,7 +465,7 @@ public class GameController {
     private void endTurn() {
         try {
             currentPlayer.clearTaken();
-            BoardController.getAristocrats(board, currentPlayer);
+            BoardManager.getAristocrats(board, currentPlayer);
             players.add(players.remove(0));
             currentPlayer = players.get(0);
             updateFields();
@@ -465,11 +474,12 @@ public class GameController {
         }
         if (currentPlayer instanceof PlayerWithNodes) {
             try {
-                AIController.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
+                AIManager.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
             } catch (GameLostException ignored) {
             }
             endTurn();
         } else {
+            gameMapper.saveGame(board);
             setPictures();
         }
     }
@@ -835,6 +845,7 @@ public class GameController {
         assert whites1 != null : "fx:id=\"whites1\" was not injected: check your FXML file 'board.fxml'.";
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
+        gameMapper = Mapper.getGameMapper();
         ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
         playersResource = new ArrayList<>();
         playersPanes = new ArrayList<>();
@@ -884,11 +895,11 @@ public class GameController {
                 players.add(new Player(playersName, 10000));
             else if (playersName.contains("AI")) {
                 if (numberOfPlayers == 2)
-                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/two/28.txt")));
+                    players.add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/two/28.txt")));
                 if (numberOfPlayers == 3)
-                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/three/15.txt")));
+                    players.add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/three/15.txt")));
                 if (numberOfPlayers == 4)
-                    players.add(new PlayerWithNodes(new Player(playersName), AIController.readNodesFromFile("masters/four/3.txt")));
+                    players.add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/four/3.txt")));
             }
             else players.add(new Player(playersName));
         }
@@ -919,7 +930,7 @@ public class GameController {
         updateFields();
         if (currentPlayer instanceof PlayerWithNodes) {
             try {
-                AIController.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
+                AIManager.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
             } catch (GameLostException ignored) {
             }
             endTurn();

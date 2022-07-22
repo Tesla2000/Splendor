@@ -1,6 +1,6 @@
 package edu.ib.splendor.database.entities;
 
-import edu.ib.splendor.service.BoardController;
+import edu.ib.splendor.service.BoardManager;
 
 public class BuildBuilding implements Move {
     private final Tier tier;
@@ -13,7 +13,7 @@ public class BuildBuilding implements Move {
 
     @Override
     public void play(Board board, Player player) {
-        BoardController.buyEstate(tier, index, board, player);
+        BoardManager.buyEstate(tier, index, board, player);
     }
 
     public Tier getTier() {

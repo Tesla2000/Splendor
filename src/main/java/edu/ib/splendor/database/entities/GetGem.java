@@ -1,6 +1,6 @@
 package edu.ib.splendor.database.entities;
 
-import edu.ib.splendor.service.BoardController;
+import edu.ib.splendor.service.BoardManager;
 
 public class GetGem implements Move {
     Gem[] gemList;
@@ -12,7 +12,7 @@ public class GetGem implements Move {
     @Override
     public void play(Board board, Player player) {
         for (Gem gem: gemList)
-        BoardController.collectGem(gem, board, player);
+        BoardManager.collectGem(gem, board, player);
     }
 
     public Gem[] getGemList() {

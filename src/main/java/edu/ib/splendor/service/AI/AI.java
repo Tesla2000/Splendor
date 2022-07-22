@@ -1,7 +1,7 @@
 package edu.ib.splendor.service.AI;
 
 import edu.ib.splendor.database.entities.*;
-import edu.ib.splendor.service.CommunicationController;
+import edu.ib.splendor.service.CommunicationManager;
 import edu.ib.splendor.service.DeckGenerator;
 import edu.ib.splendor.service.GameLostException;
 
@@ -41,10 +41,10 @@ public abstract class AI {
         scores = new double[16];
         best = 0;
         bestScore = 0;
-        CommunicationController.waitForJavaTurn();
+        CommunicationManager.waitForJavaTurn();
         allPlayers = new ArrayList<>();
         for (int id = 0; id < 16; id++) {
-            allPlayers.add(AIController.readNodesFromFile("coefficients/" + id + ".txt"));
+            allPlayers.add(AIManager.readNodesFromFile("coefficients/" + id + ".txt"));
         }
     }
 
@@ -67,7 +67,7 @@ public abstract class AI {
         while (true) {
             moves++;
             try{
-                AIController.playTurn(players, currentPlayers.get(0).getNodes(), board, getPossibleMoves());
+                AIManager.playTurn(players, currentPlayers.get(0).getNodes(), board, getPossibleMoves());
             } catch (GameLostException e){
                 break;
             }

@@ -1,11 +1,12 @@
 package edu.ib.splendor.service;
 
+import edu.ib.splendor.controller.GameController;
 import edu.ib.splendor.database.entities.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BoardController {
+public class BoardManager {
 
     public static Card getCard(Tier tier, int index, Board board, Player currentPlayer){
         Card card = null;

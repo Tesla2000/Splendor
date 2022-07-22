@@ -1,15 +1,15 @@
 package edu.ib.splendor.service.AI;
 
 import edu.ib.splendor.database.entities.*;
-import edu.ib.splendor.service.BoardController;
-import edu.ib.splendor.service.CommunicationController;
+import edu.ib.splendor.service.BoardManager;
+import edu.ib.splendor.service.CommunicationManager;
 import edu.ib.splendor.service.GameLostException;
 
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AIController {
+public class AIManager {
     public static ArrayList<Node> readNodesFromFile(String path) throws IOException {
         String st;
         ArrayList<Node> nodes = new ArrayList<>();
@@ -123,15 +123,15 @@ public class AIController {
     public static void playTurn(ArrayList<Player> players, ArrayList<Node> nodes, Board board, HashMap<Integer, Move> possibleMoves) throws GameLostException {
         Player player = players.get(0);
         playMoveAI(nodes, board, players, possibleMoves);
-        BoardController.endTurn(board, player);
+        BoardManager.endTurn(board, player);
     }
 
     private static void playMove(Player player, List<Integer> sequence, Board board, HashMap<Integer, Move> possibleMoves) throws GameLostException {
         int playersResource = player.getPossession().values().stream().reduce(0, Integer::sum);
         for (int index : sequence) {
             if (!(possibleMoves.get(index) instanceof ReserveBuilding)) break;
-            if (BoardController.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
-                BoardController.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
+            if (BoardManager.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
+                BoardManager.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
                 return;
             }
         }
@@ -144,15 +144,15 @@ public class AIController {
         sequence = list;
         if (playersResource == 10) {
             for (Integer option : sequence) {
-                if (BoardController.canBuy(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player)) {
-                    BoardController.buyEstate(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player);
+                if (BoardManager.canBuy(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player)) {
+                    BoardManager.buyEstate(((BuildBuilding) possibleMoves.get(option)).getTier(), ((BuildBuilding) possibleMoves.get(option)).getIndex(), board, player);
                     return;
                 }
             }
             throw new GameLostException();
         }
-        if (BoardController.canBuy(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player)) {
-            BoardController.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
+        if (BoardManager.canBuy(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player)) {
+            BoardManager.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
         } else {
             List<Gem> gotten = new ArrayList<>();
             int i = 0;
@@ -161,7 +161,7 @@ public class AIController {
                 if (i >= sequence.size()) {
                     break;
                 }
-                ArrayList<GemAmountPair> lack = BoardController.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
+                ArrayList<GemAmountPair> lack = BoardManager.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
                 if (lack == null || !canBeTaken(lack, player.getPossession(), board)) {
                     i++;
                     continue;
@@ -169,8 +169,8 @@ public class AIController {
                 lack = (ArrayList<GemAmountPair>) lack.stream().filter(l -> l.integer != 0).collect(Collectors.toList());
                 lack.sort((e1, e2) -> e2.integer - e1.integer);
                 if (lack.size() == 0) {
-                    if (gotten.size() == 0 && BoardController.getCard(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player) != null) {
-                        BoardController.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
+                    if (gotten.size() == 0 && BoardManager.getCard(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player) != null) {
+                        BoardManager.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
                         return;
                     } else {
                         i++;
@@ -178,18 +178,18 @@ public class AIController {
                     }
                 }
                 if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4 && canBeTaken == 3 && !gotten.contains(lack.get(0).gem)) {
-                    BoardController.collectGem(lack.get(0).gem, board, player);
-                    BoardController.collectGem(lack.get(0).gem, board, player);
+                    BoardManager.collectGem(lack.get(0).gem, board, player);
+                    BoardManager.collectGem(lack.get(0).gem, board, player);
                     break;
                 } else {
                     for (GemAmountPair gemAmountPair : lack) {
                         if (!gotten.contains(gemAmountPair.gem) && board.getStored(gemAmountPair.gem) > 0 && gotten.size() < 3 && canBeTaken > 0) {
-                            BoardController.collectGem(gemAmountPair.gem, board, player);
+                            BoardManager.collectGem(gemAmountPair.gem, board, player);
                             gotten.add(gemAmountPair.gem);
                             if (i != 0) canBeTaken--;
                         }
                     }
-                    lack = BoardController.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
+                    lack = BoardManager.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
                     if (lack == null) {
                         i++;
                         continue;
@@ -245,7 +245,7 @@ public class AIController {
                     ai.playGame(id);
                 }
             }
-            CommunicationController.respondToPython(ai.getScores());
+            CommunicationManager.respondToPython(ai.getScores());
             ai.setBestScore(0);
             ai.setScores(new double[16]);
             for (int i = 0; i < 1000; i++) {
@@ -258,7 +258,7 @@ public class AIController {
                 saveAsMaster(ai.getBest(), ai.getMasterCounter(), numberOfPlayers);
             }
             System.out.println("Best pretender: " + (int) Math.round(ai.getBestScore()) + "/" + 100);
-            CommunicationController.passToPython();
+            CommunicationManager.passToPython();
         }
     }
 }

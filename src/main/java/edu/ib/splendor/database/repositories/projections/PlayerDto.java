@@ -10,6 +10,12 @@ public class PlayerDto {
     private Integer points;
     private String name;
     private int queuePosition;
+    private int red;
+    private int green;
+    private int blue;
+    private int brown;
+    private int white;
+    private int gold;
     @ManyToOne
     @JoinColumn(name = "board_id")
     private BoardDto board;
@@ -52,5 +58,53 @@ public class PlayerDto {
 
     public void setBoard(BoardDto board) {
         this.board = board;
+    }
+
+    public int getRed() {
+        return red;
+    }
+
+    public void setRed(int red) {
+        this.red = red;
+    }
+
+    public int getGreen() {
+        return green;
+    }
+
+    public void setGreen(int green) {
+        this.green = green;
+    }
+
+    public int getBlue() {
+        return blue;
+    }
+
+    public void setBlue(int blue) {
+        this.blue = blue;
+    }
+
+    public int getBrown() {
+        return brown;
+    }
+
+    public void setBrown(int brown) {
+        this.brown = brown;
+    }
+
+    public int getWhite() {
+        return white;
+    }
+
+    public void setWhite(int white) {
+        this.white = white;
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 }

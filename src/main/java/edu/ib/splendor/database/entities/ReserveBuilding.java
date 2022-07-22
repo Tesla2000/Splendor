@@ -1,6 +1,6 @@
 package edu.ib.splendor.database.entities;
 
-import edu.ib.splendor.service.BoardController;
+import edu.ib.splendor.service.BoardManager;
 
 public class ReserveBuilding implements Move {
     private final Tier tier;
@@ -13,7 +13,7 @@ public class ReserveBuilding implements Move {
 
     @Override
     public void play(Board board, Player player) {
-        BoardController.reserveCard(player, board, tier, index);
+        BoardManager.reserveCard(player, board, tier, index);
     }
 
     public Tier getTier() {

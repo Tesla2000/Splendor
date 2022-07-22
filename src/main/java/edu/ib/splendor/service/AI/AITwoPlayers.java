@@ -4,7 +4,6 @@ import edu.ib.splendor.database.entities.Node;
 import edu.ib.splendor.database.entities.NumberOfPlayers;
 import edu.ib.splendor.database.entities.Player;
 import edu.ib.splendor.database.entities.PlayerWithNodes;
-import edu.ib.splendor.service.CommunicationController;
 
 import java.io.*;
 import java.util.*;
@@ -18,7 +17,7 @@ public class AITwoPlayers extends AI {
     public static void main(String[] args) throws IOException {
         AITwoPlayers ai = new AITwoPlayers(28);
         int betterIndicator = 61;
-        AIController.trainAI(ai, betterIndicator, NumberOfPlayers.two);
+        AIManager.trainAI(ai, betterIndicator, NumberOfPlayers.two);
 //        while (true) {
 //            ai.initializeTraining();
 //            for (int id = 0; id < ai.getAllPlayers().size(); id++) {
@@ -65,7 +64,7 @@ public class AITwoPlayers extends AI {
 
     @Override
     protected void setOrder(ArrayList<ArrayList<Node>> allPlayers, int masterCounter, ArrayList<PlayerWithNodes> currentPlayers, int id) throws IOException {
-        ArrayList<Node> master = AIController.readNodesFromFile("masters/two/" + masterCounter + ".txt");
+        ArrayList<Node> master = AIManager.readNodesFromFile("masters/two/" + masterCounter + ".txt");
         setCurrentPlayers(new ArrayList<>());
         getCurrentPlayers().add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
         getCurrentPlayers().add(new PlayerWithNodes(new Player("Master"), master));

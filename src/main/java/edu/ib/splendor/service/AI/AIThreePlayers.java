@@ -17,13 +17,13 @@ public class AIThreePlayers extends AI {
         AIThreePlayers ai = new AIThreePlayers(10);
 //        int betterIndicator = 42; // for 100 trials
         int betterIndicator = 358; // for 1000 trails
-        AIController.trainAI(ai, betterIndicator, NumberOfPlayers.three);
+        AIManager.trainAI(ai, betterIndicator, NumberOfPlayers.three);
     }
 
     @Override
     protected void setOrder(ArrayList<ArrayList<Node>> allPlayers, int masterCounter, ArrayList<PlayerWithNodes> currentPlayers, int id) throws IOException {
-        ArrayList<Node> master = AIController.readNodesFromFile("masters/three/" + masterCounter + ".txt");
-        ArrayList<Node> previousMaster = AIController.readNodesFromFile("masters/three/" + Math.max(0,masterCounter-1) + ".txt");
+        ArrayList<Node> master = AIManager.readNodesFromFile("masters/three/" + masterCounter + ".txt");
+        ArrayList<Node> previousMaster = AIManager.readNodesFromFile("masters/three/" + Math.max(0,masterCounter-1) + ".txt");
         setCurrentPlayers(new ArrayList<>());
         getCurrentPlayers().add(new PlayerWithNodes(new Player("Master"), master));
         getCurrentPlayers().add(new PlayerWithNodes(new Player("PreviousMaster"), previousMaster));

@@ -1,8 +1,6 @@
 package edu.ib.splendor.database.repositories.projections;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class AristocratDto {
@@ -15,6 +13,20 @@ public class AristocratDto {
     private int brown;
     private int white;
     private String image;
+    @ManyToOne
+    @JoinColumn(name = "player_dto_id")
+    private PlayerDto playerDto;
+    @ManyToOne
+    @JoinColumn(name = "board_dto_id")
+    private BoardDto boardDto;
+
+    public BoardDto getBoardDto() {
+        return boardDto;
+    }
+
+    public PlayerDto getPlayerDto() {
+        return playerDto;
+    }
 
     public Long getId() {
         return id;
@@ -70,5 +82,13 @@ public class AristocratDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setPlayerDto(PlayerDto playerDto) {
+        this.playerDto = playerDto;
+    }
+
+    public void setBoardDto(BoardDto boardDto) {
+        this.boardDto = boardDto;
     }
 }

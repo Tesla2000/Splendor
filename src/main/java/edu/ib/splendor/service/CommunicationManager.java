@@ -1,10 +1,8 @@
 package edu.ib.splendor.service;
 
 import java.io.*;
-import java.util.*;
-import java.util.stream.Collectors;
 
-public class CommunicationController {
+public class CommunicationManager {
 
     public static void waitForJavaTurn() throws IOException {
         String st;

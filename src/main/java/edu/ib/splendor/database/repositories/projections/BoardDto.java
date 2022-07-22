@@ -1,8 +1,6 @@
 package edu.ib.splendor.database.repositories.projections;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class BoardDto {
