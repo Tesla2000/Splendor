@@ -1,4 +1,4 @@
-package edu.ib.splendor.database.repositories.projections;
+package edu.ib.splendor.database.repositories.dtos;
 
 import edu.ib.splendor.database.entities.Gem;
 import edu.ib.splendor.database.entities.Tier;

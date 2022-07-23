@@ -1,4 +1,4 @@
-package edu.ib.splendor.database.repositories.projections;
+package edu.ib.splendor.database.repositories.dtos;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -1,10 +1,10 @@
-package edu.ib.splendor.database.repositories.projections;
+package edu.ib.splendor.database.repositories.dtos;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class AristocratDto {
+public class BoardDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,11 +13,7 @@ public class AristocratDto {
     private int blue;
     private int brown;
     private int white;
-    private String image;
-    @ManyToOne
-    private PlayerDto playerDto;
-    @ManyToOne
-    private BoardDto boardDto;
+    private int gold;
     private LocalDateTime creation;
 
     public LocalDateTime getCreation() {
@@ -26,21 +22,6 @@ public class AristocratDto {
 
     public void setCreation(LocalDateTime creation) {
         this.creation = creation;
-    }
-
-    public BoardDto getBoardDto() {
-        return boardDto;
-    }
-
-    public AristocratDto(Long id) {
-        this.id = id;
-    }
-
-    public AristocratDto() {
-    }
-
-    public PlayerDto getPlayerDto() {
-        return playerDto;
     }
 
     public Long getId() {
@@ -91,19 +72,11 @@ public class AristocratDto {
         this.white = white;
     }
 
-    public String getImage() {
-        return image;
+    public int getGold() {
+        return gold;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public void setPlayerDto(PlayerDto playerDto) {
-        this.playerDto = playerDto;
-    }
-
-    public void setBoardDto(BoardDto boardDto) {
-        this.boardDto = boardDto;
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 }
