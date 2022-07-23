@@ -10,6 +10,7 @@ import edu.ib.splendor.database.repositories.dtos.BoardDto;
 import edu.ib.splendor.database.repositories.dtos.CardDto;
 import edu.ib.splendor.database.repositories.dtos.PlayerDto;
 import edu.ib.splendor.service.AI.AIManager;
+import edu.ib.splendor.service.exceptions.NoSuchIdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

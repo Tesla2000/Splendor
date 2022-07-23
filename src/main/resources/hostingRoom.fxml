@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="289.0" prefWidth="246.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.controller.HostingRoomController">
+   <children>
+      <TextField fx:id="secondPlayerNameTextField" layoutX="12.0" layoutY="105.0" prefHeight="25.0" prefWidth="158.0" promptText="Name of the second player" />
+      <TextField fx:id="firstPlayerNameTextField" layoutX="12.0" layoutY="54.0" prefHeight="25.0" prefWidth="158.0" promptText="Name of the first player" />
+      <TextField fx:id="thirdPlayerNameTextField" layoutX="12.0" layoutY="161.0" prefHeight="25.0" prefWidth="158.0" promptText="Name of the third player" />
+      <TextField fx:id="fourthPlayerNameTextField" layoutX="12.0" layoutY="211.0" prefHeight="25.0" prefWidth="158.0" promptText="Name of the fourth player" />
+      <Text fill="WHITE" layoutX="76.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set up your game" />
+      <CheckBox fx:id="isFirstPlayerMeCheckBox" layoutX="189.0" layoutY="58.0" mnemonicParsing="false" text="Me" textFill="WHITE" />
+      <CheckBox fx:id="isSecondPlayerMeCheckBox" layoutX="189.0" layoutY="109.0" mnemonicParsing="false" text="Me" textFill="WHITE" />
+      <CheckBox fx:id="isThirdPlayerMeCheckBox" layoutX="189.0" layoutY="165.0" mnemonicParsing="false" text="Me" textFill="WHITE" />
+      <CheckBox fx:id="isFourthPlayerMeCheckBox" layoutX="189.0" layoutY="215.0" mnemonicParsing="false" text="Me" textFill="WHITE" />
+      <CheckBox fx:id="waitingForGameCheckBox" layoutX="54.0" layoutY="251.0" mnemonicParsing="false" onAction="#changeState" text="Wait for game to start" />
+   </children>
+</AnchorPane>

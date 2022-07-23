@@ -3,7 +3,7 @@ package edu.ib.splendor.service.AI;
 import edu.ib.splendor.database.entities.*;
 import edu.ib.splendor.service.BoardManager;
 import edu.ib.splendor.service.CommunicationManager;
-import edu.ib.splendor.service.GameLostException;
+import edu.ib.splendor.service.exceptions.GameLostException;
 
 import java.io.*;
 import java.util.*;

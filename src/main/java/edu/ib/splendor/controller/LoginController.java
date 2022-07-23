@@ -1,8 +1,7 @@
 package edu.ib.splendor.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import edu.ib.splendor.Configuration;
+import edu.ib.splendor.database.repositories.dtos.UserDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,12 +12,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class LoginController {
     private Stage stage;
     private Scene scene;
     private Parent root;
     public static String login;
-    public static String password;
 
     @FXML
     private ResourceBundle resources;
@@ -38,15 +40,19 @@ public class LoginController {
     @FXML
     void login(ActionEvent event) throws IOException {
         login = loginField.getText();
-        password = passwordField.getText();
-        root = FXMLLoader.load(getClass().getClassLoader().getResource("setGame.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setTitle("Splendor");
-        stage.setScene(scene);
-        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.show();
+        for (UserDto userDto: Configuration.userRepository.findAll()){
+            if (userDto.getLogin().equals(login) && userDto.getPassword().equals(passwordField.getText())){
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("setGame.fxml"));
+                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                scene = new Scene(root);
+                stage.setTitle("Splendor");
+                stage.setScene(scene);
+                String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
+                scene.getStylesheets().add(css);
+                stage.show();
+
+            }
+        }
 
     }
 

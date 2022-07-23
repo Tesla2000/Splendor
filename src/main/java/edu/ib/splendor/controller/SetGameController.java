@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import edu.ib.splendor.database.entities.NameAIPair;
+import edu.ib.splendor.database.entities.NameCheckedPair;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class SetGameController {
-    public static List<NameAIPair> players;
+    public static List<NameCheckedPair> players;
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -56,18 +56,18 @@ public class SetGameController {
     @FXML
     void start(ActionEvent event) throws IOException {
         players = new ArrayList<>();
-        players.add(new NameAIPair(firstPlayerNameTextField.getText(), isFirstPlayerAICheckBox.isSelected()));
-        players.add(new NameAIPair(secondPlayerNameTextField.getText(), isSecondPlayerAICheckBox.isSelected()));
-        players.add(new NameAIPair(thirdPlayerNameTextField.getText(), isThirdPlayerAICheckBox.isSelected()));
-        players.add(new NameAIPair(fourthPlayerNameTextField.getText(), isFourthPlayerAICheckBox.isSelected()));
-        List<NameAIPair> nameAIPairs = new ArrayList<>();
-        for (NameAIPair player : players) {
+        players.add(new NameCheckedPair(firstPlayerNameTextField.getText(), isFirstPlayerAICheckBox.isSelected()));
+        players.add(new NameCheckedPair(secondPlayerNameTextField.getText(), isSecondPlayerAICheckBox.isSelected()));
+        players.add(new NameCheckedPair(thirdPlayerNameTextField.getText(), isThirdPlayerAICheckBox.isSelected()));
+        players.add(new NameCheckedPair(fourthPlayerNameTextField.getText(), isFourthPlayerAICheckBox.isSelected()));
+        List<NameCheckedPair> nameCheckedPairs = new ArrayList<>();
+        for (NameCheckedPair player : players) {
             if (!player.getName().equals("")) {
-                nameAIPairs.add(player);
+                nameCheckedPairs.add(player);
             }
         }
-        players = nameAIPairs;
-        if (!nameAIPairs.isEmpty()){
+        players = nameCheckedPairs;
+        if (!nameCheckedPairs.isEmpty()){
             root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);

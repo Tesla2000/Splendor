@@ -1,4 +1,4 @@
-package edu.ib.splendor.service;
+package edu.ib.splendor.service.exceptions;
 
 public class NoSuchIdException extends Exception{
 }

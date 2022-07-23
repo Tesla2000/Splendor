@@ -11,6 +11,8 @@ import edu.ib.splendor.database.entities.*;
 import edu.ib.splendor.service.*;
 import edu.ib.splendor.service.AI.AI;
 import edu.ib.splendor.service.AI.AIManager;
+import edu.ib.splendor.service.exceptions.GameLostException;
+import edu.ib.splendor.service.exceptions.NoSuchIdException;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -905,19 +907,19 @@ public class GameController {
 //            else board.getPlayers().add(new Player(playersName));
 //        }
 //        scanner.close();
-        for (NameAIPair nameAIPair: SetGameController.players){
-            if (nameAIPair.isAI()) {
+        for (NameCheckedPair nameCheckedPair : SetGameController.players){
+            if (nameCheckedPair.isChecked()) {
                 if (SetGameController.players.size() == 2)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameAIPair.getName()), AIManager.readNodesFromFile("masters/two/28.txt"), "masters/two/28.txt"));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/two/28.txt"), "masters/two/28.txt"));
                 if (SetGameController.players.size() == 3)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameAIPair.getName()), AIManager.readNodesFromFile("masters/three/15.txt"), "masters/three/15.txt"));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/three/15.txt"), "masters/three/15.txt"));
                 if (SetGameController.players.size() == 4)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameAIPair.getName()), AIManager.readNodesFromFile("masters/four/3.txt"), "masters/four/3.txt"));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/four/3.txt"), "masters/four/3.txt"));
             }
-            else if (nameAIPair.getName().equals("Voldemort"))
-                board.getPlayers().add(new Player(nameAIPair.getName(), 10000));
+            else if (nameCheckedPair.getName().equals("Voldemort"))
+                board.getPlayers().add(new Player(nameCheckedPair.getName(), 10000));
             else
-                board.getPlayers().add(new Player(nameAIPair.getName()));
+                board.getPlayers().add(new Player(nameCheckedPair.getName()));
         }
         setPictures();
         currentPlayer = board.getPlayers().get(0);
