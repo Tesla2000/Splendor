@@ -36,5 +36,7 @@ public class Aristocrat {
         return cost;
     }
 
-    public String getImage(){return new File("src/main/java/edu/ib/splendor/database/pictures/aristocrats/"+image+".png").getAbsolutePath();}
+    public String getImage(){
+        if (image.contains("\\")) return image;
+        return new File("src/main/java/edu/ib/splendor/database/pictures/aristocrats/"+image+".png").getAbsolutePath();}
 }

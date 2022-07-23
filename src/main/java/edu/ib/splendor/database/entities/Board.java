@@ -25,6 +25,18 @@ public class Board {
         stored.put(Gem.GOLD, gold);
     }
 
+    public Board(TradeRow tradeRow, ArrayList<Player> players, ArrayList<Aristocrat> aristocrats, int red, int green, int blue, int brown, int white, int gold) {
+        this.tradeRow = tradeRow;
+        this.players = players;
+        this.aristocrats = aristocrats;
+        stored.put(Gem.RED, red);
+        stored.put(Gem.GREEN, green);
+        stored.put(Gem.BLUE, blue);
+        stored.put(Gem.BROWN, brown);
+        stored.put(Gem.WHITE, white);
+        stored.put(Gem.GOLD, gold);
+    }
+
     public Integer getStored(Gem gem){
         return stored.get(gem);
     }

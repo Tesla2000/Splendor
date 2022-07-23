@@ -1,0 +1,4 @@
+2022-07-22 21:47:02 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "SELECT * FROM CARD_DTO WHERE BOARD_ID[*] == 461594155464942498"
+Syntax error in SQL statement "SELECT * FROM CARD_DTO WHERE BOARD_ID[*] == 461594155464942498"; SQL statement:
+SELECT * FROM CARD_DTO where BOARD_ID == 461594155464942498 [42000-200]

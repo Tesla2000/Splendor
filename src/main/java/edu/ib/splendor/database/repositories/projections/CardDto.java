@@ -1,13 +1,15 @@
 package edu.ib.splendor.database.repositories.projections;
 
+import edu.ib.splendor.database.entities.Gem;
 import edu.ib.splendor.database.entities.Tier;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class CardDto {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Boolean visible;
     private Boolean reserve;
@@ -18,16 +20,38 @@ public class CardDto {
     private int brown;
     private int white;
     private int points;
+    private Gem production;
     private String picture;
     @ManyToOne
-    @JoinColumn(name = "board_id")
     private BoardDto board;
     @ManyToOne
-    @JoinColumn(name = "player_projection_id")
     private PlayerDto playerDto;
+    private LocalDateTime creation;
 
+    public LocalDateTime getCreation() {
+        return creation;
+    }
 
-    public PlayerDto getPlayerProjection() {
+    public void setCreation(LocalDateTime creation) {
+        this.creation = creation;
+    }
+
+    public CardDto(Long id) {
+        this.id = id;
+    }
+
+    public CardDto() {
+    }
+
+    public Gem getProduction() {
+        return production;
+    }
+
+    public void setProduction(Gem production) {
+        this.production = production;
+    }
+
+    public PlayerDto getPlayerDto() {
         return playerDto;
     }
 
@@ -128,7 +152,7 @@ public class CardDto {
         this.board = board;
     }
 
-    public void setPlayerProjection(PlayerDto playerDto) {
+    public void setPlayerDto(PlayerDto playerDto) {
         this.playerDto = playerDto;
     }
 }

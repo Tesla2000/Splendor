@@ -1,11 +1,12 @@
 package edu.ib.splendor.database.repositories.projections;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class AristocratDto {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int red;
     private int green;
@@ -14,14 +15,28 @@ public class AristocratDto {
     private int white;
     private String image;
     @ManyToOne
-    @JoinColumn(name = "player_dto_id")
     private PlayerDto playerDto;
     @ManyToOne
-    @JoinColumn(name = "board_dto_id")
     private BoardDto boardDto;
+    private LocalDateTime creation;
+
+    public LocalDateTime getCreation() {
+        return creation;
+    }
+
+    public void setCreation(LocalDateTime creation) {
+        this.creation = creation;
+    }
 
     public BoardDto getBoardDto() {
         return boardDto;
+    }
+
+    public AristocratDto(Long id) {
+        this.id = id;
+    }
+
+    public AristocratDto() {
     }
 
     public PlayerDto getPlayerDto() {

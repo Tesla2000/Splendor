@@ -1,11 +1,12 @@
 package edu.ib.splendor.database.repositories.projections;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class PlayerDto {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer points;
     private String name;
@@ -17,8 +18,23 @@ public class PlayerDto {
     private int white;
     private int gold;
     @ManyToOne
-    @JoinColumn(name = "board_id")
     private BoardDto board;
+    private LocalDateTime creation;
+
+    public LocalDateTime getCreation() {
+        return creation;
+    }
+
+    public void setCreation(LocalDateTime creation) {
+        this.creation = creation;
+    }
+
+    public PlayerDto(Long id) {
+        this.id = id;
+    }
+
+    public PlayerDto() {
+    }
 
     public BoardDto getBoard() {
         return board;

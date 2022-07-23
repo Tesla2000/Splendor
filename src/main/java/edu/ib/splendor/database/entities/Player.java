@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player {
-    private final ArrayList<Card> deck = new ArrayList<>();
-    private final ArrayList<Card> reserve = new ArrayList<>();
+    private ArrayList<Card> deck = new ArrayList<>();
+    private ArrayList<Card> reserve = new ArrayList<>();
     private final ArrayList<Aristocrat> aristocrats = new ArrayList<>();
     private final HashMap<Gem, Integer> possession = new HashMap<>();
     private HashMap<Gem, Integer> production = new HashMap<>();
@@ -57,6 +57,19 @@ public class Player {
         production.put(Gem.WHITE, 0);
     }
 
+    public Player(String name, int red, int green, int blue, int brown, int white, int gold, ArrayList<Card> deck, ArrayList<Card> reserve) {
+        possession.put(Gem.RED, red);
+        possession.put(Gem.GREEN, green);
+        possession.put(Gem.BLUE, blue);
+        possession.put(Gem.BROWN, brown);
+        possession.put(Gem.WHITE, white);
+        possession.put(Gem.GOLD, gold);
+        this.name = name;
+        this.deck = deck;
+        this.reserve = reserve;
+        updateStates();
+    }
+
     public Player(String name, Integer gold) {
         this.name = name;
         possession.put(Gem.RED, 0);
@@ -86,6 +99,7 @@ public class Player {
         production.put(Gem.BROWN, 0);
         production.put(Gem.WHITE, 0);
     }
+
 
     public void changeGem(Gem gem, Integer amount){
         possession.put(gem, Math.max(possession.get(gem)-amount, 0));
@@ -156,5 +170,9 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<Aristocrat> getAristocrats() {
+        return aristocrats;
     }
 }

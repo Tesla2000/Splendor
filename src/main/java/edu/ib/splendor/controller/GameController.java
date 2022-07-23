@@ -6,14 +6,11 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import edu.ib.splendor.Mapper;
+import edu.ib.splendor.Configuration;
 import edu.ib.splendor.database.entities.*;
+import edu.ib.splendor.service.*;
 import edu.ib.splendor.service.AI.AI;
 import edu.ib.splendor.service.AI.AIManager;
-import edu.ib.splendor.service.BoardManager;
-import edu.ib.splendor.service.DeckGenerator;
-import edu.ib.splendor.service.GameLostException;
-import edu.ib.splendor.service.GameMapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -24,7 +21,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -479,7 +475,12 @@ public class GameController {
             }
             endTurn();
         } else {
-            gameMapper.saveGame(board);
+            Long id = gameMapper.saveGame(board);
+            try {
+                board = gameMapper.recreateGame(id);
+            } catch (NoSuchIdException e) {
+                e.printStackTrace();
+            }
             setPictures();
         }
     }
@@ -845,7 +846,7 @@ public class GameController {
         assert whites1 != null : "fx:id=\"whites1\" was not injected: check your FXML file 'board.fxml'.";
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
-        gameMapper = Mapper.getGameMapper();
+        gameMapper = Configuration.gameMapper;
         ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
         playersResource = new ArrayList<>();
         playersPanes = new ArrayList<>();

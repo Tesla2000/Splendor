@@ -15,14 +15,22 @@ public class TradeRow {
         cardsVisible.put(Tier.FIRST, new ArrayList<>());
         cardsVisible.put(Tier.SECOND, new ArrayList<>());
         cardsVisible.put(Tier.THIRD, new ArrayList<>());
-        Random random = new Random();
-        int index;
         for (int i = 0; i < 4; i++) {
             for (Tier tier : Tier.values())
                 if (!tier.equals(Tier.RESERVE)) {
                     cardsVisible.get(tier).add(cardsHidden.get(tier).remove(0));
                 }
         }
+    }
+
+    public TradeRow(ArrayList<Card> tierFirstHidden, ArrayList<Card> tierSecondHidden, ArrayList<Card> tierThirdHidden,
+                    ArrayList<Card> tierFirstVisible, ArrayList<Card> tierSecondVisible, ArrayList<Card> tierThirdVisible) {
+        this.cardsHidden.put(Tier.FIRST, tierFirstHidden);
+        this.cardsHidden.put(Tier.SECOND, tierSecondHidden);
+        this.cardsHidden.put(Tier.THIRD, tierThirdHidden);
+        cardsVisible.put(Tier.FIRST, tierFirstVisible);
+        cardsVisible.put(Tier.SECOND, tierSecondVisible);
+        cardsVisible.put(Tier.THIRD, tierThirdVisible);
     }
 
     public Card takeCard(Tier tier, int index) {
