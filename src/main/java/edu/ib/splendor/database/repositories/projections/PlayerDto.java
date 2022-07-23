@@ -17,6 +17,7 @@ public class PlayerDto {
     private int brown;
     private int white;
     private int gold;
+    private String ai;
     @ManyToOne
     private BoardDto board;
     private LocalDateTime creation;
@@ -34,6 +35,14 @@ public class PlayerDto {
     }
 
     public PlayerDto() {
+    }
+
+    public String getAi() {
+        return ai;
+    }
+
+    public void setAi(String ai) {
+        this.ai = ai;
     }
 
     public BoardDto getBoard() {

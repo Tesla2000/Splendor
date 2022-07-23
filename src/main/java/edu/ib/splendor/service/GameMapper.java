@@ -9,9 +9,11 @@ import edu.ib.splendor.database.repositories.projections.AristocratDto;
 import edu.ib.splendor.database.repositories.projections.BoardDto;
 import edu.ib.splendor.database.repositories.projections.CardDto;
 import edu.ib.splendor.database.repositories.projections.PlayerDto;
+import edu.ib.splendor.service.AI.AIManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,7 +36,7 @@ public class GameMapper {
         this.playerRepository = playerRepository;
     }
 
-    public Board recreateGame(Long id) throws NoSuchIdException {
+    public Board recreateGame(Long id) throws NoSuchIdException, IOException {
         BoardDto boardDto = boardRepository.findById(id).orElseThrow(NoSuchIdException::new);
         List<CardDto> cardDtos = (List<CardDto>) cardRepository.findAll();
         List<CardDto> list = new ArrayList<>();
@@ -104,7 +106,10 @@ public class GameMapper {
         playerDtos.sort(Comparator.comparingInt(PlayerDto::getQueuePosition));
         ArrayList<Player>players =new ArrayList<>();
         for (PlayerDto playerDto: playerDtos){
-            players.add(new Player(playerDto.getName(), playerDto.getRed(), playerDto.getGreen(), playerDto.getBlue(), playerDto.getBrown(), playerDto.getWhite(), playerDto.getGold(), decks.get(playerDto.getId()), reserves.get(playerDto.getId())));
+            Player player = new Player(playerDto.getName(), playerDto.getRed(), playerDto.getGreen(), playerDto.getBlue(), playerDto.getBrown(), playerDto.getWhite(), playerDto.getGold(), decks.get(playerDto.getId()), reserves.get(playerDto.getId()));
+            if (playerDto.getAi()==null)
+            players.add(player);
+            else players.add(new PlayerWithNodes(player, AIManager.readNodesFromFile(playerDto.getAi()), playerDto.getAi()));
         }
         ArrayList<Aristocrat> aristocrats = new ArrayList<>();
         for (AristocratDto aristocratDto: aristocratDtos){
@@ -129,6 +134,8 @@ public class GameMapper {
         int playerCounter = 0;
         for (Player player : board.getPlayers()) {
             PlayerDto playerDto = new PlayerDto();
+            if (player instanceof PlayerWithNodes)
+                playerDto.setAi(((PlayerWithNodes)player).getNodesFile());
             playerDto.setPoints(player.getPoints());
             playerDto.setBoard(boardDto);
             playerDto.setName(player.getName());
@@ -163,7 +170,6 @@ public class GameMapper {
                 aristocratDto.setBoardDto(boardDto);
                 aristocratDto.setPlayerDto(playerDto);
                 aristocratDto.setCreation(creationTime);
-
             }
         }
         for (Tier tier : Tier.values())

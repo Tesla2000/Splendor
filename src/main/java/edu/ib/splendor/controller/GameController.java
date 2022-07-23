@@ -55,7 +55,6 @@ public class GameController {
     private Text brownsResource111;
     private Text whitesResource111;
     private Text goldsResource111;
-    private ArrayList<Player> players;
     private GameMapper gameMapper;
 
     @FXML
@@ -462,15 +461,15 @@ public class GameController {
         try {
             currentPlayer.clearTaken();
             BoardManager.getAristocrats(board, currentPlayer);
-            players.add(players.remove(0));
-            currentPlayer = players.get(0);
+            board.getPlayers().add(board.getPlayers().remove(0));
+            currentPlayer = board.getPlayers().get(0);
             updateFields();
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (currentPlayer instanceof PlayerWithNodes) {
             try {
-                AIManager.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
+                AIManager.playTurn(board.getPlayers(), ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
             } catch (GameLostException ignored) {
             }
             endTurn();
@@ -478,9 +477,10 @@ public class GameController {
             Long id = gameMapper.saveGame(board);
             try {
                 board = gameMapper.recreateGame(id);
-            } catch (NoSuchIdException e) {
+            } catch (NoSuchIdException | IOException e) {
                 e.printStackTrace();
             }
+            currentPlayer = board.getPlayers().get(0);
             setPictures();
         }
     }
@@ -885,7 +885,7 @@ public class GameController {
             }
         }
         TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
-        players = new ArrayList<>();
+        board = new Board(tradeRow, new ArrayList<>(), 7, 7, 7, 7, 7, 5);
         System.out.println("Enter number of players 2-4: ");
         Scanner scanner = new Scanner(System.in);
         int numberOfPlayers = scanner.nextInt();
@@ -893,21 +893,20 @@ public class GameController {
             System.out.println("Enter players name: ");
             String playersName = scanner.next();
             if (playersName.equals("Voldemort"))
-                players.add(new Player(playersName, 10000));
+                board.getPlayers().add(new Player(playersName, 10000));
             else if (playersName.contains("AI")) {
                 if (numberOfPlayers == 2)
-                    players.add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/two/28.txt")));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/two/28.txt"), "masters/two/28.txt"));
                 if (numberOfPlayers == 3)
-                    players.add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/three/15.txt")));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/three/15.txt"), "masters/three/15.txt"));
                 if (numberOfPlayers == 4)
-                    players.add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/four/3.txt")));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/four/3.txt"), "masters/four/3.txt"));
             }
-            else players.add(new Player(playersName));
+            else board.getPlayers().add(new Player(playersName));
         }
         scanner.close();
-        board = new Board(tradeRow, players, 7, 7, 7, 7, 7, 5);
         setPictures();
-        currentPlayer = players.get(0);
+        currentPlayer = board.getPlayers().get(0);
         endTurnButton.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/end_turn.png").getAbsolutePath()));
         showResources();
         for (int i = 0; i < Gem.values().length; i++) {
@@ -931,7 +930,7 @@ public class GameController {
         updateFields();
         if (currentPlayer instanceof PlayerWithNodes) {
             try {
-                AIManager.playTurn(players, ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
+                AIManager.playTurn(board.getPlayers(), ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
             } catch (GameLostException ignored) {
             }
             endTurn();
