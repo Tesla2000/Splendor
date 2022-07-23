@@ -108,8 +108,9 @@ public class GameMapper {
         for (PlayerDto playerDto: playerDtos){
             Player player = new Player(playerDto.getName(), playerDto.getRed(), playerDto.getGreen(), playerDto.getBlue(), playerDto.getBrown(), playerDto.getWhite(), playerDto.getGold(), decks.get(playerDto.getId()), reserves.get(playerDto.getId()));
             if (playerDto.getAi()==null)
-            players.add(player);
-            else players.add(new PlayerWithNodes(player, AIManager.readNodesFromFile(playerDto.getAi()), playerDto.getAi()));
+                players.add(player);
+            else
+                players.add(new PlayerWithNodes(player, AIManager.readNodesFromFile(playerDto.getAi()), playerDto.getAi()));
         }
         ArrayList<Aristocrat> aristocrats = new ArrayList<>();
         for (AristocratDto aristocratDto: aristocratDtos){

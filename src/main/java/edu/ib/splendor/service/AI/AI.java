@@ -53,13 +53,15 @@ public abstract class AI {
         TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
         List<Player> list = new ArrayList<>();
         for (PlayerWithNodes currentPlayer : currentPlayers) {
-            Player player = currentPlayer.getPlayer();
+//            Player player = currentPlayer.getPlayer();
+            Player player = currentPlayer;
             list.add(player);
         }
         players = new ArrayList<>(list);
         List<Player> result = new ArrayList<>();
         for (PlayerWithNodes currentPlayer : currentPlayers) {
-            Player player = currentPlayer.getPlayer();
+//            Player player = currentPlayer.getPlayer();
+            Player player = currentPlayer;
             result.add(player);
         }
         Board board = new Board(tradeRow, new ArrayList<>(result), 7, 7, 7, 7, 7, 5);
@@ -71,8 +73,10 @@ public abstract class AI {
             } catch (GameLostException e){
                 break;
             }
-            if (currentPlayers.get(0).getPlayer().getPoints()>=15) {
-                if (currentPlayers.get(0).getPlayer().getName().equals("Pretender")) {
+//            if (currentPlayers.get(0).getPlayer().getPoints()>=15) {
+//                if (currentPlayers.get(0).getPlayer().getName().equals("Pretender")) {
+            if (currentPlayers.get(0).getPoints()>=15) {
+                if (currentPlayers.get(0).getName().equals("Pretender")) {
                     scores[id] = scores[id] + 1 + 1.0 / moves / 50;
                     if (scores[id] > bestScore) {
                         best = id;
