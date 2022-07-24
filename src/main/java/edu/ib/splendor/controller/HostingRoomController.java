@@ -20,11 +20,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class HostingRoomController {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    public static ArrayList<NameCheckedPair> players;
 
     @FXML
     private ResourceBundle resources;
@@ -63,11 +66,13 @@ public class HostingRoomController {
     void changeState(ActionEvent event) throws IOException, InterruptedException {
         GameDto gameDto = new GameDto();
         gameDto.setCreated(LocalDateTime.now());
-        List<NameCheckedPair> players;
+        Configuration.gameRepository.save(gameDto);
         while (true) {
             ArrayList<WaitDto> waitDtos = new ArrayList<>();
             for (int i=0;i<4;i++){
-                waitDtos.add(new WaitDto());
+                WaitDto waitDto = new WaitDto();
+                Configuration.waitRepository.save(waitDto);
+                waitDtos.add(waitDto);
             }
             if (waitingForGameCheckBox.isSelected()) {
                 players = new ArrayList<>();
@@ -78,9 +83,12 @@ public class HostingRoomController {
                 for (int i=0; i<4;i++) {
                     waitDtos.get(i).setGameDto(gameDto);
                     if (!players.get(i).getName().equals("") && !players.get(i).isChecked()) {;
-                        if (players.get(i).isChecked()){
+                        if (!players.get(i).isChecked()){
                             waitDtos.get(i).setGameKey(players.get(i).getName());
                             waitDtos.get(i).setReady(false);
+                        } else {
+                            waitDtos.get(i).setPlayerName(players.get(i).getName());
+                            waitDtos.get(i).setReady(true);
                         }
                     } else {
                         waitDtos.get(i).setReady(true);
@@ -92,6 +100,13 @@ public class HostingRoomController {
             Configuration.waitRepository.saveAll(waitDtos);
             Thread.sleep(1000);
             if (areAllPlayersReady(waitDtos)){
+                ArrayList<NameCheckedPair> list = new ArrayList<>();
+                for (NameCheckedPair player : players) {
+                    if (!player.getName().equals("")) {
+                        list.add(player);
+                    }
+                }
+                players = list;
                 root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
                 stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 scene = new Scene(root);

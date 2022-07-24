@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="88.0" prefWidth="192.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.controller.WaitingRoomController">
+   <children>
+      <Button layoutX="34.0" layoutY="14.0" mnemonicParsing="false" onAction="#admin" text="Host game as admin" />
+      <Button layoutX="36.0" layoutY="49.0" mnemonicParsing="false" onAction="#user" text="Join game as player" />
+   </children>
+</AnchorPane>

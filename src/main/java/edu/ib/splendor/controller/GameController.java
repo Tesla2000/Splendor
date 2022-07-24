@@ -907,7 +907,10 @@ public class GameController {
 //            else board.getPlayers().add(new Player(playersName));
 //        }
 //        scanner.close();
-        for (NameCheckedPair nameCheckedPair : SetGameController.players){
+        List<NameCheckedPair> pairs;
+        if (SetGameController.players == null) pairs = SetGameController.players;
+        else pairs = HostingRoomController.players;
+        for (NameCheckedPair nameCheckedPair : pairs){
             if (nameCheckedPair.isChecked()) {
                 if (SetGameController.players.size() == 2)
                     board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/two/28.txt"), "masters/two/28.txt"));

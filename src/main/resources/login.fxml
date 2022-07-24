@@ -5,10 +5,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
+<?import javafx.scene.control.PasswordField?>
 <AnchorPane prefHeight="118.0" prefWidth="193.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.controller.LoginController">
    <children>
       <TextField fx:id="loginField" layoutX="22.0" layoutY="14.0" promptText="Login" />
-      <TextField fx:id="passwordField" layoutX="22.0" layoutY="47.0" promptText="Password" />
+      <PasswordField fx:id="passwordField" layoutX="22.0" layoutY="47.0" promptText="Password" />
       <Button fx:id="signInButton" layoutX="22.0" layoutY="79.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="149.0" text="Sign in" />
    </children>
 </AnchorPane>

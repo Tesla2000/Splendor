@@ -1,14 +1,8 @@
 package edu.ib.splendor.service;
 
 import edu.ib.splendor.database.entities.*;
-import edu.ib.splendor.database.repositories.interfaces.AristocratRepository;
-import edu.ib.splendor.database.repositories.interfaces.BoardRepository;
-import edu.ib.splendor.database.repositories.interfaces.CardRepository;
-import edu.ib.splendor.database.repositories.interfaces.PlayerRepository;
-import edu.ib.splendor.database.repositories.dtos.AristocratDto;
-import edu.ib.splendor.database.repositories.dtos.BoardDto;
-import edu.ib.splendor.database.repositories.dtos.CardDto;
-import edu.ib.splendor.database.repositories.dtos.PlayerDto;
+import edu.ib.splendor.database.repositories.dtos.*;
+import edu.ib.splendor.database.repositories.interfaces.*;
 import edu.ib.splendor.service.AI.AIManager;
 import edu.ib.splendor.service.exceptions.NoSuchIdException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class GameMapper {
@@ -27,14 +18,20 @@ public class GameMapper {
     private final BoardRepository boardRepository;
     private final CardRepository cardRepository;
     private final PlayerRepository playerRepository;
+    private final UserRepository userRepository;
+    private final WaitRepository waitRepository;
+    private final GameRepository gameRepository;
 
 
     @Autowired
-    public GameMapper(AristocratRepository aristocratRepository, BoardRepository boardRepository, CardRepository cardRepository, PlayerRepository playerRepository) {
+    public GameMapper(AristocratRepository aristocratRepository, BoardRepository boardRepository, CardRepository cardRepository, PlayerRepository playerRepository, UserRepository userRepository, WaitRepository waitRepository, GameRepository gameRepository) {
         this.aristocratRepository = aristocratRepository;
         this.boardRepository = boardRepository;
         this.cardRepository = cardRepository;
         this.playerRepository = playerRepository;
+        this.userRepository = userRepository;
+        this.waitRepository = waitRepository;
+        this.gameRepository = gameRepository;
     }
 
     public Board recreateGame(Long id) throws NoSuchIdException, IOException {
