@@ -908,15 +908,15 @@ public class GameController {
 //        }
 //        scanner.close();
         List<NameCheckedPair> pairs;
-        if (SetGameController.players == null) pairs = SetGameController.players;
+        if (SetGameController.players != null) pairs = SetGameController.players;
         else pairs = HostingRoomController.players;
         for (NameCheckedPair nameCheckedPair : pairs){
             if (nameCheckedPair.isChecked()) {
-                if (SetGameController.players.size() == 2)
+                if (pairs.size() == 2)
                     board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/two/28.txt"), "masters/two/28.txt"));
-                if (SetGameController.players.size() == 3)
+                if (pairs.size() == 3)
                     board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/three/15.txt"), "masters/three/15.txt"));
-                if (SetGameController.players.size() == 4)
+                if (pairs.size() == 4)
                     board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/four/3.txt"), "masters/four/3.txt"));
             }
             else if (nameCheckedPair.getName().equals("Voldemort"))

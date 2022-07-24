@@ -67,13 +67,13 @@ public class HostingRoomController {
         GameDto gameDto = new GameDto();
         gameDto.setCreated(LocalDateTime.now());
         Configuration.gameRepository.save(gameDto);
+        ArrayList<WaitDto> waitDtos = new ArrayList<>();
+        for (int i=0;i<4;i++){
+            WaitDto waitDto = new WaitDto();
+            Configuration.waitRepository.save(waitDto);
+            waitDtos.add(waitDto);
+        }
         while (true) {
-            ArrayList<WaitDto> waitDtos = new ArrayList<>();
-            for (int i=0;i<4;i++){
-                WaitDto waitDto = new WaitDto();
-                Configuration.waitRepository.save(waitDto);
-                waitDtos.add(waitDto);
-            }
             if (waitingForGameCheckBox.isSelected()) {
                 players = new ArrayList<>();
                 players.add(new NameCheckedPair(firstPlayerNameTextField.getText(), isFirstPlayerMeCheckBox.isSelected()));
@@ -82,16 +82,19 @@ public class HostingRoomController {
                 players.add(new NameCheckedPair(fourthPlayerNameTextField.getText(), isFourthPlayerMeCheckBox.isSelected()));
                 for (int i=0; i<4;i++) {
                     waitDtos.get(i).setGameDto(gameDto);
-                    if (!players.get(i).getName().equals("") && !players.get(i).isChecked()) {;
-                        if (!players.get(i).isChecked()){
-                            waitDtos.get(i).setGameKey(players.get(i).getName());
-                            waitDtos.get(i).setReady(false);
-                        } else {
-                            waitDtos.get(i).setPlayerName(players.get(i).getName());
-                            waitDtos.get(i).setReady(true);
-                        }
-                    } else {
+                    if (!players.get(i).getName().equals("") && players.get(i).isChecked()) {
+                        waitDtos.get(i).setPlayerName(players.get(i).getName());
                         waitDtos.get(i).setReady(true);
+                    } else if (players.get(i).getName().equals("") && !players.get(i).isChecked()) {
+                        waitDtos.get(i).setReady(true);
+                        waitDtos.get(i).setPlayerName("");
+                        waitDtos.get(i).setGameKey("");
+                    }else if (!players.get(i).getName().equals("") && !players.get(i).isChecked()) {
+                        waitDtos.get(i).setReady(false);
+                        waitDtos.get(i).setPlayerName("");
+                        waitDtos.get(i).setGameKey(players.get(i).getName());
+                    } else {
+                        waitDtos.get(i).setReady(false);
                         waitDtos.get(i).setPlayerName("");
                         waitDtos.get(i).setGameKey("");
                     }
@@ -101,20 +104,22 @@ public class HostingRoomController {
             Thread.sleep(1000);
             if (areAllPlayersReady(waitDtos)){
                 ArrayList<NameCheckedPair> list = new ArrayList<>();
-                for (NameCheckedPair player : players) {
-                    if (!player.getName().equals("")) {
-                        list.add(player);
+                for (WaitDto waitDto: Configuration.waitRepository.findAll()) {
+                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")) {
+                        list.add(new NameCheckedPair(waitDto.getPlayerName(), false));
                     }
                 }
                 players = list;
-                root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                scene = new Scene(root);
-                stage.setTitle("Splendor");
-                stage.setScene(scene);
-                String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
-                scene.getStylesheets().add(css);
-                stage.show();
+                if (players.size()>=2) {
+                    root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
+                    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    scene = new Scene(root);
+                    stage.setTitle("Splendor");
+                    stage.setScene(scene);
+                    String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
+                    scene.getStylesheets().add(css);
+                    stage.show();
+                }
             }
         }
     }
