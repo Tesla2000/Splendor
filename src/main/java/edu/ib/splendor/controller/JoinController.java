@@ -16,7 +16,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class JoinController {
     private Stage stage;
     private Scene scene;
@@ -43,10 +45,11 @@ public class JoinController {
         while (true) {
             if (readyButton.isSelected()) {
                 for (WaitDto waitDto: Configuration.waitRepository.findAll()){
-                    if (waitDto.getGameKey().equals(secretNameField.getText())){
+                    if (waitDto.getGameKey() != null && waitDto.getGameKey().equals(secretNameField.getText())){
                         gameId = waitDto.getGameDto().getId();
                         waitDto.setReady(true);
                         waitDto.setPlayerName(AliasFieldName.getText());
+                        Configuration.waitRepository.save(waitDto);
                         if (Configuration.gameRepository.findById(gameId).orElseThrow(IllegalAccessError::new).getStarted()){
                             root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
                             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

@@ -66,6 +66,7 @@ public class HostingRoomController {
     void changeState(ActionEvent event) throws IOException, InterruptedException {
         GameDto gameDto = new GameDto();
         gameDto.setCreated(LocalDateTime.now());
+        gameDto.setStarted(false);
         Configuration.gameRepository.save(gameDto);
         ArrayList<WaitDto> waitDtos = new ArrayList<>();
         for (int i=0;i<4;i++){
@@ -111,6 +112,8 @@ public class HostingRoomController {
                 }
                 players = list;
                 if (players.size()>=2) {
+                    gameDto.setStarted(true);
+                    Configuration.gameRepository.save(gameDto);
                     root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
                     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     scene = new Scene(root);

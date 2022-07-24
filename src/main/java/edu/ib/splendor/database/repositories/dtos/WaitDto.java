@@ -15,6 +15,13 @@ public class WaitDto {
     @ManyToOne
     private GameDto gameDto;
 
+    public WaitDto() {
+    }
+
+    public WaitDto(GameDto gameDto) {
+        this.gameDto = gameDto;
+    }
+
     public GameDto getGameDto() {
         return gameDto;
     }
