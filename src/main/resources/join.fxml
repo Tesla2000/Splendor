@@ -7,7 +7,7 @@
 <AnchorPane prefHeight="136.0" prefWidth="201.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.controller.JoinController">
    <children>
       <TextField fx:id="secretNameField" layoutX="26.0" layoutY="22.0" promptText="My secret name" />
-      <TextField fx:id="AliasFieldName" layoutX="26.0" layoutY="62.0" promptText="My alias" />
+      <TextField fx:id="aliasFieldName" layoutX="26.0" layoutY="62.0" promptText="My alias" />
       <CheckBox fx:id="readyButton" layoutX="78.0" layoutY="99.0" mnemonicParsing="false" onAction="#wait" text="Start" />
    </children>
 </AnchorPane>

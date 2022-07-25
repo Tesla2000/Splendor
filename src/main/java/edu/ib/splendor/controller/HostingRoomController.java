@@ -20,9 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.springframework.stereotype.Controller;
 
-@Controller
 public class HostingRoomController {
     private Stage stage;
     private Scene scene;
@@ -74,6 +72,14 @@ public class HostingRoomController {
             Configuration.waitRepository.save(waitDto);
             waitDtos.add(waitDto);
         }
+        root = FXMLLoader.load(getClass().getClassLoader().getResource("waitForGame.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setTitle("Splendor");
+        stage.setScene(scene);
+        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage.show();
         while (true) {
             if (waitingForGameCheckBox.isSelected()) {
                 players = new ArrayList<>();
@@ -119,7 +125,6 @@ public class HostingRoomController {
                     scene = new Scene(root);
                     stage.setTitle("Splendor");
                     stage.setScene(scene);
-                    String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
                     scene.getStylesheets().add(css);
                     stage.show();
                 }

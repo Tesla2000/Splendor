@@ -23,9 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.springframework.stereotype.Controller;
 
-@Controller
 public class GameController {
     private LocalDateTime block = LocalDateTime.now();
     private Player currentPlayer;
@@ -477,11 +475,18 @@ public class GameController {
             endTurn();
         } else {
             Long id = gameMapper.saveGame(board);
-            try {
-                board = gameMapper.recreateGame(id);
-            } catch (NoSuchIdException | IOException e) {
-                e.printStackTrace();
-            }
+            do {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    board = gameMapper.recreateGame(id);
+                } catch (NoSuchIdException | IOException e) {
+                    e.printStackTrace();
+                }
+            } while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName()));
             currentPlayer = board.getPlayers().get(0);
             setPictures();
         }

@@ -5,7 +5,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import edu.ib.splendor.Configuration;
 import edu.ib.splendor.database.entities.NameCheckedPair;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,6 +70,7 @@ public class SetGameController {
         }
         players = nameCheckedPairs;
         if (nameCheckedPairs.size() >= 2){
+            Configuration.playerNames = players.stream().map(NameCheckedPair::getName).collect(Collectors.toList());
             root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);

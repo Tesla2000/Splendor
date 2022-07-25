@@ -40,9 +40,9 @@ public class LoginController {
     @FXML
     void login(ActionEvent event) throws IOException {
         login = loginField.getText();
-        for (UserDto userDto: Configuration.userRepository.findAll()){
-            if (userDto.getLogin().equals(login) && userDto.getPassword().equals(passwordField.getText())){
-                root = FXMLLoader.load(getClass().getClassLoader().getResource("setGame.fxml"));
+        for (UserDto userDto : Configuration.userRepository.findAll()) {
+            if (userDto.getLogin().equals(login) && userDto.getPassword().equals(passwordField.getText())) {
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("multiplayer.fxml"));
                 stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 scene = new Scene(root);
                 stage.setTitle("Splendor");
@@ -53,7 +53,6 @@ public class LoginController {
 
             }
         }
-
     }
 
     @FXML
@@ -61,7 +60,5 @@ public class LoginController {
         assert loginField != null : "fx:id=\"loginField\" was not injected: check your FXML file 'login.fxml'.";
         assert passwordField != null : "fx:id=\"passwordField\" was not injected: check your FXML file 'login.fxml'.";
         assert signInButton != null : "fx:id=\"signInButton\" was not injected: check your FXML file 'login.fxml'.";
-
     }
-
 }

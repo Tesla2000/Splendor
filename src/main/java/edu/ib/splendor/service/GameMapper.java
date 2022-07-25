@@ -2,36 +2,26 @@ package edu.ib.splendor.service;
 
 import edu.ib.splendor.database.entities.*;
 import edu.ib.splendor.database.repositories.dtos.*;
-import edu.ib.splendor.database.repositories.interfaces.*;
+import edu.ib.splendor.database.repositories.access.*;
 import edu.ib.splendor.service.AI.AIManager;
 import edu.ib.splendor.service.exceptions.NoSuchIdException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Component
+
 public class GameMapper {
     private final AristocratRepository aristocratRepository;
     private final BoardRepository boardRepository;
     private final CardRepository cardRepository;
     private final PlayerRepository playerRepository;
-    private final UserRepository userRepository;
-    private final WaitRepository waitRepository;
-    private final GameRepository gameRepository;
 
-
-    @Autowired
     public GameMapper(AristocratRepository aristocratRepository, BoardRepository boardRepository, CardRepository cardRepository, PlayerRepository playerRepository, UserRepository userRepository, WaitRepository waitRepository, GameRepository gameRepository) {
         this.aristocratRepository = aristocratRepository;
         this.boardRepository = boardRepository;
         this.cardRepository = cardRepository;
         this.playerRepository = playerRepository;
-        this.userRepository = userRepository;
-        this.waitRepository = waitRepository;
-        this.gameRepository = gameRepository;
     }
 
     public Board recreateGame(Long id) throws NoSuchIdException, IOException {

@@ -1,3 +1,4 @@
 # Project exclude paths
 /target/
 /src/main/java/edu/ib/splendor/service/UserRegisterer.java
+/Endpoints/
