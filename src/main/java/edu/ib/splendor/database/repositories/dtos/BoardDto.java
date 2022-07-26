@@ -1,12 +1,9 @@
 package edu.ib.splendor.database.repositories.dtos;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+
 public class BoardDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int red;
     private int green;

@@ -1,6 +1,6 @@
 package edu.ib.splendor.controller;
 
-import edu.ib.splendor.Configuration;
+import edu.ib.splendor.database.repositories.access.RepositoryAccessor;
 import edu.ib.splendor.database.repositories.dtos.UserDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +21,7 @@ public class LoginController {
     private Scene scene;
     private Parent root;
     public static String login;
+    private RepositoryAccessor<UserDto> userRepositoryAccessor;
 
     @FXML
     private ResourceBundle resources;
@@ -40,7 +41,7 @@ public class LoginController {
     @FXML
     void login(ActionEvent event) throws IOException {
         login = loginField.getText();
-        for (UserDto userDto : Configuration.userRepository.findAll()) {
+        for (UserDto userDto : userRepositoryAccessor.findAll()) {
             if (userDto.getLogin().equals(login) && userDto.getPassword().equals(passwordField.getText())) {
                 root = FXMLLoader.load(getClass().getClassLoader().getResource("multiplayer.fxml"));
                 stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -60,5 +61,6 @@ public class LoginController {
         assert loginField != null : "fx:id=\"loginField\" was not injected: check your FXML file 'login.fxml'.";
         assert passwordField != null : "fx:id=\"passwordField\" was not injected: check your FXML file 'login.fxml'.";
         assert signInButton != null : "fx:id=\"signInButton\" was not injected: check your FXML file 'login.fxml'.";
+        userRepositoryAccessor = new RepositoryAccessor<>("/user", UserDto.class, UserDto[].class);
     }
 }

@@ -474,20 +474,22 @@ public class GameController {
             }
             endTurn();
         } else {
-            Long id = gameMapper.saveGame(board);
-            do {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    board = gameMapper.recreateGame(id);
-                } catch (NoSuchIdException | IOException e) {
-                    e.printStackTrace();
-                }
-            } while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName()));
-            currentPlayer = board.getPlayers().get(0);
+            if (!Configuration.hotSeat) {
+                Long id = gameMapper.saveGame(board);
+                do {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        board = gameMapper.recreateGame(id);
+                    } catch (NoSuchIdException | IOException e) {
+                        e.printStackTrace();
+                    }
+                } while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName()));
+                currentPlayer = board.getPlayers().get(0);
+            }
             setPictures();
         }
     }
@@ -853,7 +855,7 @@ public class GameController {
         assert whites1 != null : "fx:id=\"whites1\" was not injected: check your FXML file 'board.fxml'.";
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
-        gameMapper = Configuration.gameMapper;
+        gameMapper = new GameMapper();
         ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
         playersResource = new ArrayList<>();
         playersPanes = new ArrayList<>();

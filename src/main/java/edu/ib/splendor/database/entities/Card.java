@@ -21,10 +21,7 @@ public class Card {
     }
 
     public String getPicture() {
-        String result;
-        if (picture.contains("\\")) result = picture;
-        else result = new File("src/main/java/edu/ib/splendor/database/pictures/buildings/"+picture+".png").getAbsolutePath();
-        return result;
+        return new File("src/main/java/edu/ib/splendor/database/pictures/buildings/"+picture+".png").getAbsolutePath();
     }
 
     private int points = 0;

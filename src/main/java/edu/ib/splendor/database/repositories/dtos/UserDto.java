@@ -1,11 +1,7 @@
 package edu.ib.splendor.database.repositories.dtos;
 
-import javax.persistence.*;
-
-@Entity
 public class UserDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     private String login;

@@ -1,12 +1,8 @@
 package edu.ib.splendor.database.repositories.dtos;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
 public class PlayerDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer points;
     private String name;
@@ -18,7 +14,6 @@ public class PlayerDto {
     private int white;
     private int gold;
     private String ai;
-    @ManyToOne
     private BoardDto board;
     private LocalDateTime creation;
 

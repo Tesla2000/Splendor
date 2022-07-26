@@ -1,18 +1,12 @@
 package edu.ib.splendor.database.repositories.dtos;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
-@Entity
 public class WaitDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String gameKey;
     private String playerName;
     private Boolean ready;
-    @ManyToOne
     private GameDto gameDto;
 
     public WaitDto() {

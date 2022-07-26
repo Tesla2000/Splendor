@@ -12,30 +12,29 @@ import java.util.*;
 
 
 public class GameMapper {
-    private final AristocratRepository aristocratRepository;
-    private final BoardRepository boardRepository;
-    private final CardRepository cardRepository;
-    private final PlayerRepository playerRepository;
+    private final RepositoryAccessor<AristocratDto> aristocratRepositoryAccessor;
+    private final RepositoryAccessor<BoardDto> boardRepositoryAccessor;
+    private final RepositoryAccessor<CardDto> cardRepositoryAccessor;
+    private final RepositoryAccessor<PlayerDto> playerRepositoryAccessor;
 
-    public GameMapper(AristocratRepository aristocratRepository, BoardRepository boardRepository, CardRepository cardRepository, PlayerRepository playerRepository, UserRepository userRepository, WaitRepository waitRepository, GameRepository gameRepository) {
-        this.aristocratRepository = aristocratRepository;
-        this.boardRepository = boardRepository;
-        this.cardRepository = cardRepository;
-        this.playerRepository = playerRepository;
+    public GameMapper() {
+        this.aristocratRepositoryAccessor = new RepositoryAccessor<>("/aristocrat", AristocratDto.class, AristocratDto[].class);
+        this.boardRepositoryAccessor = new RepositoryAccessor<>("/board", BoardDto.class, BoardDto[].class);
+        this.cardRepositoryAccessor = new RepositoryAccessor<>("/card", CardDto.class, CardDto[].class);
+        this.playerRepositoryAccessor = new RepositoryAccessor<>("/player", PlayerDto.class, PlayerDto[].class);
     }
 
     public Board recreateGame(Long id) throws NoSuchIdException, IOException {
-        BoardDto boardDto = boardRepository.findById(id).orElseThrow(NoSuchIdException::new);
-        List<CardDto> cardDtos = (List<CardDto>) cardRepository.findAll();
+        BoardDto boardDto = boardRepositoryAccessor.findById(id);
         List<CardDto> list = new ArrayList<>();
-        for (CardDto dto : cardDtos) {
+        for (CardDto dto : cardRepositoryAccessor.findAll()) {
             if (dto.getBoard().getId().equals(boardDto.getId())) {
                 list.add(dto);
             }
         }
-        cardDtos = list;
+        List<CardDto> cardDtos = list;
         List<AristocratDto> aristocratDtos = new ArrayList<>();
-        for (AristocratDto dto : aristocratRepository.findAll()) {
+        for (AristocratDto dto : aristocratRepositoryAccessor.findAll()) {
             if (dto.getBoardDto().getId().equals(boardDto.getId())) {
                 aristocratDtos.add(dto);
             }
@@ -45,7 +44,7 @@ public class GameMapper {
         HashMap<Long, ArrayList<Card>> decks = new HashMap<>();
         HashMap<Long, ArrayList<Card>> reserves = new HashMap<>();
         List<PlayerDto> playerDtos = new ArrayList<>();
-        for (PlayerDto dto : playerRepository.findAll()) {
+        for (PlayerDto dto : playerRepositoryAccessor.findAll()) {
             if (dto.getBoard().getId().equals(boardDto.getId())) {
                 playerDtos.add(dto);
             }
@@ -119,7 +118,7 @@ public class GameMapper {
         boardDto.setWhite(board.getStored(Gem.WHITE));
         boardDto.setGold(board.getStored(Gem.GOLD));
         boardDto.setCreation(creationTime);
-        boardRepository.save(boardDto);
+        boardRepositoryAccessor.save(boardDto);
         int playerCounter = 0;
         for (Player player : board.getPlayers()) {
             PlayerDto playerDto = new PlayerDto();
@@ -137,14 +136,14 @@ public class GameMapper {
             playerDto.setQueuePosition(playerCounter);
             playerDto.setCreation(creationTime);
             playerCounter++;
-            playerRepository.save(playerDto);
+            playerRepositoryAccessor.save(playerDto);
             for (Card card : player.getReserve()) {
                 CardDto cardDto = cardToDto(card);
                 cardDto.setReserve(true);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
                 cardDto.setCreation(creationTime);
-                cardRepository.save(cardDto);
+                cardRepositoryAccessor.save(cardDto);
             }
             for (Card card : player.getDeck()) {
                 CardDto cardDto = cardToDto(card);
@@ -152,7 +151,7 @@ public class GameMapper {
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
                 cardDto.setCreation(creationTime);
-                cardRepository.save(cardDto);
+                cardRepositoryAccessor.save(cardDto);
             }
             for (Aristocrat aristocrat: player.getAristocrats()){
                 AristocratDto aristocratDto = convertAristocratToDto(aristocrat);
@@ -168,21 +167,21 @@ public class GameMapper {
                     cardDto.setBoard(boardDto);
                     cardDto.setVisible(false);
                     cardDto.setCreation(creationTime);
-                    cardRepository.save(cardDto);
+                    cardRepositoryAccessor.save(cardDto);
                 }
                 for (Card card : board.getTradeRow().getCardsVisible().get(tier)) {
                     CardDto cardDto = cardToDto(card);
                     cardDto.setBoard(boardDto);
                     cardDto.setVisible(true);
                     cardDto.setCreation(creationTime);
-                    cardRepository.save(cardDto);
+                    cardRepositoryAccessor.save(cardDto);
                 }
             }
         for (Aristocrat aristocrat : board.getAristocrats()) {
             AristocratDto aristocratDto = convertAristocratToDto(aristocrat);
             aristocratDto.setBoardDto(boardDto);
             aristocratDto.setCreation(creationTime);
-            aristocratRepository.save(aristocratDto);
+            aristocratRepositoryAccessor.save(aristocratDto);
         }
         return boardDto.getId();
     }

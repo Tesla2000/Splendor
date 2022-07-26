@@ -4,11 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
-import edu.ib.splendor.Configuration;
 import edu.ib.splendor.database.entities.NameCheckedPair;
+import edu.ib.splendor.database.repositories.access.RepositoryAccessor;
 import edu.ib.splendor.database.repositories.dtos.GameDto;
 import edu.ib.splendor.database.repositories.dtos.WaitDto;
 import javafx.event.ActionEvent;
@@ -25,6 +24,8 @@ public class HostingRoomController {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    private RepositoryAccessor<WaitDto> waitRepositoryAccessor;
+    private RepositoryAccessor<GameDto> gameRepositoryAccessor;
     public static ArrayList<NameCheckedPair> players;
 
     @FXML
@@ -65,11 +66,11 @@ public class HostingRoomController {
         GameDto gameDto = new GameDto();
         gameDto.setCreated(LocalDateTime.now());
         gameDto.setStarted(false);
-        Configuration.gameRepository.save(gameDto);
+        gameRepositoryAccessor.save(gameDto);
         ArrayList<WaitDto> waitDtos = new ArrayList<>();
         for (int i=0;i<4;i++){
             WaitDto waitDto = new WaitDto();
-            Configuration.waitRepository.save(waitDto);
+            waitRepositoryAccessor.save(waitDto);
             waitDtos.add(waitDto);
         }
         root = FXMLLoader.load(getClass().getClassLoader().getResource("waitForGame.fxml"));
@@ -88,7 +89,7 @@ public class HostingRoomController {
                 players.add(new NameCheckedPair(thirdPlayerNameTextField.getText(), isThirdPlayerMeCheckBox.isSelected()));
                 players.add(new NameCheckedPair(fourthPlayerNameTextField.getText(), isFourthPlayerMeCheckBox.isSelected()));
                 for (int i=0; i<4;i++) {
-                    waitDtos.get(i).setGameDto(gameDto);
+//                    waitDtos.get(i).setGameDto(gameDto);
                     if (!players.get(i).getName().equals("") && players.get(i).isChecked()) {
                         waitDtos.get(i).setPlayerName(players.get(i).getName());
                         waitDtos.get(i).setReady(true);
@@ -107,19 +108,19 @@ public class HostingRoomController {
                     }
                 }
             }
-            Configuration.waitRepository.saveAll(waitDtos);
+            waitRepositoryAccessor.saveAll(waitDtos);
             Thread.sleep(1000);
             if (areAllPlayersReady(waitDtos)){
                 ArrayList<NameCheckedPair> list = new ArrayList<>();
-                for (WaitDto waitDto: Configuration.waitRepository.findAll()) {
-                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")) {
-                        list.add(new NameCheckedPair(waitDto.getPlayerName(), false));
-                    }
+                for (WaitDto waitDto: waitRepositoryAccessor.findAll()) {
+//                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")) {
+//                        list.add(new NameCheckedPair(waitDto.getPlayerName(), false));
+//                    }
                 }
                 players = list;
                 if (players.size()>=2) {
                     gameDto.setStarted(true);
-                    Configuration.gameRepository.save(gameDto);
+                    gameRepositoryAccessor.save(gameDto);
                     root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
                     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     scene = new Scene(root);
@@ -150,7 +151,8 @@ public class HostingRoomController {
         assert secondPlayerNameTextField != null : "fx:id=\"secondPlayerNameTextField\" was not injected: check your FXML file 'hostingRoom.fxml'.";
         assert thirdPlayerNameTextField != null : "fx:id=\"thirdPlayerNameTextField\" was not injected: check your FXML file 'hostingRoom.fxml'.";
         assert waitingForGameCheckBox != null : "fx:id=\"waitingForGameCheckBox\" was not injected: check your FXML file 'hostingRoom.fxml'.";
-
+        waitRepositoryAccessor = new RepositoryAccessor<>("/wait", WaitDto.class, WaitDto[].class);
+        gameRepositoryAccessor = new RepositoryAccessor<>("/game", GameDto.class, GameDto[].class);
     }
 
 }

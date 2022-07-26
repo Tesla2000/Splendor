@@ -1,12 +1,10 @@
 package edu.ib.splendor.database.repositories.dtos;
 
-import javax.persistence.*;
+
 import java.time.LocalDateTime;
 
-@Entity
+
 public class GameDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Boolean started;

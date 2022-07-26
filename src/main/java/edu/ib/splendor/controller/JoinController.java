@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import edu.ib.splendor.Configuration;
+import edu.ib.splendor.database.repositories.access.RepositoryAccessor;
+import edu.ib.splendor.database.repositories.dtos.GameDto;
 import edu.ib.splendor.database.repositories.dtos.WaitDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +23,8 @@ public class JoinController {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    private RepositoryAccessor<WaitDto> waitRepositoryAccessor;
+    private RepositoryAccessor<GameDto> gameRepositoryAccessor;
 
     @FXML
     private ResourceBundle resources;
@@ -50,13 +54,13 @@ public class JoinController {
         stage.show();
         while (true) {
             if (readyButton.isSelected()) {
-                for (WaitDto waitDto: Configuration.waitRepository.findAll()){
+                for (WaitDto waitDto: waitRepositoryAccessor.findAll()){
                     if (waitDto.getGameKey() != null && waitDto.getGameKey().equals(secretNameField.getText())){
                         gameId = waitDto.getGameDto().getId();
                         waitDto.setReady(true);
                         waitDto.setPlayerName(aliasFieldName.getText());
-                        Configuration.waitRepository.save(waitDto);
-                        if (Configuration.gameRepository.findById(gameId).orElseThrow(IllegalAccessError::new).getStarted()){
+                        waitRepositoryAccessor.save(waitDto);
+                        if (gameRepositoryAccessor.findById(gameId).getStarted()){
                             ArrayList<String> playerNames = new ArrayList<>();
                             playerNames.add(aliasFieldName.getText());
                             Configuration.playerNames = playerNames;
@@ -81,7 +85,8 @@ public class JoinController {
         assert aliasFieldName != null : "fx:id=\"AliasFieldName\" was not injected: check your FXML file 'join.fxml'.";
         assert readyButton != null : "fx:id=\"readyButton\" was not injected: check your FXML file 'join.fxml'.";
         assert secretNameField != null : "fx:id=\"secretNameField\" was not injected: check your FXML file 'join.fxml'.";
-
+        waitRepositoryAccessor = new RepositoryAccessor<>("/wait", WaitDto.class, WaitDto[].class);
+        gameRepositoryAccessor = new RepositoryAccessor<>("/game", GameDto.class, GameDto[].class);
     }
 
 }

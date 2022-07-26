@@ -2,14 +2,9 @@ package edu.ib.splendor.database.repositories.dtos;
 
 import edu.ib.splendor.database.entities.Gem;
 import edu.ib.splendor.database.entities.Tier;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
 public class CardDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Boolean visible;
     private Boolean reserve;
@@ -22,9 +17,7 @@ public class CardDto {
     private int points;
     private Gem production;
     private String picture;
-    @ManyToOne
     private BoardDto board;
-    @ManyToOne
     private PlayerDto playerDto;
     private LocalDateTime creation;
 

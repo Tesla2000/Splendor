@@ -37,7 +37,7 @@ public class WaitingRoomController {
 
     @FXML
     void user(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getClassLoader().getResource("join.fxml"));
+        root = FXMLLoader.load(getClass().getResource("join.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setTitle("Splendor");
