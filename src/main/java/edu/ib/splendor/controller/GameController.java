@@ -895,25 +895,6 @@ public class GameController {
         }
         TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
         board = new Board(tradeRow, new ArrayList<>(), 7, 7, 7, 7, 7, 5);
-//        System.out.println("Enter number of players 2-4: ");
-//        Scanner scanner = new Scanner(System.in);
-//        int numberOfPlayers = scanner.nextInt();
-//        for (int i = 0; i < numberOfPlayers; i++) {
-//            System.out.println("Enter players name: ");
-//            String playersName = scanner.next();
-//            if (playersName.equals("Voldemort"))
-//                board.getPlayers().add(new Player(playersName, 10000));
-//            else if (playersName.contains("AI")) {
-//                if (numberOfPlayers == 2)
-//                    board.getPlayers().add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/two/28.txt"), "masters/two/28.txt"));
-//                if (numberOfPlayers == 3)
-//                    board.getPlayers().add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/three/15.txt"), "masters/three/15.txt"));
-//                if (numberOfPlayers == 4)
-//                    board.getPlayers().add(new PlayerWithNodes(new Player(playersName), AIManager.readNodesFromFile("masters/four/3.txt"), "masters/four/3.txt"));
-//            }
-//            else board.getPlayers().add(new Player(playersName));
-//        }
-//        scanner.close();
         List<NameCheckedPair> pairs;
         if (SetGameController.players != null) pairs = SetGameController.players;
         else pairs = HostingRoomController.players;
@@ -959,6 +940,8 @@ public class GameController {
                 AIManager.playTurn(board.getPlayers(), ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
             } catch (GameLostException ignored) {
             }
+            endTurn();
+        } else if (!Configuration.playerNames.contains(currentPlayer.getName())){
             endTurn();
         }
     }

@@ -4,7 +4,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane prefHeight="134.0" prefWidth="364.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="134.0" prefWidth="364.0" xmlns="http://javafx.com/javafx/17" fx:controller="edu.ib.splendor.controller.WaitingRoomController" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text layoutX="112.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Waiting for the game to start" />
    </children>

@@ -2,10 +2,11 @@ package edu.ib.splendor.controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
+import edu.ib.splendor.Configuration;
 import edu.ib.splendor.database.entities.NameCheckedPair;
 import edu.ib.splendor.database.repositories.access.RepositoryAccessor;
 import edu.ib.splendor.database.repositories.dtos.GameDto;
@@ -63,24 +64,32 @@ public class HostingRoomController {
 
     @FXML
     void changeState(ActionEvent event) throws IOException, InterruptedException {
+        Random random = new Random(1);
+        boolean[] checks = new boolean[4];
+        Configuration.playerNames = new ArrayList<>();
+        checks[0] = isFirstPlayerMeCheckBox.isSelected();
+        checks[1] = isSecondPlayerMeCheckBox.isSelected();
+        checks[2] = isThirdPlayerMeCheckBox.isSelected();
+        checks[3] = isFourthPlayerMeCheckBox.isSelected();
         GameDto gameDto = new GameDto();
-        gameDto.setCreated(LocalDateTime.now());
         gameDto.setStarted(false);
+        gameDto.setId(random.nextLong());
         gameRepositoryAccessor.save(gameDto);
         ArrayList<WaitDto> waitDtos = new ArrayList<>();
         for (int i=0;i<4;i++){
             WaitDto waitDto = new WaitDto();
+            waitDto.setId(random.nextLong());
             waitRepositoryAccessor.save(waitDto);
             waitDtos.add(waitDto);
         }
-        root = FXMLLoader.load(getClass().getClassLoader().getResource("waitForGame.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setTitle("Splendor");
-        stage.setScene(scene);
-        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.show();
+        if (checks[0])
+            Configuration.playerNames.add(firstPlayerNameTextField.getText());
+        if (checks[1])
+            Configuration.playerNames.add(secondPlayerNameTextField.getText());
+        if (checks[2])
+            Configuration.playerNames.add(thirdPlayerNameTextField.getText());
+        if (checks[3])
+            Configuration.playerNames.add(fourthPlayerNameTextField.getText());
         while (true) {
             if (waitingForGameCheckBox.isSelected()) {
                 players = new ArrayList<>();
@@ -89,15 +98,15 @@ public class HostingRoomController {
                 players.add(new NameCheckedPair(thirdPlayerNameTextField.getText(), isThirdPlayerMeCheckBox.isSelected()));
                 players.add(new NameCheckedPair(fourthPlayerNameTextField.getText(), isFourthPlayerMeCheckBox.isSelected()));
                 for (int i=0; i<4;i++) {
-//                    waitDtos.get(i).setGameDto(gameDto);
-                    if (!players.get(i).getName().equals("") && players.get(i).isChecked()) {
+                    waitDtos.get(i).setGameDto(gameDto);
+                    if (!players.get(i).getName().equals("") && checks[i]) {
                         waitDtos.get(i).setPlayerName(players.get(i).getName());
                         waitDtos.get(i).setReady(true);
-                    } else if (players.get(i).getName().equals("") && !players.get(i).isChecked()) {
+                    } else if (players.get(i).getName().equals("") && !checks[i]) {
                         waitDtos.get(i).setReady(true);
                         waitDtos.get(i).setPlayerName("");
                         waitDtos.get(i).setGameKey("");
-                    }else if (!players.get(i).getName().equals("") && !players.get(i).isChecked()) {
+                    }else if (!players.get(i).getName().equals("") && !checks[i]) {
                         waitDtos.get(i).setReady(false);
                         waitDtos.get(i).setPlayerName("");
                         waitDtos.get(i).setGameKey(players.get(i).getName());
@@ -110,12 +119,13 @@ public class HostingRoomController {
             }
             waitRepositoryAccessor.saveAll(waitDtos);
             Thread.sleep(1000);
-            if (areAllPlayersReady(waitDtos)){
+            if (areAllPlayersReady(waitRepositoryAccessor.findAll())){
+                System.out.println("All ready");
                 ArrayList<NameCheckedPair> list = new ArrayList<>();
                 for (WaitDto waitDto: waitRepositoryAccessor.findAll()) {
-//                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")) {
-//                        list.add(new NameCheckedPair(waitDto.getPlayerName(), false));
-//                    }
+                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")) {
+                        list.add(new NameCheckedPair(waitDto.getPlayerName(), false));
+                    }
                 }
                 players = list;
                 if (players.size()>=2) {
@@ -126,14 +136,16 @@ public class HostingRoomController {
                     scene = new Scene(root);
                     stage.setTitle("Splendor");
                     stage.setScene(scene);
+                    String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
                     scene.getStylesheets().add(css);
                     stage.show();
+                    break;
                 }
             }
         }
     }
 
-    private boolean areAllPlayersReady(ArrayList<WaitDto> waitDtos){
+    private boolean areAllPlayersReady(WaitDto[] waitDtos){
         for (WaitDto waitDto: waitDtos){
             if (!waitDto.getReady()) return false;
         }

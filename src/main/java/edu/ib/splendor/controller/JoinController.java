@@ -44,14 +44,17 @@ public class JoinController {
     @FXML
     void wait(ActionEvent event) throws IOException, InterruptedException {
         Long gameId;
-        root = FXMLLoader.load(getClass().getClassLoader().getResource("waitForGame.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setTitle("Splendor");
-        stage.setScene(scene);
-        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.show();
+//        root = FXMLLoader.load(getClass().getClassLoader().getResource("waitForGame.fxml"));
+//        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        scene = new Scene(root);
+//        stage.setTitle("Splendor");
+//        stage.setScene(scene);
+//        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
+//        scene.getStylesheets().add(css);
+//        stage.show();
+        ArrayList<String> playerNames = new ArrayList<>();
+        playerNames.add(aliasFieldName.getText());
+        Configuration.playerNames = playerNames;
         while (true) {
             if (readyButton.isSelected()) {
                 for (WaitDto waitDto: waitRepositoryAccessor.findAll()){
@@ -61,14 +64,12 @@ public class JoinController {
                         waitDto.setPlayerName(aliasFieldName.getText());
                         waitRepositoryAccessor.save(waitDto);
                         if (gameRepositoryAccessor.findById(gameId).getStarted()){
-                            ArrayList<String> playerNames = new ArrayList<>();
-                            playerNames.add(aliasFieldName.getText());
-                            Configuration.playerNames = playerNames;
                             root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
                             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                             scene = new Scene(root);
                             stage.setTitle("Splendor");
                             stage.setScene(scene);
+                            String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
                             scene.getStylesheets().add(css);
                             stage.show();
                         }
@@ -76,7 +77,7 @@ public class JoinController {
                     }
                 }
             }
-//            Thread.sleep(250);
+            Thread.sleep(250);
         }
     }
 

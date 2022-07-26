@@ -16,6 +16,7 @@ public class GameMapper {
     private final RepositoryAccessor<BoardDto> boardRepositoryAccessor;
     private final RepositoryAccessor<CardDto> cardRepositoryAccessor;
     private final RepositoryAccessor<PlayerDto> playerRepositoryAccessor;
+    private final Random random = new Random();
 
     public GameMapper() {
         this.aristocratRepositoryAccessor = new RepositoryAccessor<>("/aristocrat", AristocratDto.class, AristocratDto[].class);
@@ -109,7 +110,6 @@ public class GameMapper {
 
 
     public long saveGame(Board board) {
-        LocalDateTime creationTime = LocalDateTime.now();
         BoardDto boardDto = new BoardDto();
         boardDto.setBlue(board.getStored(Gem.BLUE));
         boardDto.setGreen(board.getStored(Gem.GREEN));
@@ -117,7 +117,7 @@ public class GameMapper {
         boardDto.setBrown(board.getStored(Gem.BROWN));
         boardDto.setWhite(board.getStored(Gem.WHITE));
         boardDto.setGold(board.getStored(Gem.GOLD));
-        boardDto.setCreation(creationTime);
+        boardDto.setId(random.nextLong());
         boardRepositoryAccessor.save(boardDto);
         int playerCounter = 0;
         for (Player player : board.getPlayers()) {
@@ -134,15 +134,15 @@ public class GameMapper {
             playerDto.setWhite(player.getPossession().get(Gem.WHITE));
             playerDto.setGold(player.getPossession().get(Gem.GOLD));
             playerDto.setQueuePosition(playerCounter);
-            playerDto.setCreation(creationTime);
             playerCounter++;
+            playerDto.setId(random.nextLong());
             playerRepositoryAccessor.save(playerDto);
             for (Card card : player.getReserve()) {
                 CardDto cardDto = cardToDto(card);
                 cardDto.setReserve(true);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
-                cardDto.setCreation(creationTime);
+                cardDto.setId(random.nextLong());
                 cardRepositoryAccessor.save(cardDto);
             }
             for (Card card : player.getDeck()) {
@@ -150,14 +150,15 @@ public class GameMapper {
                 cardDto.setReserve(false);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
-                cardDto.setCreation(creationTime);
+                cardDto.setId(random.nextLong());
                 cardRepositoryAccessor.save(cardDto);
             }
             for (Aristocrat aristocrat: player.getAristocrats()){
                 AristocratDto aristocratDto = convertAristocratToDto(aristocrat);
                 aristocratDto.setBoardDto(boardDto);
                 aristocratDto.setPlayerDto(playerDto);
-                aristocratDto.setCreation(creationTime);
+                aristocratDto.setId(random.nextLong());
+                aristocratRepositoryAccessor.save(aristocratDto);
             }
         }
         for (Tier tier : Tier.values())
@@ -166,21 +167,21 @@ public class GameMapper {
                     CardDto cardDto = cardToDto(card);
                     cardDto.setBoard(boardDto);
                     cardDto.setVisible(false);
-                    cardDto.setCreation(creationTime);
+                    cardDto.setId(random.nextLong());
                     cardRepositoryAccessor.save(cardDto);
                 }
                 for (Card card : board.getTradeRow().getCardsVisible().get(tier)) {
                     CardDto cardDto = cardToDto(card);
                     cardDto.setBoard(boardDto);
                     cardDto.setVisible(true);
-                    cardDto.setCreation(creationTime);
+                    cardDto.setId(random.nextLong());
                     cardRepositoryAccessor.save(cardDto);
                 }
             }
         for (Aristocrat aristocrat : board.getAristocrats()) {
             AristocratDto aristocratDto = convertAristocratToDto(aristocrat);
             aristocratDto.setBoardDto(boardDto);
-            aristocratDto.setCreation(creationTime);
+            aristocratDto.setId(random.nextLong());
             aristocratRepositoryAccessor.save(aristocratDto);
         }
         return boardDto.getId();
