@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -42,13 +43,25 @@ public class HostingRoomController {
     private TextField fourthPlayerNameTextField;
 
     @FXML
+    private CheckBox isFirstPlayerAICheckBox;
+
+    @FXML
     private CheckBox isFirstPlayerMeCheckBox;
+
+    @FXML
+    private CheckBox isFourthPlayerAICheckBox;
 
     @FXML
     private CheckBox isFourthPlayerMeCheckBox;
 
     @FXML
+    private CheckBox isSecondPlayerAICheckBox;
+
+    @FXML
     private CheckBox isSecondPlayerMeCheckBox;
+
+    @FXML
+    private CheckBox isThirdPlayerAICheckBox;
 
     @FXML
     private CheckBox isThirdPlayerMeCheckBox;
@@ -60,17 +73,21 @@ public class HostingRoomController {
     private TextField thirdPlayerNameTextField;
 
     @FXML
-    private CheckBox waitingForGameCheckBox;
+    private Button waitingForGameCheckBox;
 
     @FXML
     void changeState(ActionEvent event) throws IOException, InterruptedException {
         Random random = new Random(1);
         boolean[] checks = new boolean[4];
-        Configuration.playerNames = new ArrayList<>();
+        boolean[] ais = new boolean[4];
         checks[0] = isFirstPlayerMeCheckBox.isSelected();
         checks[1] = isSecondPlayerMeCheckBox.isSelected();
         checks[2] = isThirdPlayerMeCheckBox.isSelected();
         checks[3] = isFourthPlayerMeCheckBox.isSelected();
+        ais[0] = isFirstPlayerAICheckBox.isSelected();
+        ais[1] = isSecondPlayerAICheckBox.isSelected();
+        ais[2] = isThirdPlayerAICheckBox.isSelected();
+        ais[3] = isFourthPlayerAICheckBox.isSelected();
         GameDto gameDto = new GameDto();
         gameDto.setStarted(false);
         gameDto.setId(random.nextLong());
@@ -82,39 +99,45 @@ public class HostingRoomController {
             waitRepositoryAccessor.save(waitDto);
             waitDtos.add(waitDto);
         }
-        if (checks[0])
+        if (checks[0] && !ais[0])
             Configuration.playerNames.add(firstPlayerNameTextField.getText());
-        if (checks[1])
+        if (checks[1] && !ais[1])
             Configuration.playerNames.add(secondPlayerNameTextField.getText());
-        if (checks[2])
+        if (checks[2] && !ais[2])
             Configuration.playerNames.add(thirdPlayerNameTextField.getText());
-        if (checks[3])
+        if (checks[3] && !ais[3])
             Configuration.playerNames.add(fourthPlayerNameTextField.getText());
+        if (ais[0])
+            Configuration.AINames.add(firstPlayerNameTextField.getText());
+        if (ais[1])
+            Configuration.AINames.add(secondPlayerNameTextField.getText());
+        if (ais[2])
+            Configuration.AINames.add(thirdPlayerNameTextField.getText());
+        if (ais[3])
+            Configuration.AINames.add(fourthPlayerNameTextField.getText());
         while (true) {
-            if (waitingForGameCheckBox.isSelected()) {
-                players = new ArrayList<>();
-                players.add(new NameCheckedPair(firstPlayerNameTextField.getText(), isFirstPlayerMeCheckBox.isSelected()));
-                players.add(new NameCheckedPair(secondPlayerNameTextField.getText(), isSecondPlayerMeCheckBox.isSelected()));
-                players.add(new NameCheckedPair(thirdPlayerNameTextField.getText(), isThirdPlayerMeCheckBox.isSelected()));
-                players.add(new NameCheckedPair(fourthPlayerNameTextField.getText(), isFourthPlayerMeCheckBox.isSelected()));
-                for (int i=0; i<4;i++) {
-                    waitDtos.get(i).setGameDto(gameDto);
-                    if (!players.get(i).getName().equals("") && checks[i]) {
-                        waitDtos.get(i).setPlayerName(players.get(i).getName());
-                        waitDtos.get(i).setReady(true);
-                    } else if (players.get(i).getName().equals("") && !checks[i]) {
-                        waitDtos.get(i).setReady(true);
-                        waitDtos.get(i).setPlayerName("");
-                        waitDtos.get(i).setGameKey("");
-                    }else if (!players.get(i).getName().equals("") && !checks[i]) {
-                        waitDtos.get(i).setReady(false);
-                        waitDtos.get(i).setPlayerName("");
-                        waitDtos.get(i).setGameKey(players.get(i).getName());
-                    } else {
-                        waitDtos.get(i).setReady(false);
-                        waitDtos.get(i).setPlayerName("");
-                        waitDtos.get(i).setGameKey("");
-                    }
+            players = new ArrayList<>();
+            players.add(new NameCheckedPair(firstPlayerNameTextField.getText(), isFirstPlayerMeCheckBox.isSelected()));
+            players.add(new NameCheckedPair(secondPlayerNameTextField.getText(), isSecondPlayerMeCheckBox.isSelected()));
+            players.add(new NameCheckedPair(thirdPlayerNameTextField.getText(), isThirdPlayerMeCheckBox.isSelected()));
+            players.add(new NameCheckedPair(fourthPlayerNameTextField.getText(), isFourthPlayerMeCheckBox.isSelected()));
+            for (int i=0; i<4;i++) {
+                waitDtos.get(i).setGameDto(gameDto);
+                if (!players.get(i).getName().equals("") && (checks[i] || ais[i])) {
+                    waitDtos.get(i).setPlayerName(players.get(i).getName());
+                    waitDtos.get(i).setReady(true);
+                } else if (players.get(i).getName().equals("") && !(checks[i] || ais[i])) {
+                    waitDtos.get(i).setReady(true);
+                    waitDtos.get(i).setPlayerName("");
+                    waitDtos.get(i).setGameKey("");
+                }else if (!players.get(i).getName().equals("") && !(checks[i] || ais[i])) {
+                    waitDtos.get(i).setReady(false);
+                    waitDtos.get(i).setPlayerName("");
+                    waitDtos.get(i).setGameKey(players.get(i).getName());
+                } else {
+                    waitDtos.get(i).setReady(false);
+                    waitDtos.get(i).setPlayerName("");
+                    waitDtos.get(i).setGameKey("");
                 }
             }
             waitRepositoryAccessor.saveAll(waitDtos);

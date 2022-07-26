@@ -1,10 +1,5 @@
 package edu.ib.splendor.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
 import edu.ib.splendor.Configuration;
 import edu.ib.splendor.database.repositories.access.RepositoryAccessor;
 import edu.ib.splendor.database.repositories.dtos.GameDto;
@@ -15,14 +10,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 public class JoinController {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
     private RepositoryAccessor<WaitDto> waitRepositoryAccessor;
     private RepositoryAccessor<GameDto> gameRepositoryAccessor;
 
@@ -36,7 +33,7 @@ public class JoinController {
     private TextField aliasFieldName;
 
     @FXML
-    private CheckBox readyButton;
+    private Button readyButton;
 
     @FXML
     private TextField secretNameField;
@@ -44,37 +41,27 @@ public class JoinController {
     @FXML
     void wait(ActionEvent event) throws IOException, InterruptedException {
         Long gameId;
-//        root = FXMLLoader.load(getClass().getClassLoader().getResource("waitForGame.fxml"));
-//        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        scene = new Scene(root);
-//        stage.setTitle("Splendor");
-//        stage.setScene(scene);
-//        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
-//        scene.getStylesheets().add(css);
-//        stage.show();
         ArrayList<String> playerNames = new ArrayList<>();
         playerNames.add(aliasFieldName.getText());
         Configuration.playerNames = playerNames;
         while (true) {
-            if (readyButton.isSelected()) {
-                for (WaitDto waitDto: waitRepositoryAccessor.findAll()){
-                    if (waitDto.getGameKey() != null && waitDto.getGameKey().equals(secretNameField.getText())){
-                        gameId = waitDto.getGameDto().getId();
-                        waitDto.setReady(true);
-                        waitDto.setPlayerName(aliasFieldName.getText());
-                        waitRepositoryAccessor.save(waitDto);
-                        if (gameRepositoryAccessor.findById(gameId).getStarted()){
-                            root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
-                            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                            scene = new Scene(root);
-                            stage.setTitle("Splendor");
-                            stage.setScene(scene);
-                            String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
-                            scene.getStylesheets().add(css);
-                            stage.show();
-                        }
-                        break;
+            for (WaitDto waitDto: waitRepositoryAccessor.findAll()){
+                if (waitDto.getGameKey() != null && waitDto.getGameKey().equals(secretNameField.getText())){
+                    gameId = waitDto.getGameDto().getId();
+                    waitDto.setReady(true);
+                    waitDto.setPlayerName(aliasFieldName.getText());
+                    waitRepositoryAccessor.save(waitDto);
+                    if (gameRepositoryAccessor.findById(gameId).getStarted()){
+                        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
+                        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        Scene scene = new Scene(root);
+                        stage.setTitle("Splendor");
+                        stage.setScene(scene);
+                        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
+                        scene.getStylesheets().add(css);
+                        stage.show();
                     }
+                    break;
                 }
             }
             Thread.sleep(250);

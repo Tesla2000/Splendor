@@ -66,11 +66,16 @@ public class SetGameController {
         for (NameCheckedPair player : players) {
             if (!player.getName().equals("")) {
                 nameCheckedPairs.add(player);
+                if (player.isChecked())
+                    Configuration.AINames.add(player.getName());
+                else {
+                    Configuration.playerNames.add(player.getName());
+                }
+
             }
         }
         players = nameCheckedPairs;
         if (nameCheckedPairs.size() >= 2){
-            Configuration.playerNames = players.stream().map(NameCheckedPair::getName).collect(Collectors.toList());
             Configuration.hotSeat = true;
             root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

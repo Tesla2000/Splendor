@@ -472,11 +472,13 @@ public class GameController {
                 AIManager.playTurn(board.getPlayers(), ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
             } catch (GameLostException ignored) {
             }
+            System.out.println("AI played move");
             endTurn();
         } else {
             if (!Configuration.hotSeat) {
                 Long id = gameMapper.saveGame(board);
-                do {
+                System.out.println("Waiting for my turn");
+                while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName())) {
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -487,8 +489,9 @@ public class GameController {
                     } catch (NoSuchIdException | IOException e) {
                         e.printStackTrace();
                     }
-                } while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName()));
+                }
                 currentPlayer = board.getPlayers().get(0);
+                System.out.println("Done waiting");
             }
             setPictures();
         }
@@ -899,7 +902,7 @@ public class GameController {
         if (SetGameController.players != null) pairs = SetGameController.players;
         else pairs = HostingRoomController.players;
         for (NameCheckedPair nameCheckedPair : pairs){
-            if (nameCheckedPair.isChecked()) {
+            if (Configuration.AINames.contains(nameCheckedPair.getName())) {
                 if (pairs.size() == 2)
                     board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/two/28.txt"), "masters/two/28.txt"));
                 if (pairs.size() == 3)

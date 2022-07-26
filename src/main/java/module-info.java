@@ -1,4 +1,4 @@
-module edu.ib.splendor {
+module Splendor {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.fasterxml.jackson.databind;
