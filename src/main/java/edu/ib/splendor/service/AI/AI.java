@@ -44,7 +44,7 @@ public abstract class AI {
         CommunicationManager.waitForJavaTurn();
         allPlayers = new ArrayList<>();
         for (int id = 0; id < 16; id++) {
-            allPlayers.add(AIManager.readNodesFromFile("coefficients/" + id + ".txt"));
+            allPlayers.add(AIManager.readNodesFromFile(String.valueOf(getClass().getClassLoader().getResource("coefficients/" + id + ".txt"))));
         }
     }
 

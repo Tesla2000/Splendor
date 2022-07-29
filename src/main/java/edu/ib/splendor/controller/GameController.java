@@ -1,7 +1,10 @@
 package edu.ib.splendor.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -816,7 +819,7 @@ public class GameController {
     }
 
     @FXML
-    void initialize() throws IOException {
+    void initialize() throws IOException, URISyntaxException {
         assert endTurnButton != null : "fx:id=\"endTurnButon\" was not injected: check your FXML file 'board.fxml'.";
         assert blue != null : "fx:id=\"blue\" was not injected: check your FXML file 'board.fxml'.";
         assert blues != null : "fx:id=\"blues\" was not injected: check your FXML file 'board.fxml'.";
@@ -869,7 +872,9 @@ public class GameController {
                 new ImageView[]{reds111, greens111, blues111, browns111, whites111, golds111},
         };
         Image[] images = new Image[]{
-                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/red.png").getAbsolutePath()),
+//                new Image(getClass().getClassLoader().getResource("src/main/java/edu/ib/splendor/database/pictures/resource/green.png")),
+//                new Image(new File(Objects.requireNonNull(getClass().getResource("/edu/ib/splendor/background.png")).toURI()).getAbsolutePath()),
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/background.png"))),
                 new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/green.png").getAbsolutePath()),
                 new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/blue.png").getAbsolutePath()),
                 new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/brown.png").getAbsolutePath()),
@@ -918,6 +923,7 @@ public class GameController {
         setPictures();
         currentPlayer = board.getPlayers().get(0);
         endTurnButton.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/end_turn.png").getAbsolutePath()));
+//        endTurnButton.setImage(new Image(new File(getClass().getClassLoader().getResource("src/main/java/edu/ib/splendor/database/pictures/end_turn.png").toURI()).getAbsolutePath()));
         showResources();
         for (int i = 0; i < Gem.values().length; i++) {
             imageViews[0][i].setImage(images[i]);
