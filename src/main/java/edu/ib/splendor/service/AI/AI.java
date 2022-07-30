@@ -48,7 +48,7 @@ public abstract class AI {
         }
     }
 
-    public void playGame(int id){
+    public void playGame(int id) throws IOException {
         ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
         TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
         List<Player> list = new ArrayList<>();
