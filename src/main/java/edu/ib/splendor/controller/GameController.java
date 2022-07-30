@@ -485,8 +485,8 @@ public class GameController {
         } else {
             if (!Configuration.hotSeat) {
                 waitTurn();
-                currentPlayer = board.getPlayers().get(0);
             }
+            updateFields();
             setPictures();
         }
     }
@@ -900,7 +900,6 @@ public class GameController {
             }
         }
         updateFields();
-        showResources();
         setPictures();
     }
 
@@ -918,6 +917,7 @@ public class GameController {
                 e.printStackTrace();
             }
         } while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName()));
+        currentPlayer = board.getPlayers().get(0);
         System.out.println("Done waiting");
     }
 }

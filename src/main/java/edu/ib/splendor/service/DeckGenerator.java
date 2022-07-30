@@ -1,13 +1,12 @@
 package edu.ib.splendor.service;
 
-import edu.ib.splendor.controller.GameController;
 import edu.ib.splendor.database.entities.Aristocrat;
 import edu.ib.splendor.database.entities.Card;
 import edu.ib.splendor.database.entities.Gem;
 import edu.ib.splendor.database.entities.Tier;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;

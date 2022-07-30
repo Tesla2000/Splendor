@@ -79,7 +79,7 @@ public class HostingRoomController {
 
     @FXML
     void changeState(ActionEvent event) throws IOException, InterruptedException {
-        Random random = new Random(1);
+        Random random = new Random();
         boolean[] checks = new boolean[4];
         boolean[] ais = new boolean[4];
         checks[0] = isFirstPlayerMeCheckBox.isSelected();
