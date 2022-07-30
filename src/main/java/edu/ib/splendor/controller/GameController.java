@@ -849,10 +849,38 @@ public class GameController {
             }
         }
         else board = gameMapper.recreateGame(Configuration.gameId);
-        setPictures();
+//        setPictures();
         currentPlayer = board.getPlayers().get(0);
         endTurnButton.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/end_turn.png"))));
-        showResources();
+//        showResources();
+//        for (int i = 0; i < Gem.values().length; i++) {
+//            imageViews[0][i].setImage(images[i]);
+//        }
+//        if (board.getPlayers().size() == 2) {
+//            for (int i = 0; i < Gem.values().length; i++) {
+//                imageViews[2][i].setImage(images[i]);
+//            }
+//        } else {
+//            for (int i = 0; i < Gem.values().length; i++) {
+//                imageViews[1][i].setImage(images[i]);
+//                imageViews[2][i].setImage(images[i]);
+//            }
+//        }
+//        if (board.getPlayers().size() == 4) {
+//            for (int i = 0; i < Gem.values().length; i++) {
+//                imageViews[3][i].setImage(images[i]);
+//            }
+//        }
+//        updateFields();
+        if (!Configuration.joining && currentPlayer instanceof PlayerWithNodes) {
+            try {
+                AIManager.playTurn(board.getPlayers(), ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
+            } catch (GameLostException ignored) {
+            }
+            endTurn();
+        } else if (!Configuration.playerNames.contains(currentPlayer.getName())){
+            waitTurn();
+        }
         for (int i = 0; i < Gem.values().length; i++) {
             imageViews[0][i].setImage(images[i]);
         }
@@ -872,15 +900,8 @@ public class GameController {
             }
         }
         updateFields();
-        if (!Configuration.joining && currentPlayer instanceof PlayerWithNodes) {
-            try {
-                AIManager.playTurn(board.getPlayers(), ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
-            } catch (GameLostException ignored) {
-            }
-            endTurn();
-        } else if (!Configuration.playerNames.contains(currentPlayer.getName())){
-            waitTurn();
-        }
+        showResources();
+        setPictures();
     }
 
     private void waitTurn() {
