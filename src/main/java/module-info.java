@@ -2,6 +2,7 @@ module Splendor {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.fasterxml.jackson.databind;
+    requires org.apache.commons.io;
     exports edu.ib.splendor.database.repositories.dtos to com.fasterxml.jackson.databind;
 
 

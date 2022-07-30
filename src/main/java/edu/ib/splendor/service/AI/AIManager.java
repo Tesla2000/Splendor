@@ -4,8 +4,9 @@ import edu.ib.splendor.database.entities.*;
 import edu.ib.splendor.service.BoardManager;
 import edu.ib.splendor.service.CommunicationManager;
 import edu.ib.splendor.service.exceptions.GameLostException;
-
+import org.apache.commons.io.IOUtils;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,20 @@ public class AIManager {
         File file = new File(path);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         while ((st = reader.readLine()) != null) {
+            List<Double> result = new ArrayList<>();
+            for (String s : st.split(",")) {
+                Double parseDouble = Double.parseDouble(s);
+                result.add(parseDouble);
+            }
+            ArrayList<Double> list = new ArrayList<>(result);
+            double bias = list.remove(list.size() - 1);
+            nodes.add(new Node(list, bias));
+        }
+        return nodes;
+    }
+    public static ArrayList<Node> readNodesFromFile(String[] stream) {
+        ArrayList<Node> nodes = new ArrayList<>();
+        for (String st: stream) {
             List<Double> result = new ArrayList<>();
             for (String s : st.split(",")) {
                 Double parseDouble = Double.parseDouble(s);

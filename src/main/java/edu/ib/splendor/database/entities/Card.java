@@ -1,7 +1,9 @@
 package edu.ib.splendor.database.entities;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Card {
     private Tier tier;
@@ -21,7 +23,7 @@ public class Card {
     }
 
     public String getPicture() {
-        return new File("src/main/java/edu/ib/splendor/database/pictures/buildings/"+picture+".png").getAbsolutePath();
+        return "/edu/ib/splendor/pictures/buildings/"+picture+".png";
     }
 
     private int points = 0;
