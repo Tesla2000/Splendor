@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class DeckGenerator {
+    private static Random random = new Random();
     public static ArrayList<ArrayList<Card>> generateCards() throws IOException {
         ArrayList<ArrayList<Card>> cards = new ArrayList<>();
         ArrayList<Card> first = new ArrayList<>();
@@ -48,16 +49,19 @@ public class DeckGenerator {
             if (words[0].equals("1")) {
                 tier = Tier.FIRST;
                 card = new Card(tier,red,green,blue,brown,white,production,points,picture);
+                card.setId(random.nextLong());
                 first.add(card);
             }
             else if (words[0].equals("2")) {
                 tier = Tier.SECOND;
                 card = new Card(tier,red,green,blue,brown,white,production,points,picture);
+                card.setId(random.nextLong());
                 second.add(card);
             }
             else {
                 tier = Tier.THIRD;
                 card = new Card(tier,red,green,blue,brown,white,production,points,picture);
+                card.setId(random.nextLong());
                 third.add(card);
             }
         }
@@ -84,17 +88,16 @@ public class DeckGenerator {
 
     public static ArrayList<Aristocrat> generateAristocrats(){
         ArrayList<Aristocrat> aristocrats = new ArrayList<>();
-        aristocrats.add(new Aristocrat(4,4,0,0,0,"44000"));
-        aristocrats.add(new Aristocrat(0,4,4,0,0,"04400"));
-        aristocrats.add(new Aristocrat(0,0,4,0,4,"00404"));
-        aristocrats.add(new Aristocrat(4,0,0,4,0,"40040"));
-        aristocrats.add(new Aristocrat(0,0,0,4,4,"00044"));
-        aristocrats.add(new Aristocrat(0,0,3,3,3,"00333"));
-        aristocrats.add(new Aristocrat(0,3,3,0,3,"03303"));
-        aristocrats.add(new Aristocrat(3,3,0,3,0,"33030"));
-        aristocrats.add(new Aristocrat(3,3,3,0,0,"33300"));
-        aristocrats.add(new Aristocrat(3,0,0,3,3,"30033"));
-        Random random = new Random();
+        aristocrats.add(new Aristocrat(random.nextLong(), 4,4,0,0,0,"44000"));
+        aristocrats.add(new Aristocrat(random.nextLong(),0,4,4,0,0,"04400"));
+        aristocrats.add(new Aristocrat(random.nextLong(),0,0,4,0,4,"00404"));
+        aristocrats.add(new Aristocrat(random.nextLong(),4,0,0,4,0,"40040"));
+        aristocrats.add(new Aristocrat(random.nextLong(),0,0,0,4,4,"00044"));
+        aristocrats.add(new Aristocrat(random.nextLong(),0,0,3,3,3,"00333"));
+        aristocrats.add(new Aristocrat(random.nextLong(),0,3,3,0,3,"03303"));
+        aristocrats.add(new Aristocrat(random.nextLong(),3,3,0,3,0,"33030"));
+        aristocrats.add(new Aristocrat(random.nextLong(),3,3,3,0,0,"33300"));
+        aristocrats.add(new Aristocrat(random.nextLong(),3,0,0,3,3,"30033"));
         int seed = random.nextInt(Integer.MAX_VALUE);
 //        System.out.println("Aristocrats seed: " + seed);
         Collections.shuffle(aristocrats, new Random(seed));

@@ -18,5 +18,7 @@ public record Aristocrat(Long id, int red, int green, int blue, int brown, int w
         return cost;
     }
 
-    public String getImage(){return "/edu/ib/splendor/pictures/aristocrats/"+image+".png";}
+    public String getImage(){
+        return "/edu/ib/splendor/pictures/aristocrats/"+image.replace("/edu/ib/splendor/pictures/aristocrats/", "").replace(".png", "")+".png";
+    }
 }

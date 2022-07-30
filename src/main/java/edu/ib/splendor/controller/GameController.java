@@ -767,6 +767,7 @@ public class GameController {
         assert whites1 != null : "fx:id=\"whites1\" was not injected: check your FXML file 'board.fxml'.";
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
+        Random random = new Random();
         gameMapper = new GameMapper();
         gameDtoRepositoryAccessor = new RepositoryAccessor<>("/game", GameDto.class, GameDto[].class);
         ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
@@ -814,17 +815,32 @@ public class GameController {
             else pairs = HostingRoomController.players;
             for (NameCheckedPair nameCheckedPair : pairs){
                 if (!Configuration.joining && Configuration.AINames.contains(nameCheckedPair.getName())) {
-                    if (pairs.size() == 2)
-                        board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/two/28.txt")), StandardCharsets.UTF_8).split("\n")), "masters/two/28.txt"));
-                    else if (pairs.size() == 3)
-                        board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/three/15.txt")), StandardCharsets.UTF_8).split("\n")), "masters/three/15.txt"));
-                    else if (pairs.size() == 4)
-                        board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/four/3.txt")), StandardCharsets.UTF_8).split("\n")), "masters/four/3.txt"));
+                    if (pairs.size() == 2) {
+                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/two/28.txt")), StandardCharsets.UTF_8).split("\n")), "masters/two/28.txt");
+                        playerWithNodes.setId(random.nextLong());
+                        board.getPlayers().add(playerWithNodes);
+                    }
+                    else if (pairs.size() == 3) {
+                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/three/15.txt")), StandardCharsets.UTF_8).split("\n")), "masters/three/15.txt");
+                        playerWithNodes.setId(random.nextLong());
+                        board.getPlayers().add(playerWithNodes);
+                    }
+                    else if (pairs.size() == 4) {
+                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/four/3.txt")), StandardCharsets.UTF_8).split("\n")), "masters/four/3.txt");
+                        playerWithNodes.setId(random.nextLong());
+                        board.getPlayers().add(playerWithNodes);
+                    }
                 }
-                else if (nameCheckedPair.getName().equals("Voldemort"))
-                    board.getPlayers().add(new Player(nameCheckedPair.getName(), 10000));
-                else
-                    board.getPlayers().add(new Player(nameCheckedPair.getName()));
+                else if (nameCheckedPair.getName().equals("Voldemort")) {
+                    Player player = new Player(nameCheckedPair.getName(), 10000);
+                    player.setId(random.nextLong());
+                    board.getPlayers().add(player);
+                }
+                else {
+                    Player player = new Player(nameCheckedPair.getName());
+                    player.setId(random.nextLong());
+                    board.getPlayers().add(player);
+                }
             }
 
             if (!Configuration.hotSeat) {

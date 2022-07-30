@@ -24,10 +24,10 @@ public class Card {
     }
 
     public String getPicture() {
-        return "/edu/ib/splendor/pictures/buildings/"+picture+".png";
+        return "/edu/ib/splendor/pictures/buildings/"+picture.replace("/edu/ib/splendor/pictures/buildings/", "").replace(".png", "")+".png";
     }
 
-    private int points = 0;
+    private int points;
     private final Gem production;
 
     public int getPoints() {

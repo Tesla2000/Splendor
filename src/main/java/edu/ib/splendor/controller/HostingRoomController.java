@@ -144,7 +144,7 @@ public class HostingRoomController {
                 }
             }
             waitRepositoryAccessor.saveAll(waitDtos);
-            Thread.sleep(5000);
+            Thread.sleep(1000);
             if (areAllPlayersReady(waitRepositoryAccessor.findAll())){
                 System.out.println("All ready");
                 ArrayList<NameCheckedPair> list = new ArrayList<>();
