@@ -3,6 +3,7 @@ package edu.ib.splendor.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -93,6 +94,7 @@ public class HostingRoomController {
         gameDto.setStarted(false);
         gameDto.setId(random.nextLong());
         gameRepositoryAccessor.save(gameDto);
+        Configuration.gameId = gameDto.getId();
         ArrayList<WaitDto> waitDtos = new ArrayList<>();
         for (int i=0;i<4;i++){
             WaitDto waitDto = new WaitDto();
@@ -146,9 +148,12 @@ public class HostingRoomController {
             if (areAllPlayersReady(waitRepositoryAccessor.findAll())){
                 System.out.println("All ready");
                 ArrayList<NameCheckedPair> list = new ArrayList<>();
-                for (WaitDto waitDto: waitRepositoryAccessor.findAll()) {
-                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")) {
+                HashMap<Long, Object> ids = new HashMap<>();
+                WaitDto[] found = waitRepositoryAccessor.findAll();
+                for (WaitDto waitDto: found) {
+                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("") && !ids.containsKey(waitDto.getId())) {
                         list.add(new NameCheckedPair(waitDto.getPlayerName(), false));
+                        ids.put(waitDto.getId(), null);
                     }
                 }
                 players = list;
@@ -172,7 +177,7 @@ public class HostingRoomController {
 
     private boolean areAllPlayersReady(WaitDto[] waitDtos){
         for (WaitDto waitDto: waitDtos){
-            if (!waitDto.getReady()) return false;
+            if (!waitDto.getReady() && waitDto.getGameDto().getId().equals(Configuration.gameId)) return false;
         }
         return true;
     }

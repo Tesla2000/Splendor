@@ -95,6 +95,7 @@ public class GameMapper {
         ArrayList<Player>players =new ArrayList<>();
         for (PlayerDto playerDto: playerDtos){
             Player player = new Player(playerDto.getName(), playerDto.getRed(), playerDto.getGreen(), playerDto.getBlue(), playerDto.getBrown(), playerDto.getWhite(), playerDto.getGold(), decks.get(playerDto.getId()), reserves.get(playerDto.getId()));
+            player.setId(playerDto.getId());
             if (playerDto.getAi()==null)
                 players.add(player);
             else
@@ -102,7 +103,7 @@ public class GameMapper {
         }
         ArrayList<Aristocrat> aristocrats = new ArrayList<>();
         for (AristocratDto aristocratDto: aristocratDtos){
-            aristocrats.add(new Aristocrat(aristocratDto.getRed(), aristocratDto.getGreen(), aristocratDto.getBlue(), aristocratDto.getBrown(), aristocratDto.getWhite(), aristocratDto.getImage()));
+            aristocrats.add(new Aristocrat(aristocratDto.getId(), aristocratDto.getRed(), aristocratDto.getGreen(), aristocratDto.getBlue(), aristocratDto.getBrown(), aristocratDto.getWhite(), aristocratDto.getImage()));
         }
         TradeRow tradeRow = new TradeRow(hiddenCards.get(0), hiddenCards.get(1), hiddenCards.get(2), visibleCards.get(0), visibleCards.get(1), visibleCards.get(2));
         return new Board(tradeRow, players, aristocrats,boardDto.getRed(), boardDto.getGreen(), boardDto.getBlue(), boardDto.getBrown(), boardDto.getWhite(), boardDto.getGold());
@@ -125,11 +126,14 @@ public class GameMapper {
         cardDto.setPoints(card.getPoints());
         cardDto.setTier(card.getTier());
         cardDto.setProduction(card.getProduction());
+        cardDto.setId(card.getId());
         return cardDto;
     }
 
     private Card dtoToCard(CardDto cardDto) {
-        return new Card(cardDto.getTier(), cardDto.getRed(), cardDto.getGreen(), cardDto.getBlue(), cardDto.getBrown(), cardDto.getWhite(), cardDto.getProduction(), cardDto.getPoints(), cardDto.getPicture());
+        Card card = new Card(cardDto.getTier(), cardDto.getRed(), cardDto.getGreen(), cardDto.getBlue(), cardDto.getBrown(), cardDto.getWhite(), cardDto.getProduction(), cardDto.getPoints(), cardDto.getPicture());
+        card.setId(cardDto.getId());
+        return card;
     }
 
     private AristocratDto convertAristocratToDto(Aristocrat aristocrat){
@@ -169,14 +173,14 @@ public class GameMapper {
             playerDto.setGold(player.getPossession().get(Gem.GOLD));
             playerDto.setQueuePosition(playerCounter);
             playerCounter++;
-            playerDto.setId(random.nextLong());
+            playerDto.setId(player.getId());
             playerRepositoryAccessor.save(playerDto);
             for (Card card : player.getReserve()) {
                 CardDto cardDto = cardToDto(card);
                 cardDto.setReserve(true);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
-                cardDto.setId(random.nextLong());
+                cardDto.setId(card.getId());
                 cardRepositoryAccessor.save(cardDto);
             }
             for (Card card : player.getDeck()) {
@@ -184,14 +188,14 @@ public class GameMapper {
                 cardDto.setReserve(false);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
-                cardDto.setId(random.nextLong());
+                cardDto.setId(card.getId());
                 cardRepositoryAccessor.save(cardDto);
             }
             for (Aristocrat aristocrat: player.getAristocrats()){
                 AristocratDto aristocratDto = convertAristocratToDto(aristocrat);
                 aristocratDto.setBoardDto(boardDto);
                 aristocratDto.setPlayerDto(playerDto);
-                aristocratDto.setId(random.nextLong());
+                aristocratDto.setId(aristocrat.id());
                 aristocratRepositoryAccessor.save(aristocratDto);
             }
         }
@@ -201,21 +205,21 @@ public class GameMapper {
                     CardDto cardDto = cardToDto(card);
                     cardDto.setBoard(boardDto);
                     cardDto.setVisible(false);
-                    cardDto.setId(random.nextLong());
+                    cardDto.setId(card.getId());
                     cardRepositoryAccessor.save(cardDto);
                 }
                 for (Card card : board.getTradeRow().getCardsVisible().get(tier)) {
                     CardDto cardDto = cardToDto(card);
                     cardDto.setBoard(boardDto);
                     cardDto.setVisible(true);
-                    cardDto.setId(random.nextLong());
+                    cardDto.setId(card.getId());
                     cardRepositoryAccessor.save(cardDto);
                 }
             }
         for (Aristocrat aristocrat : board.getAristocrats()) {
             AristocratDto aristocratDto = convertAristocratToDto(aristocrat);
             aristocratDto.setBoardDto(boardDto);
-            aristocratDto.setId(random.nextLong());
+            aristocratDto.setId(aristocrat.id());
             aristocratRepositoryAccessor.save(aristocratDto);
         }
         return boardDto.getId();

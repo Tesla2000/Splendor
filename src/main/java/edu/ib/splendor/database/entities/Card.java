@@ -9,6 +9,7 @@ public class Card {
     private Tier tier;
     private HashMap<Gem, Integer> cost = new HashMap<>();
     private String picture;
+    private Long id;
 
     public Card(Tier tier, int RED, int GREEN, int BLUE, int BROWN, int WHITE, Gem production, int points, String picture) {
         this.tier = tier;
@@ -55,5 +56,13 @@ public class Card {
                 ", points=" + points +
                 ", production=" + production +
                 '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

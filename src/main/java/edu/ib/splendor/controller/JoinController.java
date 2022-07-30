@@ -48,7 +48,8 @@ public class JoinController {
         playerNames.add(aliasFieldName.getText());
         Configuration.playerNames = playerNames;
         while (true) {
-            for (WaitDto waitDto: waitRepositoryAccessor.findAll()){
+            WaitDto[] foundAll = waitRepositoryAccessor.findAll();
+            for (WaitDto waitDto: foundAll){
                 if (waitDto.getGameKey()!=null && waitDto.getGameKey().equals(secretNameField.getText())){
                     gameId = waitDto.getGameDto().getId();
                     waitDto.setReady(true);
@@ -56,7 +57,8 @@ public class JoinController {
                     waitRepositoryAccessor.save(waitDto);
                     if (gameRepositoryAccessor.findById(gameId).getStarted()){
                         ArrayList<NameCheckedPair> list = new ArrayList<>();
-                        for (WaitDto waitDto1: waitRepositoryAccessor.findAll()) {
+                        WaitDto[] found = waitRepositoryAccessor.findAll();
+                        for (WaitDto waitDto1: found) {
                             if (waitDto1.getGameDto().getId().equals(gameId) && !waitDto1.getPlayerName().equals("")) {
                                 list.add(new NameCheckedPair(waitDto1.getPlayerName(), false));
                             }

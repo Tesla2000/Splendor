@@ -472,7 +472,7 @@ public class GameController {
             board.getPlayers().add(board.getPlayers().remove(0));
             currentPlayer = board.getPlayers().get(0);
             updateFields();
-            gameMapper.saveGame(board, Configuration.gameId);
+            if (!Configuration.hotSeat) gameMapper.saveGame(board, Configuration.gameId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -484,10 +484,8 @@ public class GameController {
             endTurn();
         } else {
             if (!Configuration.hotSeat) {
-                System.out.println("Waiting for my turn");
                 waitTurn();
                 currentPlayer = board.getPlayers().get(0);
-                System.out.println("Done waiting");
             }
             setPictures();
         }
@@ -509,10 +507,10 @@ public class GameController {
             }
             for (int j = 1; j<5; j++) {
                 try {
-                    image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(board.getTradeRow().getCard(Tier.FIRST, j - 1).getPicture())));
+                    image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(board.getTradeRow().getCard(Tier.values()[i], j - 1).getPicture())));
                     views[i][j].setImage(image);
                 } catch (Exception e) {
-                    views[i][j].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/tier_1.png"))));
+                    views[i][j].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/tier_"+(i+1)+".png"))));
                 }
             }
             views[i][5].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/tier_"+(i+1)+".png"))));
@@ -818,9 +816,9 @@ public class GameController {
                 if (!Configuration.joining && Configuration.AINames.contains(nameCheckedPair.getName())) {
                     if (pairs.size() == 2)
                         board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/two/28.txt")), StandardCharsets.UTF_8).split("\n")), "masters/two/28.txt"));
-                    if (pairs.size() == 3)
+                    else if (pairs.size() == 3)
                         board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/three/15.txt")), StandardCharsets.UTF_8).split("\n")), "masters/three/15.txt"));
-                    if (pairs.size() == 4)
+                    else if (pairs.size() == 4)
                         board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/four/3.txt")), StandardCharsets.UTF_8).split("\n")), "masters/four/3.txt"));
                 }
                 else if (nameCheckedPair.getName().equals("Voldemort"))
@@ -828,8 +826,11 @@ public class GameController {
                 else
                     board.getPlayers().add(new Player(nameCheckedPair.getName()));
             }
-            gameMapper.saveGame(board, Configuration.gameId);
-            gameDtoRepositoryAccessor.save(HostingRoomController.gameDto);
+
+            if (!Configuration.hotSeat) {
+                gameMapper.saveGame(board, Configuration.gameId);
+                gameDtoRepositoryAccessor.save(HostingRoomController.gameDto);
+            }
         }
         else board = gameMapper.recreateGame(Configuration.gameId);
         setPictures();
@@ -867,7 +868,8 @@ public class GameController {
     }
 
     private void waitTurn() {
-        while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName())) {
+        System.out.println("Waiting for my turn");
+        do {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -878,6 +880,7 @@ public class GameController {
             } catch (NoSuchIdException | IOException e) {
                 e.printStackTrace();
             }
-        }
+        } while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName()));
+        System.out.println("Done waiting");
     }
 }

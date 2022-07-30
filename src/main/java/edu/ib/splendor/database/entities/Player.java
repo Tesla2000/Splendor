@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player {
+    private Long id;
     private ArrayList<Card> deck = new ArrayList<>();
     private ArrayList<Card> reserve = new ArrayList<>();
     private final ArrayList<Aristocrat> aristocrats = new ArrayList<>();
@@ -174,5 +175,13 @@ public class Player {
 
     public ArrayList<Aristocrat> getAristocrats() {
         return aristocrats;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

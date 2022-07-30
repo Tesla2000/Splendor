@@ -1,11 +1,8 @@
 package edu.ib.splendor.database.entities;
 
-import edu.ib.splendor.database.entities.Gem;
-
-import java.io.File;
 import java.util.HashMap;
 
-public record Aristocrat(int red, int green, int blue, int brown, int white, String image) {
+public record Aristocrat(Long id, int red, int green, int blue, int brown, int white, String image) {
 
     public int getPoints() {
         return 3;
