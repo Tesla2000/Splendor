@@ -55,4 +55,15 @@ public class WaitDto {
     public void setGameDto(GameDto gameDto) {
         this.gameDto = gameDto;
     }
+
+    @Override
+    public String toString() {
+        return "WaitDto{" +
+                "id=" + id +
+                ", gameKey='" + gameKey + '\'' +
+                ", playerName='" + playerName + '\'' +
+                ", ready=" + ready +
+                ", gameDto=" + gameDto +
+                '}';
+    }
 }

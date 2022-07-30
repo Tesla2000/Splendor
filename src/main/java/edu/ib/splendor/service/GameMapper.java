@@ -110,6 +110,40 @@ public class GameMapper {
 
 
     public long saveGame(Board board) {
+        Long id = random.nextLong();
+        return saveGame(board, id);
+    }
+
+    private CardDto cardToDto(Card card) {
+        CardDto cardDto = new CardDto();
+        cardDto.setBlue(card.getCost().get(Gem.BLUE));
+        cardDto.setGreen(card.getCost().get(Gem.GREEN));
+        cardDto.setRed(card.getCost().get(Gem.RED));
+        cardDto.setBrown(card.getCost().get(Gem.BROWN));
+        cardDto.setWhite(card.getCost().get(Gem.WHITE));
+        cardDto.setPicture(card.getPicture());
+        cardDto.setPoints(card.getPoints());
+        cardDto.setTier(card.getTier());
+        cardDto.setProduction(card.getProduction());
+        return cardDto;
+    }
+
+    private Card dtoToCard(CardDto cardDto) {
+        return new Card(cardDto.getTier(), cardDto.getRed(), cardDto.getGreen(), cardDto.getBlue(), cardDto.getBrown(), cardDto.getWhite(), cardDto.getProduction(), cardDto.getPoints(), cardDto.getPicture());
+    }
+
+    private AristocratDto convertAristocratToDto(Aristocrat aristocrat){
+        AristocratDto aristocratDto = new AristocratDto();
+        aristocratDto.setBlue(aristocrat.getCost().get(Gem.BLUE));
+        aristocratDto.setBrown(aristocrat.getCost().get(Gem.BROWN));
+        aristocratDto.setRed(aristocrat.getCost().get(Gem.RED));
+        aristocratDto.setGreen(aristocrat.getCost().get(Gem.GREEN));
+        aristocratDto.setWhite(aristocrat.getCost().get(Gem.WHITE));
+        aristocratDto.setImage(aristocrat.getImage());
+        return aristocratDto;
+    }
+
+    public Long saveGame(Board board, Long gameId) {
         BoardDto boardDto = new BoardDto();
         boardDto.setBlue(board.getStored(Gem.BLUE));
         boardDto.setGreen(board.getStored(Gem.GREEN));
@@ -117,7 +151,7 @@ public class GameMapper {
         boardDto.setBrown(board.getStored(Gem.BROWN));
         boardDto.setWhite(board.getStored(Gem.WHITE));
         boardDto.setGold(board.getStored(Gem.GOLD));
-        boardDto.setId(random.nextLong());
+        boardDto.setId(gameId);
         boardRepositoryAccessor.save(boardDto);
         int playerCounter = 0;
         for (Player player : board.getPlayers()) {
@@ -185,34 +219,5 @@ public class GameMapper {
             aristocratRepositoryAccessor.save(aristocratDto);
         }
         return boardDto.getId();
-    }
-
-    private CardDto cardToDto(Card card) {
-        CardDto cardDto = new CardDto();
-        cardDto.setBlue(card.getCost().get(Gem.BLUE));
-        cardDto.setGreen(card.getCost().get(Gem.GREEN));
-        cardDto.setRed(card.getCost().get(Gem.RED));
-        cardDto.setBrown(card.getCost().get(Gem.BROWN));
-        cardDto.setWhite(card.getCost().get(Gem.WHITE));
-        cardDto.setPicture(card.getPicture());
-        cardDto.setPoints(card.getPoints());
-        cardDto.setTier(card.getTier());
-        cardDto.setProduction(card.getProduction());
-        return cardDto;
-    }
-
-    private Card dtoToCard(CardDto cardDto) {
-        return new Card(cardDto.getTier(), cardDto.getRed(), cardDto.getGreen(), cardDto.getBlue(), cardDto.getBrown(), cardDto.getWhite(), cardDto.getProduction(), cardDto.getPoints(), cardDto.getPicture());
-    }
-
-    private AristocratDto convertAristocratToDto(Aristocrat aristocrat){
-        AristocratDto aristocratDto = new AristocratDto();
-        aristocratDto.setBlue(aristocrat.getCost().get(Gem.BLUE));
-        aristocratDto.setBrown(aristocrat.getCost().get(Gem.BROWN));
-        aristocratDto.setRed(aristocrat.getCost().get(Gem.RED));
-        aristocratDto.setGreen(aristocrat.getCost().get(Gem.GREEN));
-        aristocratDto.setWhite(aristocrat.getCost().get(Gem.WHITE));
-        aristocratDto.setImage(aristocrat.getImage());
-        return aristocratDto;
     }
 }

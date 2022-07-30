@@ -33,7 +33,6 @@ public class RepositoryAccessor<Dto> {
             con.setRequestProperty("Accept", "application/json");
             con.setDoOutput(true);
             jsonString = mapper.writeValueAsString(dto);
-            System.out.println(jsonString);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

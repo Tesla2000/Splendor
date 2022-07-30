@@ -12,6 +12,8 @@ import java.util.*;
 
 import edu.ib.splendor.Configuration;
 import edu.ib.splendor.database.entities.*;
+import edu.ib.splendor.database.repositories.access.RepositoryAccessor;
+import edu.ib.splendor.database.repositories.dtos.GameDto;
 import edu.ib.splendor.service.*;
 import edu.ib.splendor.service.AI.AI;
 import edu.ib.splendor.service.AI.AIManager;
@@ -61,6 +63,7 @@ public class GameController {
     private Text whitesResource111;
     private Text goldsResource111;
     private GameMapper gameMapper;
+    private RepositoryAccessor<GameDto> gameDtoRepositoryAccessor;
 
     @FXML
     private ResourceBundle resources;
@@ -469,10 +472,11 @@ public class GameController {
             board.getPlayers().add(board.getPlayers().remove(0));
             currentPlayer = board.getPlayers().get(0);
             updateFields();
+            gameMapper.saveGame(board, Configuration.gameId);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (currentPlayer instanceof PlayerWithNodes) {
+        if (!Configuration.joining && currentPlayer instanceof PlayerWithNodes) {
             try {
                 AIManager.playTurn(board.getPlayers(), ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
             } catch (GameLostException ignored) {
@@ -480,20 +484,8 @@ public class GameController {
             endTurn();
         } else {
             if (!Configuration.hotSeat) {
-                Long id = gameMapper.saveGame(board);
                 System.out.println("Waiting for my turn");
-                while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName())) {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        board = gameMapper.recreateGame(id);
-                    } catch (NoSuchIdException | IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                waitTurn();
                 currentPlayer = board.getPlayers().get(0);
                 System.out.println("Done waiting");
             }
@@ -532,119 +524,6 @@ public class GameController {
                 views[3][i].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/reserve.png"))));
             }
         }
-//        try {
-//            image = new Image(currentPlayer.getReserve().get(0).getPicture());
-//            res1.setImage(image);
-//        } catch (Exception e) {
-//            res1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/resource/red.png"))));
-//        }
-//        try {
-//            image = new Image(currentPlayer.getReserve().get(1).getPicture());
-//            res2.setImage(image);
-//        } catch (Exception e) {
-//            res2.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(currentPlayer.getReserve().get(2).getPicture());
-//            res3.setImage(image);
-//        } catch (Exception e) {
-//            res3.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 0).getPicture());
-//            building11.setImage(image);
-//        } catch (Exception e) {
-//            building11.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 0).getPicture());
-//            building21.setImage(image);
-//        } catch (Exception e) {
-//            building21.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 0).getPicture());
-//            building31.setImage(image);
-//        } catch (Exception e) {
-//            building31.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 1).getPicture());
-//            building12.setImage(image);
-//        } catch (Exception e) {
-//            building12.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 1).getPicture());
-//            building22.setImage(image);
-//        } catch (Exception e) {
-//            building22.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 1).getPicture());
-//            building32.setImage(image);
-//        } catch (Exception e) {
-//            building32.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 2).getPicture());
-//            building13.setImage(image);
-//        } catch (Exception e) {
-//            building13.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 2).getPicture());
-//            building23.setImage(image);
-//        } catch (Exception e) {
-//            building23.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 2).getPicture());
-//            building33.setImage(image);
-//        } catch (Exception e) {
-//            building33.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.FIRST, 3).getPicture());
-//            building14.setImage(image);
-//        } catch (Exception e) {
-//            building14.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.SECOND, 3).getPicture());
-//            building24.setImage(image);
-//        } catch (Exception e) {
-//            building24.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
-//        }
-//        try {
-//            image = new Image(board.getTradeRow().getCard(Tier.THIRD, 3).getPicture());
-//            building34.setImage(image);
-//        } catch (Exception e) {
-//            building34.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
-//        }
-//        building30.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_3.png").getAbsolutePath()));
-//        building20.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_2.png").getAbsolutePath()));
-//        building10.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/tier_1.png").getAbsolutePath()));
-//        try {
-//            aristocrat0.setImage(new Image(board.getAristocrats().get(0).getImage()));
-//        } catch (Exception e) {
-//            aristocrat0.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
-//        }
-//        try {
-//            aristocrat1.setImage(new Image(board.getAristocrats().get(1).getImage()));
-//        } catch (Exception e) {
-//            aristocrat1.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
-//        }
-//        try {
-//            aristocrat2.setImage(new Image(board.getAristocrats().get(2).getImage()));
-//        } catch (Exception e) {
-//            aristocrat2.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
-//        }
-//        try {
-//            aristocrat3.setImage(new Image(board.getAristocrats().get(3).getImage()));
-//        } catch (Exception e) {
-//            aristocrat3.setImage(new Image(new File("src/main/java/edu/ib/splendor/database/pictures/reserve.png").getAbsolutePath()));
-//        }
     }
 
     private void showResources() {
@@ -848,7 +727,7 @@ public class GameController {
     }
 
     @FXML
-    void initialize() throws IOException, URISyntaxException {
+    void initialize() throws IOException, URISyntaxException, NoSuchIdException {
         assert endTurnButton != null : "fx:id=\"endTurnButon\" was not injected: check your FXML file 'board.fxml'.";
         assert blue != null : "fx:id=\"blue\" was not injected: check your FXML file 'board.fxml'.";
         assert blues != null : "fx:id=\"blues\" was not injected: check your FXML file 'board.fxml'.";
@@ -891,6 +770,7 @@ public class GameController {
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
         gameMapper = new GameMapper();
+        gameDtoRepositoryAccessor = new RepositoryAccessor<>("/game", GameDto.class, GameDto[].class);
         ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
         playersResource = new ArrayList<>();
         playersPanes = new ArrayList<>();
@@ -901,19 +781,12 @@ public class GameController {
                 new ImageView[]{reds111, greens111, blues111, browns111, whites111, golds111},
         };
         Image[] images = new Image[]{
-//                new Image(getClass().getClassLoader().getResource("src/main/java/edu/ib/splendor/database/pictures/resource/green.png")),
-//                new Image(new File(Objects.requireNonNull(getClass().getResource("/edu/ib/splendor/background.png")).toURI()).getAbsolutePath()),
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/resource/red.png"))),
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/resource/green.png"))),
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/resource/blue.png"))),
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/resource/brown.png"))),
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/resource/white.png"))),
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/resource/gold.png"))),
-//                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/green.png").getAbsolutePath()),
-//                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/blue.png").getAbsolutePath()),
-//                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/brown.png").getAbsolutePath()),
-//                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/white.png").getAbsolutePath()),
-//                new Image(new File("src/main/java/edu/ib/splendor/database/pictures/resource/gold.png").getAbsolutePath()),
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/resource/gold.png")))
         };
         Text[][] texts = new Text[][]{
                 new Text[]{redsResource, greensResource, bluesResource, brownsResource, whitesResource, goldsResource},
@@ -935,29 +808,33 @@ public class GameController {
                 playersPanes.get(player).put(Gem.values()[gem], panes[player][gem]);
             }
         }
-        TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
-        board = new Board(tradeRow, new ArrayList<>(), 7, 7, 7, 7, 7, 5);
-        List<NameCheckedPair> pairs;
-        if (SetGameController.players != null) pairs = SetGameController.players;
-        else pairs = HostingRoomController.players;
-        for (NameCheckedPair nameCheckedPair : pairs){
-            if (Configuration.AINames.contains(nameCheckedPair.getName())) {
-                if (pairs.size() == 2)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/two/28.txt")), StandardCharsets.UTF_8).split("\n")), "masters/two/28.txt"));
-                if (pairs.size() == 3)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/masters/three/15.txt")), StandardCharsets.UTF_8).split("\n")), "masters/three/15.txt"));
-                if (pairs.size() == 4)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/masters/four/3.txt")), StandardCharsets.UTF_8).split("\n")), "masters/four/3.txt"));
+        if (!Configuration.joining) {
+            TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
+            board = new Board(tradeRow, new ArrayList<>(), 7, 7, 7, 7, 7, 5);
+            List<NameCheckedPair> pairs;
+            if (SetGameController.players != null) pairs = SetGameController.players;
+            else pairs = HostingRoomController.players;
+            for (NameCheckedPair nameCheckedPair : pairs){
+                if (!Configuration.joining && Configuration.AINames.contains(nameCheckedPair.getName())) {
+                    if (pairs.size() == 2)
+                        board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/two/28.txt")), StandardCharsets.UTF_8).split("\n")), "masters/two/28.txt"));
+                    if (pairs.size() == 3)
+                        board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/three/15.txt")), StandardCharsets.UTF_8).split("\n")), "masters/three/15.txt"));
+                    if (pairs.size() == 4)
+                        board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/four/3.txt")), StandardCharsets.UTF_8).split("\n")), "masters/four/3.txt"));
+                }
+                else if (nameCheckedPair.getName().equals("Voldemort"))
+                    board.getPlayers().add(new Player(nameCheckedPair.getName(), 10000));
+                else
+                    board.getPlayers().add(new Player(nameCheckedPair.getName()));
             }
-            else if (nameCheckedPair.getName().equals("Voldemort"))
-                board.getPlayers().add(new Player(nameCheckedPair.getName(), 10000));
-            else
-                board.getPlayers().add(new Player(nameCheckedPair.getName()));
+            gameMapper.saveGame(board, Configuration.gameId);
+            gameDtoRepositoryAccessor.save(HostingRoomController.gameDto);
         }
+        else board = gameMapper.recreateGame(Configuration.gameId);
         setPictures();
         currentPlayer = board.getPlayers().get(0);
         endTurnButton.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/edu/ib/splendor/pictures/end_turn.png"))));
-//        endTurnButton.setImage(new Image(new File(getClass().getClassLoader().getResource("src/main/java/edu/ib/splendor/database/pictures/end_turn.png").toURI()).getAbsolutePath()));
         showResources();
         for (int i = 0; i < Gem.values().length; i++) {
             imageViews[0][i].setImage(images[i]);
@@ -978,14 +855,29 @@ public class GameController {
             }
         }
         updateFields();
-        if (currentPlayer instanceof PlayerWithNodes) {
+        if (!Configuration.joining && currentPlayer instanceof PlayerWithNodes) {
             try {
                 AIManager.playTurn(board.getPlayers(), ((PlayerWithNodes) currentPlayer).getNodes(), board, AI.getPossibleMoves());
             } catch (GameLostException ignored) {
             }
             endTurn();
         } else if (!Configuration.playerNames.contains(currentPlayer.getName())){
-            endTurn();
+            waitTurn();
+        }
+    }
+
+    private void waitTurn() {
+        while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName())) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                board = gameMapper.recreateGame(Configuration.gameId);
+            } catch (NoSuchIdException | IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

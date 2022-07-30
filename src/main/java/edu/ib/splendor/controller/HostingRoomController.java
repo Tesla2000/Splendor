@@ -29,6 +29,7 @@ public class HostingRoomController {
     private RepositoryAccessor<WaitDto> waitRepositoryAccessor;
     private RepositoryAccessor<GameDto> gameRepositoryAccessor;
     public static ArrayList<NameCheckedPair> players;
+    public static GameDto gameDto;
 
     @FXML
     private ResourceBundle resources;
@@ -141,7 +142,7 @@ public class HostingRoomController {
                 }
             }
             waitRepositoryAccessor.saveAll(waitDtos);
-            Thread.sleep(1000);
+            Thread.sleep(5000);
             if (areAllPlayersReady(waitRepositoryAccessor.findAll())){
                 System.out.println("All ready");
                 ArrayList<NameCheckedPair> list = new ArrayList<>();
@@ -153,7 +154,8 @@ public class HostingRoomController {
                 players = list;
                 if (players.size()>=2) {
                     gameDto.setStarted(true);
-                    gameRepositoryAccessor.save(gameDto);
+                    HostingRoomController.gameDto = gameDto;
+                    Configuration.gameId = gameDto.getId();
                     root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
                     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     scene = new Scene(root);

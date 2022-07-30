@@ -8,4 +8,6 @@ public class Configuration {
     public static List<String> AINames = new ArrayList<>();
     public static String URL = "https://splendor-online.herokuapp.com";
     public static boolean hotSeat;
+    public static boolean joining = false;
+    public static Long gameId;
 }
