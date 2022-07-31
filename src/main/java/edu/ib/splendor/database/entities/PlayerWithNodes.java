@@ -10,11 +10,15 @@ public class PlayerWithNodes extends Player {
         super(player.getName(), player.getPossession().get(Gem.RED), player.getPossession().get(Gem.GREEN), player.getPossession().get(Gem.BLUE), player.getPossession().get(Gem.BROWN), player.getPossession().get(Gem.WHITE), player.getPossession().get(Gem.GOLD), player.getDeck(), player.getReserve());
         this.nodes = nodes;
         this.nodesFile = nodesFile;
+        if (player.getId()!=null)
+            this.setId(player.getId());
     }
 
     public PlayerWithNodes(Player player, ArrayList<Node> nodes) {
         super(player.getName(), player.getPossession().get(Gem.RED), player.getPossession().get(Gem.GREEN), player.getPossession().get(Gem.BLUE), player.getPossession().get(Gem.BROWN), player.getPossession().get(Gem.WHITE), player.getPossession().get(Gem.GOLD), player.getDeck(), player.getReserve());
         this.nodes = nodes;
+        if (player.getId()!=null)
+            this.setId(player.getId());
     }
 
     public ArrayList<Node> getNodes() {

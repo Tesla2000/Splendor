@@ -148,4 +148,13 @@ public class CardDto {
     public void setPlayerDto(PlayerDto playerDto) {
         this.playerDto = playerDto;
     }
+
+    @Override
+    public String toString() {
+        return "CardDto{" +
+                "visible=" + visible +
+                ", reserve=" + reserve +
+                ", picture='" + picture + '\'' +
+                '}';
+    }
 }

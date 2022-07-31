@@ -127,4 +127,22 @@ public class PlayerDto {
     public void setGold(int gold) {
         this.gold = gold;
     }
+
+    @Override
+    public String toString() {
+        return "PlayerDto{" +
+                "id=" + id +
+                ", points=" + points +
+                ", name='" + name + '\'' +
+                ", queuePosition=" + queuePosition +
+                ", red=" + red +
+                ", green=" + green +
+                ", blue=" + blue +
+                ", brown=" + brown +
+                ", white=" + white +
+                ", gold=" + gold +
+                ", ai='" + ai + '\'' +
+                ", board=" + board +
+                '}';
+    }
 }

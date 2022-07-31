@@ -816,17 +816,17 @@ public class GameController {
             for (NameCheckedPair nameCheckedPair : pairs){
                 if (!Configuration.joining && Configuration.AINames.contains(nameCheckedPair.getName())) {
                     if (pairs.size() == 2) {
-                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/two/28.txt")), StandardCharsets.UTF_8).split("\n")), "masters/two/28.txt");
+                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/two/28.txt")), StandardCharsets.UTF_8).split("\n")), "/edu/ib/splendor/masters/two/28.txt");
                         playerWithNodes.setId(random.nextLong());
                         board.getPlayers().add(playerWithNodes);
                     }
                     else if (pairs.size() == 3) {
-                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/three/15.txt")), StandardCharsets.UTF_8).split("\n")), "masters/three/15.txt");
+                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/three/15.txt")), StandardCharsets.UTF_8).split("\n")), "/edu/ib/splendor/masters/three/15.txt");
                         playerWithNodes.setId(random.nextLong());
                         board.getPlayers().add(playerWithNodes);
                     }
                     else if (pairs.size() == 4) {
-                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/four/3.txt")), StandardCharsets.UTF_8).split("\n")), "masters/four/3.txt");
+                        PlayerWithNodes playerWithNodes = new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(GameController.class.getResourceAsStream("/edu/ib/splendor/masters/four/3.txt")), StandardCharsets.UTF_8).split("\n")), "/edu/ib/splendor/masters/four/3.txt");
                         playerWithNodes.setId(random.nextLong());
                         board.getPlayers().add(playerWithNodes);
                     }
@@ -916,7 +916,11 @@ public class GameController {
             } catch (NoSuchIdException | IOException e) {
                 e.printStackTrace();
             }
-        } while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName()));
+        } while (!Configuration.playerNames.contains(board.getPlayers().get(0).getName())
+                && board.getTradeRow().getCardsVisible().get(Tier.FIRST).size()<=4
+                && board.getTradeRow().getCardsVisible().get(Tier.SECOND).size()<=4
+                && board.getTradeRow().getCardsVisible().get(Tier.THIRD).size()<=4
+        );
         currentPlayer = board.getPlayers().get(0);
         System.out.println("Done waiting");
     }

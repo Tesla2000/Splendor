@@ -1,10 +1,12 @@
 package edu.ib.splendor.service;
 
+import edu.ib.splendor.controller.GameController;
 import edu.ib.splendor.database.entities.*;
 import edu.ib.splendor.database.repositories.dtos.*;
 import edu.ib.splendor.database.repositories.access.*;
 import edu.ib.splendor.service.AI.AIManager;
 import edu.ib.splendor.service.exceptions.NoSuchIdException;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -98,7 +100,7 @@ public class GameMapper {
             if (playerDto.getAi()==null)
                 players.add(player);
             else
-                players.add(new PlayerWithNodes(player, AIManager.readNodesFromFile(playerDto.getAi()), playerDto.getAi()));
+                players.add(new PlayerWithNodes(player, AIManager.readNodesFromFile(IOUtils.toString(Objects.requireNonNull(getClass().getResourceAsStream(playerDto.getAi()))).split("\n")), playerDto.getAi()));
         }
         ArrayList<Aristocrat> aristocrats = new ArrayList<>();
         for (AristocratDto aristocratDto: aristocratDtos){
@@ -147,6 +149,7 @@ public class GameMapper {
     }
 
     public Long saveGame(Board board, Long gameId) {
+        ArrayList<PlayerDto> playerDtos = new ArrayList<>();
         BoardDto boardDto = new BoardDto();
         boardDto.setBlue(board.getStored(Gem.BLUE));
         boardDto.setGreen(board.getStored(Gem.GREEN));
@@ -183,6 +186,7 @@ public class GameMapper {
             PlayerDto playerDto = new PlayerDto(player.getId());
             for (Card card : player.getReserve()) {
                 CardDto cardDto = cardToDto(card);
+                cardDto.setVisible(false);
                 cardDto.setReserve(true);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
@@ -190,6 +194,7 @@ public class GameMapper {
             }
             for (Card card : player.getDeck()) {
                 CardDto cardDto = cardToDto(card);
+                cardDto.setVisible(false);
                 cardDto.setReserve(false);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
@@ -215,6 +220,10 @@ public class GameMapper {
             playerDto.setGold(player.getPossession().get(Gem.GOLD));
             playerDto.setQueuePosition(playerCounter);
             playerCounter++;
+            playerDtos.add(playerDto);
+        }
+        for (PlayerDto playerDto: playerDtos) {
+            System.out.println(playerDto);
             playerRepositoryAccessor.save(playerDto);
         }
         return boardDto.getId();
