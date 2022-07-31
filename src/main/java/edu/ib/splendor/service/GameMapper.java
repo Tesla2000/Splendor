@@ -33,7 +33,6 @@ public class GameMapper {
                 list.add(dto);
             }
         }
-        List<CardDto> cardDtos = list;
         List<AristocratDto> aristocratDtos = new ArrayList<>();
         for (AristocratDto dto : aristocratRepositoryAccessor.findAll()) {
             if (dto.getBoardDto().getId().equals(boardDto.getId())) {
@@ -58,7 +57,7 @@ public class GameMapper {
             hiddenCards.add(new ArrayList<>());
             visibleCards.add(new ArrayList<>());
         }
-        for (CardDto cardDto : cardDtos) {
+        for (CardDto cardDto : list) {
             if (cardDto.getPlayerDto() == null) {
                 switch (cardDto.getTier()) {
                     case FIRST:
@@ -86,7 +85,7 @@ public class GameMapper {
             } else {
                 if (cardDto.getReserve()){
                     reserves.get(cardDto.getPlayerDto().getId()).add(dtoToCard(cardDto));
-                }else {
+                } else {
                     decks.get(cardDto.getPlayerDto().getId()).add(dtoToCard(cardDto));
                 }
             }
@@ -105,6 +104,7 @@ public class GameMapper {
         for (AristocratDto aristocratDto: aristocratDtos){
             aristocrats.add(new Aristocrat(aristocratDto.getId(), aristocratDto.getRed(), aristocratDto.getGreen(), aristocratDto.getBlue(), aristocratDto.getBrown(), aristocratDto.getWhite(), aristocratDto.getImage()));
         }
+        System.out.println("Recreation size: " + visibleCards.get(0).size());
         TradeRow tradeRow = new TradeRow(hiddenCards.get(0), hiddenCards.get(1), hiddenCards.get(2), visibleCards.get(0), visibleCards.get(1), visibleCards.get(2));
         return new Board(tradeRow, players, aristocrats,boardDto.getRed(), boardDto.getGreen(), boardDto.getBlue(), boardDto.getBrown(), boardDto.getWhite(), boardDto.getGold());
     }
@@ -157,22 +157,30 @@ public class GameMapper {
         boardDto.setId(gameId);
         boardRepositoryAccessor.save(boardDto);
         int playerCounter = 0;
+        for (Tier tier : Tier.values())
+            if (!tier.equals(Tier.RESERVE)) {
+                for (Card card : board.getTradeRow().getCardsHidden().get(tier)) {
+                    CardDto cardDto = cardToDto(card);
+                    cardDto.setBoard(boardDto);
+                    cardDto.setVisible(false);
+                    cardRepositoryAccessor.save(cardDto);
+                }
+                for (Card card : board.getTradeRow().getCardsVisible().get(tier)) {
+                    CardDto cardDto = cardToDto(card);
+                    cardDto.setBoard(boardDto);
+                    cardDto.setVisible(true);
+                    cardRepositoryAccessor.save(cardDto);
+                }
+                if (tier.equals(Tier.FIRST))
+                    System.out.println("Saving size: " + board.getTradeRow().getCardsVisible().get(tier).size());
+            }
+        for (Aristocrat aristocrat : board.getAristocrats()) {
+            AristocratDto aristocratDto = convertAristocratToDto(aristocrat);
+            aristocratDto.setBoardDto(boardDto);
+            aristocratRepositoryAccessor.save(aristocratDto);
+        }
         for (Player player : board.getPlayers()) {
             PlayerDto playerDto = new PlayerDto(player.getId());
-            if (player instanceof PlayerWithNodes)
-                playerDto.setAi(((PlayerWithNodes)player).getNodesFile());
-            playerDto.setPoints(player.getPoints());
-            playerDto.setBoard(boardDto);
-            playerDto.setName(player.getName());
-            playerDto.setBlue(player.getPossession().get(Gem.BLUE));
-            playerDto.setGreen(player.getPossession().get(Gem.GREEN));
-            playerDto.setRed(player.getPossession().get(Gem.RED));
-            playerDto.setBrown(player.getPossession().get(Gem.BROWN));
-            playerDto.setWhite(player.getPossession().get(Gem.WHITE));
-            playerDto.setGold(player.getPossession().get(Gem.GOLD));
-            playerDto.setQueuePosition(playerCounter);
-            playerCounter++;
-            playerRepositoryAccessor.save(playerDto);
             for (Card card : player.getReserve()) {
                 CardDto cardDto = cardToDto(card);
                 cardDto.setReserve(true);
@@ -194,26 +202,20 @@ public class GameMapper {
                 aristocratDto.setId(aristocrat.id());
                 aristocratRepositoryAccessor.save(aristocratDto);
             }
-        }
-        for (Tier tier : Tier.values())
-            if (!tier.equals(Tier.RESERVE)) {
-                for (Card card : board.getTradeRow().getCardsHidden().get(tier)) {
-                    CardDto cardDto = cardToDto(card);
-                    cardDto.setBoard(boardDto);
-                    cardDto.setVisible(false);
-                    cardRepositoryAccessor.save(cardDto);
-                }
-                for (Card card : board.getTradeRow().getCardsVisible().get(tier)) {
-                    CardDto cardDto = cardToDto(card);
-                    cardDto.setBoard(boardDto);
-                    cardDto.setVisible(true);
-                    cardRepositoryAccessor.save(cardDto);
-                }
-            }
-        for (Aristocrat aristocrat : board.getAristocrats()) {
-            AristocratDto aristocratDto = convertAristocratToDto(aristocrat);
-            aristocratDto.setBoardDto(boardDto);
-            aristocratRepositoryAccessor.save(aristocratDto);
+            if (player instanceof PlayerWithNodes)
+                playerDto.setAi(((PlayerWithNodes)player).getNodesFile());
+            playerDto.setPoints(player.getPoints());
+            playerDto.setBoard(boardDto);
+            playerDto.setName(player.getName());
+            playerDto.setBlue(player.getPossession().get(Gem.BLUE));
+            playerDto.setGreen(player.getPossession().get(Gem.GREEN));
+            playerDto.setRed(player.getPossession().get(Gem.RED));
+            playerDto.setBrown(player.getPossession().get(Gem.BROWN));
+            playerDto.setWhite(player.getPossession().get(Gem.WHITE));
+            playerDto.setGold(player.getPossession().get(Gem.GOLD));
+            playerDto.setQueuePosition(playerCounter);
+            playerCounter++;
+            playerRepositoryAccessor.save(playerDto);
         }
         return boardDto.getId();
     }
