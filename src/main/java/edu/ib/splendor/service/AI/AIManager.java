@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AIManager {
+    public static final int pretenders = 100;
     public static ArrayList<Node> readNodesFromFile(String path) throws IOException {
         String st;
         ArrayList<Node> nodes = new ArrayList<>();
@@ -97,7 +98,7 @@ public class AIManager {
                                 }
                             }
                         } else {
-                            for (int j = 0; j < 16; j++)
+                            for (int j = 0; j < pretenders; j++)
                                 state.add(0);
                         }
                     }
@@ -128,6 +129,7 @@ public class AIManager {
 
     private static void playMove(Player player, List<Integer> sequence, Board board, HashMap<Integer, Move> possibleMoves) throws GameLostException {
         int playersResource = player.getPossession().values().stream().reduce(0, Integer::sum);
+        List<Integer> initSeq = sequence;
         for (int index : sequence) {
             if (!(possibleMoves.get(index) instanceof ReserveBuilding)) break;
             if (BoardManager.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
@@ -177,37 +179,46 @@ public class AIManager {
                         continue;
                     }
                 }
-                if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4 && canBeTaken == 3 && !gotten.contains(lack.get(0).gem)) {
-                    BoardManager.collectGem(lack.get(0).gem, board, player);
-                    BoardManager.collectGem(lack.get(0).gem, board, player);
-                    break;
-                } else {
-                    for (GemAmountPair gemAmountPair : lack) {
-                        if (!gotten.contains(gemAmountPair.gem) && board.getStored(gemAmountPair.gem) > 0 && gotten.size() < 3 && canBeTaken > 0) {
-                            BoardManager.collectGem(gemAmountPair.gem, board, player);
-                            gotten.add(gemAmountPair.gem);
-                            if (i != 0) canBeTaken--;
+                lack = new ArrayList<>(lack.stream().filter((GemAmountPair gemAmountPair)->board.getStored(gemAmountPair.gem) > 0).toList());
+                if (lack.size() <= 1) {
+                    if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4 && canBeTaken == 3 && !gotten.contains(lack.get(0).gem)) {
+                        BoardManager.collectGem(lack.get(0).gem, board, player);
+                        BoardManager.collectGem(lack.get(0).gem, board, player);
+                        break;
+                    } else if (player.getPossession().values().stream().reduce(0, Integer::sum) <= 9 && board.getStored(Gem.GOLD) >= 1 && canBeTaken == 3 && !gotten.contains(Gem.GOLD)) {
+                        for (int index : initSeq) {
+                            if (possibleMoves.get(index) instanceof ReserveBuilding) {
+                                if (BoardManager.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
+                                    BoardManager.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
+                                    return;
+                                }
+                            }
                         }
                     }
-                    lack = BoardManager.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
-                    if (lack == null) {
-                        i++;
-                        continue;
-                    }
-                    canBeTaken = 10 - playersResource - lack.stream().map(e -> e.integer).reduce(0, Integer::sum);
-                    if (canBeTaken == 0 && gotten.size() != 0)
-                        return;
-                    i++;
                 }
+                for (GemAmountPair gemAmountPair : lack) {
+                    if (!gotten.contains(gemAmountPair.gem) && gotten.size() < 3 && canBeTaken > 0) {
+                        BoardManager.collectGem(gemAmountPair.gem, board, player);
+                        gotten.add(gemAmountPair.gem);
+                        if (i != 0) canBeTaken--;
+                    }
+                }
+                lack = BoardManager.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
+                if (lack == null) {
+                    i++;
+                    continue;
+                }
+//                canBeTaken = 10 - playersResource - lack.stream().map(e -> e.integer).reduce(0, Integer::sum);
+                if (canBeTaken == 0 && gotten.size() != 0)
+                    return;
+                i++;
             }
+
         }
     }
 
     private static void playMove(ArrayList<MoveValuePair> order, Player player, Board board, HashMap<Integer, Move> possibleMoves) throws GameLostException {
-        List<MoveValuePair> toSort = new ArrayList<>();
-        for (MoveValuePair moveValuePair : order) {
-            toSort.add(moveValuePair);
-        }
+        List<MoveValuePair> toSort = new ArrayList<>(order);
         toSort.sort((e1, e2) -> Double.compare(e2.value(), e1.value()));
         List<Integer> sequence = new ArrayList<>();
         for (MoveValuePair moveValuePair : toSort) {
@@ -218,12 +229,12 @@ public class AIManager {
     }
 
     private static boolean canBeTaken(ArrayList<GemAmountPair> lack, HashMap<Gem, Integer> possession,Board board) {
-        if (lack.stream().map(e -> e.integer).reduce(0, Integer::sum) > 10 - possession.values().stream().reduce(0, Integer::sum))
-            return false;
-        for (GemAmountPair gemAmountPair : lack) {
-            if (board.getStored(gemAmountPair.gem) < gemAmountPair.integer) return false;
-        }
-        return true;
+        return lack.stream().map(e -> e.integer).reduce(0, Integer::sum) <= 10 - possession.values().stream().reduce(0, Integer::sum);
+//        int goldNeeded = 0;
+//        for (GemAmountPair gemAmountPair : lack) {
+//            goldNeeded += Math.max(0, gemAmountPair.integer - board.getStored(gemAmountPair.gem));
+//        }
+//        return goldNeeded >= board.getStored(Gem.GOLD);
     }
 
     private ArrayList<Integer> convertToSequence(HashMap<Double, Integer> order) {
@@ -247,8 +258,8 @@ public class AIManager {
             }
             CommunicationManager.respondToPython(ai.getScores());
             ai.setBestScore(0);
-            ai.setScores(new double[16]);
-            for (int i = 0; i < 1000; i++) {
+            ai.setScores(new double[pretenders]);
+            for (int i = 0; i < 100; i++) {
                 ai.setOrder(ai.getAllPlayers(), ai.getMasterCounter(), ai.getCurrentPlayers(), ai.getBest());
                 ai.playGame(ai.getBest());
             }
