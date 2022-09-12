@@ -38,12 +38,12 @@ public abstract class AI {
     private ArrayList<PlayerWithNodes> currentPlayers;
 
     public void initializeTraining() throws IOException {
-        scores = new double[16];
+        scores = new double[AIManager.pretenders];
         best = 0;
         bestScore = 0;
         CommunicationManager.waitForJavaTurn();
         allPlayers = new ArrayList<>();
-        for (int id = 0; id < 16; id++) {
+        for (int id = 0; id < AIManager.pretenders; id++) {
             allPlayers.add(AIManager.readNodesFromFile("coefficients/" + id + ".txt"));
         }
     }
