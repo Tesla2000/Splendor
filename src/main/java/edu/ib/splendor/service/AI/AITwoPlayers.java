@@ -15,7 +15,7 @@ public class AITwoPlayers extends AI {
     }
 
     public static void main(String[] args) throws IOException {
-        AITwoPlayers ai = new AITwoPlayers(28);
+        AITwoPlayers ai = new AITwoPlayers(29);
         int betterIndicator = 61;
         AIManager.trainAI(ai, betterIndicator, NumberOfPlayers.two);
 //        while (true) {

@@ -64,7 +64,8 @@ public class HostingRoomController {
 
     @FXML
     void changeState(ActionEvent event) throws IOException, InterruptedException {
-        Random random = new Random(1);
+//        Random random = new Random(1);
+        Random random = new Random();
         boolean[] checks = new boolean[4];
         Configuration.playerNames = new ArrayList<>();
         checks[0] = isFirstPlayerMeCheckBox.isSelected();
@@ -106,7 +107,7 @@ public class HostingRoomController {
                         waitDtos.get(i).setReady(true);
                         waitDtos.get(i).setPlayerName("");
                         waitDtos.get(i).setGameKey("");
-                    }else if (!players.get(i).getName().equals("") && !checks[i]) {
+                    } else if (!players.get(i).getName().equals("") && !checks[i]) {
                         waitDtos.get(i).setReady(false);
                         waitDtos.get(i).setPlayerName("");
                         waitDtos.get(i).setGameKey(players.get(i).getName());
