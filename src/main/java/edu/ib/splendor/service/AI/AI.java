@@ -68,6 +68,10 @@ public abstract class AI {
         int moves = 0;
         while (true) {
             moves++;
+            if (moves == 1000){
+                System.out.println("Bad");
+                break;
+            }
             try{
                 AIManager.playTurn(players, currentPlayers.get(0).getNodes(), board, getPossibleMoves());
             } catch (GameLostException e){

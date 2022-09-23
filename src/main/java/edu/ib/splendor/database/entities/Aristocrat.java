@@ -21,5 +21,5 @@ public record Aristocrat(int red, int green, int blue, int brown, int white, Str
         return cost;
     }
 
-    public String getImage(){return new File("src/main/java/edu/ib/splendor/database/pictures/aristocrats/"+image+".png").getAbsolutePath();}
+    public String getImage(){return new File("src/main/java/edu/ib/splendor/database/pictures/aristocrats/"+image+".png").toURI().toString();}
 }

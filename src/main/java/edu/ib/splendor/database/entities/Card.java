@@ -21,7 +21,7 @@ public class Card {
     }
 
     public String getPicture() {
-        return new File("src/main/java/edu/ib/splendor/database/pictures/buildings/"+picture+".png").getAbsolutePath();
+        return new File("src/main/java/edu/ib/splendor/database/pictures/buildings/"+picture+".png").toURI().toString();
     }
 
     private int points = 0;
