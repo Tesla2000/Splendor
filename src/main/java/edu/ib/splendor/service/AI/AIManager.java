@@ -132,7 +132,7 @@ public class AIManager {
         List<Integer> initSeq = sequence;
         for (int index : sequence) {
             if (!(possibleMoves.get(index) instanceof ReserveBuilding)) break;
-            if (BoardManager.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
+            if (BoardManager.canCardBeReserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
                 BoardManager.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
                 return;
             }
@@ -188,7 +188,7 @@ public class AIManager {
                     } else if (player.getPossession().values().stream().reduce(0, Integer::sum) <= 9 && board.getStored(Gem.GOLD) >= 1 && canBeTaken == 3 && !gotten.contains(Gem.GOLD)) {
                         for (int index : initSeq) {
                             if (possibleMoves.get(index) instanceof ReserveBuilding) {
-                                if (BoardManager.can_card_be_reserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
+                                if (BoardManager.canCardBeReserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
                                     BoardManager.reserveCard(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex());
                                     return;
                                 }

@@ -57,7 +57,7 @@ public class BoardManager {
                     - currentPlayer.getProduction().getOrDefault(gem,0), 0);
         }
         if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD))
-        return new ArrayList<>();
+            return new ArrayList<>();
         return cost;
         }
 
@@ -91,7 +91,7 @@ public class BoardManager {
         }
     }
 
-    public static boolean can_card_be_reserved(Player player, Board board, Tier tier, int index){
+    public static boolean canCardBeReserved(Player player, Board board, Tier tier, int index){
         return player.getReserve().size() < 3 && board.getTradeRow().getCard(tier, index) != null;
     }
 
