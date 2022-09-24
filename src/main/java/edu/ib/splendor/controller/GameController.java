@@ -369,22 +369,22 @@ public class GameController {
 
     private void buyEstate(Tier tier, int i) {
         if (LocalDateTime.now().isAfter(block)) {
-            Card card;
+            Cart cart;
             HashMap<Gem, Integer> cost = new HashMap<>();
             int goldNeeded = 0;
             if (build.isSelected() && i >= 0) {
                 if (!tier.equals(Tier.RESERVE)) {
                     i--;
-                    card = board.getTradeRow().getCard(tier, i);
-                } else card = currentPlayer.getReserve().get(i);
-                goldNeeded = getGoldNeeded(card, cost, goldNeeded, currentPlayer);
+                    cart = board.getTradeRow().getCard(tier, i);
+                } else cart = currentPlayer.getReserve().get(i);
+                goldNeeded = getGoldNeeded(cart, cost, goldNeeded, currentPlayer);
                 if (goldNeeded <= currentPlayer.getPossession().get(Gem.GOLD)) {
-                    pay(card, cost, goldNeeded, currentPlayer, board);
+                    pay(cart, cost, goldNeeded, currentPlayer, board);
                     if (!tier.equals(Tier.RESERVE))
                         currentPlayer.addCard(board.getTradeRow().takeCard(tier, i));
                     else {
-                        currentPlayer.addCard(card);
-                        currentPlayer.removeReserve(card);
+                        currentPlayer.addCard(cart);
+                        currentPlayer.removeReserve(cart);
                     }
                     endTurn();
                 }
@@ -392,10 +392,10 @@ public class GameController {
             if (reserve.isSelected()) {
                 i--;
                 if (i >= 0)
-                    card = board.getTradeRow().getCard(tier, i);
-                else card = board.getTradeRow().getCardsHidden().get(tier).remove(0);
+                    cart = board.getTradeRow().getCard(tier, i);
+                else cart = board.getTradeRow().getCardsHidden().get(tier).remove(0);
                 if (currentPlayer.getReserve().size() < 3) {
-                    currentPlayer.addReserve(card);
+                    currentPlayer.addReserve(cart);
                     if (board.getStored(Gem.GOLD) > 0 && currentPlayer.allGems() < 10) {
                         currentPlayer.changeGem(Gem.GOLD, -1);
                         board.changeStored(Gem.GOLD, -1);
@@ -408,11 +408,11 @@ public class GameController {
         }
     }
 
-    public static void pay(Card card, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer, Board board) {
+    public static void pay(Cart cart, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer, Board board) {
         currentPlayer.changeGem(Gem.GOLD, goldNeeded);
         cost.put(Gem.GOLD, goldNeeded);
-        for (Gem gem : card.getCost().keySet()) {
-            Integer paid = Math.max(0, card.getCost().getOrDefault(gem, 0) - currentPlayer.getProduction().getOrDefault(gem, 0));
+        for (Gem gem : cart.getCost().keySet()) {
+            Integer paid = Math.max(0, cart.getCost().getOrDefault(gem, 0) - currentPlayer.getProduction().getOrDefault(gem, 0));
             currentPlayer.changeGem(gem, paid);
             cost.put(gem, cost.getOrDefault(gem, 0) + paid);
         }
@@ -420,11 +420,11 @@ public class GameController {
             board.changeStored(gem, cost.get(gem));
     }
 
-    public static int getGoldNeeded(Card card, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer) {
-        for (Gem gem : card.getCost().keySet()) {
-            cost.put(gem, -Math.max(card.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
+    public static int getGoldNeeded(Cart cart, HashMap<Gem, Integer> cost, int goldNeeded, Player currentPlayer) {
+        for (Gem gem : cart.getCost().keySet()) {
+            cost.put(gem, -Math.max(cart.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
                     - currentPlayer.getProduction().getOrDefault(gem, 0), 0));
-            goldNeeded += Math.max(card.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
+            goldNeeded += Math.max(cart.getCost().getOrDefault(gem, 0) - currentPlayer.getPossession().getOrDefault(gem, 0)
                     - currentPlayer.getProduction().getOrDefault(gem, 0), 0);
         }
         return goldNeeded;
@@ -856,7 +856,7 @@ public class GameController {
         assert whites11 != null : "fx:id=\"whites11\" was not injected: check your FXML file 'board.fxml'.";
         assert whites111 != null : "fx:id=\"whites111\" was not injected: check your FXML file 'board.fxml'.";
         gameMapper = new GameMapper();
-        ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
+        ArrayList<ArrayList<Cart>> cards = DeckGenerator.generateCards();
         playersResource = new ArrayList<>();
         playersPanes = new ArrayList<>();
         ImageView[][] imageViews = new ImageView[][]{

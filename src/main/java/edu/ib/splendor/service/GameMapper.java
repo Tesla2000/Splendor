@@ -7,7 +7,6 @@ import edu.ib.splendor.service.AI.AIManager;
 import edu.ib.splendor.service.exceptions.NoSuchIdException;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -40,10 +39,10 @@ public class GameMapper {
                 aristocratDtos.add(dto);
             }
         }
-        ArrayList<ArrayList<Card>> hiddenCards = new ArrayList<>();
-        ArrayList<ArrayList<Card>> visibleCards = new ArrayList<>();
-        HashMap<Long, ArrayList<Card>> decks = new HashMap<>();
-        HashMap<Long, ArrayList<Card>> reserves = new HashMap<>();
+        ArrayList<ArrayList<Cart>> hiddenCards = new ArrayList<>();
+        ArrayList<ArrayList<Cart>> visibleCards = new ArrayList<>();
+        HashMap<Long, ArrayList<Cart>> decks = new HashMap<>();
+        HashMap<Long, ArrayList<Cart>> reserves = new HashMap<>();
         List<PlayerDto> playerDtos = new ArrayList<>();
         for (PlayerDto dto : playerRepositoryAccessor.findAll()) {
             if (dto.getBoard().getId().equals(boardDto.getId())) {
@@ -137,16 +136,16 @@ public class GameMapper {
             playerCounter++;
             playerDto.setId(random.nextLong());
             playerRepositoryAccessor.save(playerDto);
-            for (Card card : player.getReserve()) {
-                CardDto cardDto = cardToDto(card);
+            for (Cart cart : player.getReserve()) {
+                CardDto cardDto = cardToDto(cart);
                 cardDto.setReserve(true);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
                 cardDto.setId(random.nextLong());
                 cardRepositoryAccessor.save(cardDto);
             }
-            for (Card card : player.getDeck()) {
-                CardDto cardDto = cardToDto(card);
+            for (Cart cart : player.getDeck()) {
+                CardDto cardDto = cardToDto(cart);
                 cardDto.setReserve(false);
                 cardDto.setPlayerDto(playerDto);
                 cardDto.setBoard(boardDto);
@@ -163,15 +162,15 @@ public class GameMapper {
         }
         for (Tier tier : Tier.values())
             if (!tier.equals(Tier.RESERVE)) {
-                for (Card card : board.getTradeRow().getCardsHidden().get(tier)) {
-                    CardDto cardDto = cardToDto(card);
+                for (Cart cart : board.getTradeRow().getCardsHidden().get(tier)) {
+                    CardDto cardDto = cardToDto(cart);
                     cardDto.setBoard(boardDto);
                     cardDto.setVisible(false);
                     cardDto.setId(random.nextLong());
                     cardRepositoryAccessor.save(cardDto);
                 }
-                for (Card card : board.getTradeRow().getCardsVisible().get(tier)) {
-                    CardDto cardDto = cardToDto(card);
+                for (Cart cart : board.getTradeRow().getCardsVisible().get(tier)) {
+                    CardDto cardDto = cardToDto(cart);
                     cardDto.setBoard(boardDto);
                     cardDto.setVisible(true);
                     cardDto.setId(random.nextLong());
@@ -187,22 +186,22 @@ public class GameMapper {
         return boardDto.getId();
     }
 
-    private CardDto cardToDto(Card card) {
+    private CardDto cardToDto(Cart cart) {
         CardDto cardDto = new CardDto();
-        cardDto.setBlue(card.getCost().get(Gem.BLUE));
-        cardDto.setGreen(card.getCost().get(Gem.GREEN));
-        cardDto.setRed(card.getCost().get(Gem.RED));
-        cardDto.setBrown(card.getCost().get(Gem.BROWN));
-        cardDto.setWhite(card.getCost().get(Gem.WHITE));
-        cardDto.setPicture(card.getPicture());
-        cardDto.setPoints(card.getPoints());
-        cardDto.setTier(card.getTier());
-        cardDto.setProduction(card.getProduction());
+        cardDto.setBlue(cart.getCost().get(Gem.BLUE));
+        cardDto.setGreen(cart.getCost().get(Gem.GREEN));
+        cardDto.setRed(cart.getCost().get(Gem.RED));
+        cardDto.setBrown(cart.getCost().get(Gem.BROWN));
+        cardDto.setWhite(cart.getCost().get(Gem.WHITE));
+        cardDto.setPicture(cart.getPicture());
+        cardDto.setPoints(cart.getPoints());
+        cardDto.setTier(cart.getTier());
+        cardDto.setProduction(cart.getProduction());
         return cardDto;
     }
 
-    private Card dtoToCard(CardDto cardDto) {
-        return new Card(cardDto.getTier(), cardDto.getRed(), cardDto.getGreen(), cardDto.getBlue(), cardDto.getBrown(), cardDto.getWhite(), cardDto.getProduction(), cardDto.getPoints(), cardDto.getPicture());
+    private Cart dtoToCard(CardDto cardDto) {
+        return new Cart(cardDto.getTier(), cardDto.getRed(), cardDto.getGreen(), cardDto.getBlue(), cardDto.getBrown(), cardDto.getWhite(), cardDto.getProduction(), cardDto.getPoints(), cardDto.getPicture());
     }
 
     private AristocratDto convertAristocratToDto(Aristocrat aristocrat){

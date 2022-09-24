@@ -49,13 +49,13 @@ public class AIManager {
     public static void saveAsMaster(String id, int masterCounter, NumberOfPlayers numberOfPlayers) throws IOException {
         String st;
         StringBuilder builder = new StringBuilder();
-        File file = new File("coefficients/" + id + ".txt");
+        File file = new File("ArtificialIntelligence/coefficients/" + id + ".txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         while ((st = reader.readLine()) != null) {
             builder.append(st).append("\n");
         }
         reader.close();
-        file = new File("masters/"+numberOfPlayers+"/" + masterCounter + ".txt");
+        file = new File("ArtificialIntelligence/masters/"+numberOfPlayers+"/" + masterCounter + ".txt");
         FileWriter writer = new FileWriter(file);
         writer.write(builder.toString());
         writer.close();

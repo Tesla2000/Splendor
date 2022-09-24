@@ -49,7 +49,7 @@ public abstract class AI {
     }
 
     public void playGame(int id){
-        ArrayList<ArrayList<Card>> cards = DeckGenerator.generateCards();
+        ArrayList<ArrayList<Cart>> cards = DeckGenerator.generateCards();
         TradeRow tradeRow = new TradeRow(cards.get(0), cards.get(1), cards.get(2));
         List<Player> list = new ArrayList<>();
         for (PlayerWithNodes currentPlayer : currentPlayers) {

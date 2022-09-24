@@ -2,6 +2,8 @@ package edu.ib.splendor.database.entities;
 
 import edu.ib.splendor.service.BoardManager;
 
+import java.util.Arrays;
+
 public class GetGem implements Move {
     Gem[] gemList;
 
@@ -17,5 +19,18 @@ public class GetGem implements Move {
 
     public Gem[] getGemList() {
         return gemList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GetGem getGem = (GetGem) o;
+        return Arrays.equals(gemList, getGem.gemList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(gemList);
     }
 }

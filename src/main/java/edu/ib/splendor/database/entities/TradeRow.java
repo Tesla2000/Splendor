@@ -2,13 +2,12 @@ package edu.ib.splendor.database.entities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 public class TradeRow {
-    private final HashMap<Tier, ArrayList<Card>> cardsVisible = new HashMap<>();
-    private final HashMap<Tier, ArrayList<Card>> cardsHidden = new HashMap<>();
+    private final HashMap<Tier, ArrayList<Cart>> cardsVisible = new HashMap<>();
+    private final HashMap<Tier, ArrayList<Cart>> cardsHidden = new HashMap<>();
 
-    public TradeRow(ArrayList<Card> tierFirstHidden, ArrayList<Card> tierSecondHidden, ArrayList<Card> tierThirdHidden) {
+    public TradeRow(ArrayList<Cart> tierFirstHidden, ArrayList<Cart> tierSecondHidden, ArrayList<Cart> tierThirdHidden) {
         this.cardsHidden.put(Tier.FIRST, tierFirstHidden);
         this.cardsHidden.put(Tier.SECOND, tierSecondHidden);
         this.cardsHidden.put(Tier.THIRD, tierThirdHidden);
@@ -23,8 +22,8 @@ public class TradeRow {
         }
     }
 
-    public TradeRow(ArrayList<Card> tierFirstHidden, ArrayList<Card> tierSecondHidden, ArrayList<Card> tierThirdHidden,
-                    ArrayList<Card> tierFirstVisible, ArrayList<Card> tierSecondVisible, ArrayList<Card> tierThirdVisible) {
+    public TradeRow(ArrayList<Cart> tierFirstHidden, ArrayList<Cart> tierSecondHidden, ArrayList<Cart> tierThirdHidden,
+                    ArrayList<Cart> tierFirstVisible, ArrayList<Cart> tierSecondVisible, ArrayList<Cart> tierThirdVisible) {
         this.cardsHidden.put(Tier.FIRST, tierFirstHidden);
         this.cardsHidden.put(Tier.SECOND, tierSecondHidden);
         this.cardsHidden.put(Tier.THIRD, tierThirdHidden);
@@ -33,30 +32,30 @@ public class TradeRow {
         cardsVisible.put(Tier.THIRD, tierThirdVisible);
     }
 
-    public Card takeCard(Tier tier, int index) {
+    public Cart takeCard(Tier tier, int index) {
         if (tier.equals(Tier.RESERVE)) throw new IllegalArgumentException("Tier can't be reserve");
-        Card card = null;
-        if (index == -1) card = cardsHidden.get(tier).remove(0);
+        Cart cart = null;
+        if (index == -1) cart = cardsHidden.get(tier).remove(0);
         else if (cardsVisible.get(tier).size()>index) {
-            card = cardsVisible.get(tier).remove(index);
+            cart = cardsVisible.get(tier).remove(index);
             if (cardsHidden.get(tier).size() > 0) cardsVisible.get(tier).add(cardsHidden.get(tier).remove(0));
         }
-        return card;
+        return cart;
     }
 
-    public Card getCard(Tier tier, int index) {
+    public Cart getCard(Tier tier, int index) {
         if (tier.equals(Tier.RESERVE)) throw new IllegalArgumentException("Tier can't be reserve");
-        Card card = null;
-        if (index == -1) card = cardsHidden.get(tier).remove(0);
-        else if (cardsVisible.get(tier).size()>index) card = cardsVisible.get(tier).get(index);
-        return card ;
+        Cart cart = null;
+        if (index == -1) cart = cardsHidden.get(tier).remove(0);
+        else if (cardsVisible.get(tier).size()>index) cart = cardsVisible.get(tier).get(index);
+        return cart;
     }
 
-    public HashMap<Tier, ArrayList<Card>> getCardsVisible() {
+    public HashMap<Tier, ArrayList<Cart>> getCardsVisible() {
         return cardsVisible;
     }
 
-    public HashMap<Tier, ArrayList<Card>> getCardsHidden() {
+    public HashMap<Tier, ArrayList<Cart>> getCardsHidden() {
         return cardsHidden;
     }
 }

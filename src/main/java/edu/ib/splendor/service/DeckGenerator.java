@@ -1,7 +1,7 @@
 package edu.ib.splendor.service;
 
 import edu.ib.splendor.database.entities.Aristocrat;
-import edu.ib.splendor.database.entities.Card;
+import edu.ib.splendor.database.entities.Cart;
 import edu.ib.splendor.database.entities.Gem;
 import edu.ib.splendor.database.entities.Tier;
 
@@ -11,11 +11,11 @@ import java.util.Collections;
 import java.util.Random;
 
 public class DeckGenerator {
-    public static ArrayList<ArrayList<Card>> generateCards(){
-        ArrayList<ArrayList<Card>> cards = new ArrayList<>();
-        ArrayList<Card> first = new ArrayList<>();
-        ArrayList<Card> second = new ArrayList<>();
-        ArrayList<Card> third = new ArrayList<>();
+    public static ArrayList<ArrayList<Cart>> generateCards(){
+        ArrayList<ArrayList<Cart>> cards = new ArrayList<>();
+        ArrayList<Cart> first = new ArrayList<>();
+        ArrayList<Cart> second = new ArrayList<>();
+        ArrayList<Cart> third = new ArrayList<>();
         File file = new File("src/main/java/edu/ib/splendor/database/buildings.txt");
         try {
             FileReader reader = new FileReader(file);
@@ -30,7 +30,7 @@ public class DeckGenerator {
             int green;
             int red;
             int brown;
-            Card card;
+            Cart cart;
             while ((line= bufferedReader.readLine())!=null){
                 String[] words = line.split("\t");
                 if (words[1].equals("black")) production=Gem.BROWN;
@@ -48,18 +48,18 @@ public class DeckGenerator {
                 points = Integer.parseInt(words[2]);
                 if (words[0].equals("1")) {
                     tier = Tier.FIRST;
-                    card = new Card(tier,red,green,blue,brown,white,production,points,picture);
-                    first.add(card);
+                    cart = new Cart(tier,red,green,blue,brown,white,production,points,picture);
+                    first.add(cart);
                 }
                 else if (words[0].equals("2")) {
                     tier = Tier.SECOND;
-                    card = new Card(tier,red,green,blue,brown,white,production,points,picture);
-                    second.add(card);
+                    cart = new Cart(tier,red,green,blue,brown,white,production,points,picture);
+                    second.add(cart);
                 }
                 else {
                     tier = Tier.THIRD;
-                    card = new Card(tier,red,green,blue,brown,white,production,points,picture);
-                    third.add(card);
+                    cart = new Cart(tier,red,green,blue,brown,white,production,points,picture);
+                    third.add(cart);
                 }
             }
             reader.close();

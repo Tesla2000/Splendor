@@ -72,4 +72,24 @@ public class Board {
     public void removeAristocrat(Aristocrat aristocrat){
         aristocrats.remove(aristocrat);
     }
+    
+    public Board deepcopy(){
+        return new Board(new TradeRow(
+                new ArrayList<>(tradeRow.getCardsHidden().get(Tier.FIRST)),
+                new ArrayList<>(tradeRow.getCardsHidden().get(Tier.SECOND)),
+                new ArrayList<>(tradeRow.getCardsHidden().get(Tier.THIRD)),
+                new ArrayList<>(tradeRow.getCardsVisible().get(Tier.FIRST)),
+                new ArrayList<>(tradeRow.getCardsVisible().get(Tier.SECOND)),
+                new ArrayList<>(tradeRow.getCardsVisible().get(Tier.THIRD))
+                ),
+                new ArrayList<>(players.stream().map(Player::deepcopy).toList()),
+                new ArrayList<>(aristocrats),
+                stored.get(Gem.RED),
+                stored.get(Gem.GREEN),
+                stored.get(Gem.BLUE),
+                stored.get(Gem.BROWN),
+                stored.get(Gem.WHITE),
+                stored.get(Gem.GOLD)
+                );
+    }
 }

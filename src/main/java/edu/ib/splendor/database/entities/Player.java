@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player {
-    private ArrayList<Card> deck = new ArrayList<>();
-    private ArrayList<Card> reserve = new ArrayList<>();
-    private final ArrayList<Aristocrat> aristocrats = new ArrayList<>();
+    private ArrayList<Cart> deck = new ArrayList<>();
+    private ArrayList<Cart> reserve = new ArrayList<>();
+    private ArrayList<Aristocrat> aristocrats = new ArrayList<>();
     private final HashMap<Gem, Integer> possession = new HashMap<>();
     private HashMap<Gem, Integer> production = new HashMap<>();
     private int points = 0;
@@ -57,7 +57,7 @@ public class Player {
         production.put(Gem.WHITE, 0);
     }
 
-    public Player(String name, int red, int green, int blue, int brown, int white, int gold, ArrayList<Card> deck, ArrayList<Card> reserve) {
+    public Player(String name, int red, int green, int blue, int brown, int white, int gold, ArrayList<Cart> deck, ArrayList<Cart> reserve) {
         possession.put(Gem.RED, red);
         possession.put(Gem.GREEN, green);
         possession.put(Gem.BLUE, blue);
@@ -67,6 +67,20 @@ public class Player {
         this.name = name;
         this.deck = deck;
         this.reserve = reserve;
+        updateStates();
+    }
+
+    public Player(String name, int red, int green, int blue, int brown, int white, int gold, ArrayList<Cart> deck, ArrayList<Cart> reserve, ArrayList<Aristocrat> aristocrats) {
+        possession.put(Gem.RED, red);
+        possession.put(Gem.GREEN, green);
+        possession.put(Gem.BLUE, blue);
+        possession.put(Gem.BROWN, brown);
+        possession.put(Gem.WHITE, white);
+        possession.put(Gem.GOLD, gold);
+        this.name = name;
+        this.deck = deck;
+        this.reserve = reserve;
+        this.aristocrats = aristocrats;
         updateStates();
     }
 
@@ -112,35 +126,35 @@ public class Player {
         return total;
     }
 
-    public ArrayList<Card> getReserve(){
+    public ArrayList<Cart> getReserve(){
         return reserve;
     }
 
-    public void addReserve(Card card){
-        if (reserve.size()<3) reserve.add(card);
+    public void addReserve(Cart cart){
+        if (reserve.size()<3) reserve.add(cart);
     }
-    public void removeReserve(Card card){
-        reserve.remove(card);
+    public void removeReserve(Cart cart){
+        reserve.remove(cart);
     }
 
 
     private void updateStates(){
         points = 0;
         production = new HashMap<>();
-        for (Card card: deck){
-            production.put(card.getProduction(), production.getOrDefault(card.getProduction(),0)+1);
-            points += card.getPoints();
+        for (Cart cart : deck){
+            production.put(cart.getProduction(), production.getOrDefault(cart.getProduction(),0)+1);
+            points += cart.getPoints();
         }
         for (Aristocrat aristocrat: aristocrats)
             points += aristocrat.getPoints();
     }
 
-    public ArrayList<Card> getDeck() {
+    public ArrayList<Cart> getDeck() {
         return deck;
     }
 
-    public void addCard(Card card){
-        deck.add(card);
+    public void addCard(Cart cart){
+        deck.add(cart);
         updateStates();
     }
 
@@ -174,5 +188,11 @@ public class Player {
 
     public ArrayList<Aristocrat> getAristocrats() {
         return aristocrats;
+    }
+
+    public Player deepcopy(){
+        return new Player(name, possession.get(Gem.RED), possession.get(Gem.GREEN), possession.get(Gem.BLUE),
+                possession.get(Gem.BROWN), possession.get(Gem.WHITE), possession.get(Gem.GOLD), new ArrayList<>(deck),
+                new ArrayList<>(reserve), new ArrayList<>(aristocrats));
     }
 }
