@@ -901,11 +901,11 @@ public class GameController {
         for (NameCheckedPair nameCheckedPair : pairs){
             if (nameCheckedPair.isChecked()) {
                 if (pairs.size() == 2)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/two/32.txt"), "masters/two/32.txt"));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("ArtificialIntelligence/masters/two/28.txt"), "ArtificialIntelligence/masters/two/28.txt"));
                 if (pairs.size() == 3)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/three/15.txt"), "masters/three/15.txt"));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("ArtificialIntelligence/masters/three/15.txt"), "ArtificialIntelligence/masters/three/15.txt"));
                 if (pairs.size() == 4)
-                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("masters/four/3.txt"), "masters/four/3.txt"));
+                    board.getPlayers().add(new PlayerWithNodes(new Player(nameCheckedPair.getName()), AIManager.readNodesFromFile("ArtificialIntelligence/masters/four/3.txt"), "ArtificialIntelligence/masters/four/3.txt"));
             }
             else if (nameCheckedPair.getName().equals("Voldemort"))
                 board.getPlayers().add(new Player(nameCheckedPair.getName(), 10000));

@@ -156,12 +156,35 @@ public class AIManager {
         if (BoardManager.canBuy(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player)) {
             BoardManager.buyEstate(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
         } else {
-            List<Gem> gotten = new ArrayList<>();
+            ArrayList<GemAmountPair> lacking;
             int i = 0;
+            int canBeTakenFromLessWanted;
+            ArrayList<Gem> wantedGems = new ArrayList<>();
+            do {
+                wantedGems = new ArrayList<>();
+                int sum = 0;
+                if (sequence.size() == 0)
+                    throw new GameLostException();
+                lacking = BoardManager.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
+                if (lacking == null) {
+                    sequence.remove(0);
+                    continue;
+                }
+                for (GemAmountPair pair: lacking){
+                    sum += pair.integer;
+                    wantedGems.add(pair.gem);
+                }
+                canBeTakenFromLessWanted = 10 - playersResource - sum;
+                if (canBeTaken(lacking, player.getPossession(), board)){
+                    break;
+                }
+                sequence.remove(0);
+            } while (true);
+            List<Gem> gotten = new ArrayList<>();
             int canBeTaken = 3;
             while (player.getPossession().values().stream().reduce(0, Integer::sum) < 10 && gotten.size() < 3 && canBeTaken > 0) {
                 if (i >= sequence.size()) {
-                    break;
+                    return;
                 }
                 ArrayList<GemAmountPair> lack = BoardManager.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(i))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(i))).getIndex(), board, player);
                 if (lack == null || !canBeTaken(lack, player.getPossession(), board)) {
@@ -179,13 +202,12 @@ public class AIManager {
                         continue;
                     }
                 }
-                lack = new ArrayList<>(lack.stream().filter((GemAmountPair gemAmountPair)->board.getStored(gemAmountPair.gem) > 0).toList());
-                if (lack.size() <= 1) {
-                    if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4 && canBeTaken == 3 && !gotten.contains(lack.get(0).gem)) {
-                        BoardManager.collectGem(lack.get(0).gem, board, player);
-                        BoardManager.collectGem(lack.get(0).gem, board, player);
-                        break;
-                    } else if (player.getPossession().values().stream().reduce(0, Integer::sum) <= 9 && board.getStored(Gem.GOLD) >= 1 && canBeTaken == 3 && !gotten.contains(Gem.GOLD)) {
+                if (lack.size() == 1 && player.getPossession().values().stream().reduce(0, Integer::sum) <= 8 && board.getStored(lack.get(0).gem) >= 4 && canBeTaken == 3 && !gotten.contains(lack.get(0).gem)) {
+                    BoardManager.collectGem(lack.get(0).gem, board, player);
+                    BoardManager.collectGem(lack.get(0).gem, board, player);
+                    return;
+                } else if (player.getPossession().values().stream().reduce(0, Integer::sum) <= 9 && board.getStored(Gem.GOLD) >= 1 && canBeTaken == 3) {
+                    if (player.getReserve().size() < 3 && board.getStored(Gem.GOLD) > 0) {
                         for (int index : initSeq) {
                             if (possibleMoves.get(index) instanceof ReserveBuilding) {
                                 if (BoardManager.canCardBeReserved(player, board, ((ReserveBuilding) possibleMoves.get(index)).getTier(), ((ReserveBuilding) possibleMoves.get(index)).getIndex())) {
@@ -195,25 +217,27 @@ public class AIManager {
                             }
                         }
                     }
-                }
-                for (GemAmountPair gemAmountPair : lack) {
-                    if (!gotten.contains(gemAmountPair.gem) && gotten.size() < 3 && canBeTaken > 0) {
-                        BoardManager.collectGem(gemAmountPair.gem, board, player);
-                        gotten.add(gemAmountPair.gem);
-                        if (i != 0) canBeTaken--;
+                } else if (player.getPossession().values().stream().reduce(0, Integer::sum) <= 9 && canBeTaken > 0 && board.getStored(lack.get(0).gem) > 0) {
+                    if (wantedGems.contains(lack.get(0).gem)){
+                        BoardManager.collectGem(lack.get(0).gem, board, player);
+                    } else if (canBeTakenFromLessWanted > 0) {
+                        BoardManager.collectGem(lack.get(0).gem, board, player);
+                        canBeTakenFromLessWanted--;
                     }
                 }
-                lack = BoardManager.lackingGems(((BuildBuilding) possibleMoves.get(sequence.get(0))).getTier(), ((BuildBuilding) possibleMoves.get(sequence.get(0))).getIndex(), board, player);
-                if (lack == null) {
-                    i++;
-                    continue;
+                for (GemAmountPair gemAmountPair : lack) {
+                    if (!gotten.contains(gemAmountPair.gem) && player.getPossession().values().stream().reduce(0, Integer::sum) < 10 && canBeTaken > 0 && (wantedGems.contains(gemAmountPair.gem) || canBeTakenFromLessWanted > 0)) {
+                        BoardManager.collectGem(gemAmountPair.gem, board, player);
+                        gotten.add(gemAmountPair.gem);
+                        canBeTaken--;
+                        if (!wantedGems.contains(gemAmountPair.gem))
+                            canBeTakenFromLessWanted--;
+                    }
                 }
-//                canBeTaken = 10 - playersResource - lack.stream().map(e -> e.integer).reduce(0, Integer::sum);
-                if (canBeTaken == 0 && gotten.size() != 0)
+                if (canBeTaken == 0)
                     return;
                 i++;
             }
-
         }
     }
 

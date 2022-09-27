@@ -44,7 +44,7 @@ public abstract class AI {
         CommunicationManager.waitForJavaTurn();
         allPlayers = new ArrayList<>();
         for (int id = 0; id < AIManager.pretenders; id++) {
-            allPlayers.add(AIManager.readNodesFromFile("coefficients/" + id + ".txt"));
+            allPlayers.add(AIManager.readNodesFromFile("ArtificialIntelligence/coefficients/" + id + ".txt"));
         }
     }
 
@@ -68,9 +68,9 @@ public abstract class AI {
         int moves = 0;
         while (true) {
             moves++;
-            if (moves == 1000){
+            if (moves >= 1000){
                 System.out.println("Bad");
-                break;
+//                break;
             }
             try{
                 AIManager.playTurn(players, currentPlayers.get(0).getNodes(), board, getPossibleMoves());
@@ -80,6 +80,7 @@ public abstract class AI {
 //            if (currentPlayers.get(0).getPlayer().getPoints()>=15) {
 //                if (currentPlayers.get(0).getPlayer().getName().equals("Pretender")) {
             if (currentPlayers.get(0).getPoints()>=15) {
+//                System.out.println("Finished");
                 if (currentPlayers.get(0).getName().equals("Pretender")) {
                     scores[id] = scores[id] + 1 + 1.0 / moves / 50;
                     if (scores[id] > bestScore) {

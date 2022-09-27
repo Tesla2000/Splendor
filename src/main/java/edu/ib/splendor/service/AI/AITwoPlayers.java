@@ -64,7 +64,7 @@ public class AITwoPlayers extends AI {
 
     @Override
     protected void setOrder(ArrayList<ArrayList<Node>> allPlayers, int masterCounter, ArrayList<PlayerWithNodes> currentPlayers, int id) throws IOException {
-        ArrayList<Node> master = AIManager.readNodesFromFile("masters/two/" + masterCounter + ".txt");
+        ArrayList<Node> master = AIManager.readNodesFromFile("ArtificialIntelligence/masters/two/" + masterCounter + ".txt");
         setCurrentPlayers(new ArrayList<>());
         getCurrentPlayers().add(new PlayerWithNodes(new Player("Pretender"), allPlayers.get(id)));
         getCurrentPlayers().add(new PlayerWithNodes(new Player("Master"), master));
