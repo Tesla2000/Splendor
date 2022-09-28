@@ -217,7 +217,7 @@ public class AIManager {
                             }
                         }
                     }
-                } else if (player.getPossession().values().stream().reduce(0, Integer::sum) <= 9 && canBeTaken > 0 && board.getStored(lack.get(0).gem) > 0) {
+                } else if (player.getPossession().values().stream().reduce(0, Integer::sum) <= 9 && board.getStored(lack.get(0).gem) > 0) {
                     if (wantedGems.contains(lack.get(0).gem)){
                         BoardManager.collectGem(lack.get(0).gem, board, player);
                     } else if (canBeTakenFromLessWanted > 0) {
