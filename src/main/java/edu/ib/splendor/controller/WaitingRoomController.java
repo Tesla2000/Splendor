@@ -24,7 +24,7 @@ public class WaitingRoomController {
 
     @FXML
     void admin(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getClassLoader().getResource("login.fxml"));
+        root = FXMLLoader.load(getClass().getClassLoader().getResource("multiplayer.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setTitle("Splendor");

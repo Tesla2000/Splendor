@@ -2,6 +2,7 @@ package edu.ib.splendor.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,28 +25,26 @@ public class MultiplayerController {
 
     @FXML
     void hotSeat(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getClassLoader().getResource("setGame.fxml"));
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("setGame.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setTitle("Splendor");
         stage.setScene(scene);
-        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
+        String css = Objects.requireNonNull(getClass().getClassLoader().getResource("board.css")).toExternalForm();
         scene.getStylesheets().add(css);
         stage.show();
-
     }
 
     @FXML
     void onlineGame(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getClassLoader().getResource("hostingRoom.fxml"));
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("login.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setTitle("Splendor");
         stage.setScene(scene);
-        String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
+        String css = Objects.requireNonNull(getClass().getClassLoader().getResource("board.css")).toExternalForm();
         scene.getStylesheets().add(css);
         stage.show();
-
     }
 
     @FXML

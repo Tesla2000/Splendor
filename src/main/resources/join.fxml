@@ -4,10 +4,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.control.CheckBox?>
 <AnchorPane prefHeight="136.0" prefWidth="201.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.splendor.controller.JoinController">
    <children>
       <TextField fx:id="secretNameField" layoutX="26.0" layoutY="22.0" promptText="Secret Key" text="Secret Key" />
       <TextField fx:id="aliasFieldName" layoutX="26.0" layoutY="62.0" promptText="My name" text="My name" />
-      <Button fx:id="readyButton" layoutX="80.0" layoutY="97.0" mnemonicParsing="false" onAction="#wait" text="Start" />
+      <CheckBox fx:id="readyButton" layoutX="80.0" layoutY="97.0" mnemonicParsing="false" onAction="#wait" text="Start" />
    </children>
 </AnchorPane>

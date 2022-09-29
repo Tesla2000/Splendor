@@ -461,8 +461,10 @@ public class GameController {
         try {
             currentPlayer.clearTaken();
             BoardManager.getAristocrats(board, currentPlayer);
-            board.getPlayers().add(board.getPlayers().remove(0));
-            currentPlayer = board.getPlayers().get(0);
+            if (Configuration.playerNames.contains(currentPlayer.getName())) {
+                board.getPlayers().add(board.getPlayers().remove(0));
+                currentPlayer = board.getPlayers().get(0);
+            }
             updateFields();
         } catch (Exception e) {
             e.printStackTrace();
@@ -897,7 +899,8 @@ public class GameController {
         board = new Board(tradeRow, new ArrayList<>(), 7, 7, 7, 7, 7, 5);
         List<NameCheckedPair> pairs;
         if (SetGameController.players != null) pairs = SetGameController.players;
-        else pairs = HostingRoomController.players;
+        else if (HostingRoomController.players != null) pairs = HostingRoomController.players;
+        else pairs = JoinController.players;
         for (NameCheckedPair nameCheckedPair : pairs){
             if (nameCheckedPair.isChecked()) {
                 if (pairs.size() == 2)

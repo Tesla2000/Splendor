@@ -43,7 +43,7 @@ public class LoginController {
         login = loginField.getText();
         for (UserDto userDto : userRepositoryAccessor.findAll()) {
             if (userDto.getLogin().equals(login) && userDto.getPassword().equals(passwordField.getText())) {
-                root = FXMLLoader.load(getClass().getClassLoader().getResource("multiplayer.fxml"));
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("hostingRoom.fxml"));
                 stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 scene = new Scene(root);
                 stage.setTitle("Splendor");
