@@ -897,7 +897,8 @@ public class GameController {
         board = new Board(tradeRow, new ArrayList<>(), 7, 7, 7, 7, 7, 5);
         List<NameCheckedPair> pairs;
         if (SetGameController.players != null) pairs = SetGameController.players;
-        else pairs = HostingRoomController.players;
+        else if (HostingRoomController.players != null) pairs = HostingRoomController.players;
+        else pairs = JoinController.players;
         for (NameCheckedPair nameCheckedPair : pairs){
             if (nameCheckedPair.isChecked()) {
                 if (pairs.size() == 2)

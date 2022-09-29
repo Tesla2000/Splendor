@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import edu.ib.splendor.Configuration;
+import edu.ib.splendor.database.entities.Board;
+import edu.ib.splendor.database.entities.NameCheckedPair;
+import edu.ib.splendor.database.entities.Player;
 import edu.ib.splendor.database.repositories.access.RepositoryAccessor;
+import edu.ib.splendor.database.repositories.dtos.BoardDto;
 import edu.ib.splendor.database.repositories.dtos.GameDto;
 import edu.ib.splendor.database.repositories.dtos.WaitDto;
 import javafx.event.ActionEvent;
@@ -25,6 +29,8 @@ public class JoinController {
     private Parent root;
     private RepositoryAccessor<WaitDto> waitRepositoryAccessor;
     private RepositoryAccessor<GameDto> gameRepositoryAccessor;
+    private RepositoryAccessor<BoardDto> boardRepositoryAccessor;
+    public static ArrayList<NameCheckedPair> players = new ArrayList<>();
 
     @FXML
     private ResourceBundle resources;
@@ -43,7 +49,7 @@ public class JoinController {
 
     @FXML
     void wait(ActionEvent event) throws IOException, InterruptedException {
-        Long gameId;
+        Long gameId = null;
 //        root = FXMLLoader.load(getClass().getClassLoader().getResource("waitForGame.fxml"));
 //        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 //        scene = new Scene(root);
@@ -55,15 +61,26 @@ public class JoinController {
         ArrayList<String> playerNames = new ArrayList<>();
         playerNames.add(aliasFieldName.getText());
         Configuration.playerNames = playerNames;
+        for (WaitDto waitDto: waitRepositoryAccessor.findAll()) {
+            if (waitDto.getGameKey() != null && waitDto.getGameKey().equals(secretNameField.getText())) {
+                gameId = waitDto.getGameDto().getId();
+            }
+        }
         while (true) {
             if (readyButton.isSelected()) {
+                ArrayList<NameCheckedPair> list = new ArrayList<>();
                 for (WaitDto waitDto: waitRepositoryAccessor.findAll()){
+                    GameDto gameDto = gameRepositoryAccessor.findById(gameId);
+                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")) {
+                        list.add(new NameCheckedPair(waitDto.getPlayerName(), false));
+                    }
                     if (waitDto.getGameKey() != null && waitDto.getGameKey().equals(secretNameField.getText())){
                         gameId = waitDto.getGameDto().getId();
                         waitDto.setReady(true);
                         waitDto.setPlayerName(aliasFieldName.getText());
                         waitRepositoryAccessor.save(waitDto);
-                        if (gameRepositoryAccessor.findById(gameId).getStarted()){
+                        if (gameDto.getStarted()){
+                            players = list;
                             root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
                             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                             scene = new Scene(root);
@@ -88,6 +105,7 @@ public class JoinController {
         assert secretNameField != null : "fx:id=\"secretNameField\" was not injected: check your FXML file 'join.fxml'.";
         waitRepositoryAccessor = new RepositoryAccessor<>("/wait", WaitDto.class, WaitDto[].class);
         gameRepositoryAccessor = new RepositoryAccessor<>("/game", GameDto.class, GameDto[].class);
+        boardRepositoryAccessor = new RepositoryAccessor<>("/board", BoardDto.class, BoardDto[].class);
     }
 
 }
