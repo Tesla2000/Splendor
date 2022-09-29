@@ -17,7 +17,7 @@
       <CheckBox fx:id="isSecondPlayerMeCheckBox" layoutX="190.0" layoutY="97.0" mnemonicParsing="false" text="Me" textFill="WHITE" />
       <CheckBox fx:id="isThirdPlayerMeCheckBox" layoutX="180.0" layoutY="153.0" mnemonicParsing="false" text="Me" textFill="WHITE" />
       <CheckBox fx:id="isFourthPlayerMeCheckBox" layoutX="180.0" layoutY="203.0" mnemonicParsing="false" text="Me" textFill="WHITE" />
-      <Button fx:id="waitingForGameCheckBox" layoutX="57.0" layoutY="250.0" mnemonicParsing="false" onAction="#changeState" text="Wait for game to start" />
+      <CheckBox fx:id="waitingForGameCheckBox" layoutX="57.0" layoutY="250.0" mnemonicParsing="false" onAction="#changeState" text="Wait for game to start" />
       <CheckBox fx:id="isFirstPlayerAICheckBox" layoutX="193.0" layoutY="71.0" mnemonicParsing="false" text="AI" textFill="WHITE" />
       <CheckBox fx:id="isSecondPlayerAICheckBox" layoutX="180.0" layoutY="122.0" mnemonicParsing="false" text="AI" textFill="WHITE" />
       <CheckBox fx:id="isThirdPlayerAICheckBox" layoutX="177.0" layoutY="178.0" mnemonicParsing="false" text="AI" textFill="WHITE" />
