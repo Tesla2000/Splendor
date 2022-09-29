@@ -3,6 +3,7 @@ package edu.ib.splendor.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -22,9 +23,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class HostingRoomController {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
     private RepositoryAccessor<WaitDto> waitRepositoryAccessor;
     private RepositoryAccessor<GameDto> gameRepositoryAccessor;
     public static ArrayList<NameCheckedPair> players;
@@ -132,12 +130,12 @@ public class HostingRoomController {
                 if (players.size()>=2) {
                     gameDto.setStarted(true);
                     gameRepositoryAccessor.save(gameDto);
-                    root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
-                    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    scene = new Scene(root);
+                    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("board.fxml")));
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(root);
                     stage.setTitle("Splendor");
                     stage.setScene(scene);
-                    String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
+                    String css = Objects.requireNonNull(getClass().getClassLoader().getResource("board.css")).toExternalForm();
                     scene.getStylesheets().add(css);
                     stage.show();
                     break;

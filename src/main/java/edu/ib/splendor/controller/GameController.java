@@ -461,8 +461,10 @@ public class GameController {
         try {
             currentPlayer.clearTaken();
             BoardManager.getAristocrats(board, currentPlayer);
-            board.getPlayers().add(board.getPlayers().remove(0));
-            currentPlayer = board.getPlayers().get(0);
+            if (Configuration.playerNames.contains(currentPlayer.getName())) {
+                board.getPlayers().add(board.getPlayers().remove(0));
+                currentPlayer = board.getPlayers().get(0);
+            }
             updateFields();
         } catch (Exception e) {
             e.printStackTrace();

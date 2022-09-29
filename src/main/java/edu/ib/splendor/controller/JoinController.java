@@ -3,6 +3,7 @@ package edu.ib.splendor.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import edu.ib.splendor.Configuration;
@@ -67,32 +68,31 @@ public class JoinController {
             }
         }
         while (true) {
+            GameDto gameDto = gameRepositoryAccessor.findById(gameId);
             if (readyButton.isSelected()) {
                 ArrayList<NameCheckedPair> list = new ArrayList<>();
                 for (WaitDto waitDto: waitRepositoryAccessor.findAll()){
-                    GameDto gameDto = gameRepositoryAccessor.findById(gameId);
-                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")) {
+                    if (waitDto.getGameDto().getId().equals(gameDto.getId()) && !waitDto.getPlayerName().equals("")  && players != null) {
                         list.add(new NameCheckedPair(waitDto.getPlayerName(), false));
                     }
                     if (waitDto.getGameKey() != null && waitDto.getGameKey().equals(secretNameField.getText())){
-                        gameId = waitDto.getGameDto().getId();
                         waitDto.setReady(true);
                         waitDto.setPlayerName(aliasFieldName.getText());
                         waitRepositoryAccessor.save(waitDto);
-                        if (gameDto.getStarted()){
-                            players = list;
-                            root = FXMLLoader.load(getClass().getClassLoader().getResource("board.fxml"));
-                            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                            scene = new Scene(root);
-                            stage.setTitle("Splendor");
-                            stage.setScene(scene);
-                            String css = getClass().getClassLoader().getResource("board.css").toExternalForm();
-                            scene.getStylesheets().add(css);
-                            stage.show();
-                        }
-                        break;
                     }
                 }
+                players = list;
+            }
+            if (gameDto.getStarted()){
+                root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("board.fxml")));
+                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                scene = new Scene(root);
+                stage.setTitle("Splendor");
+                stage.setScene(scene);
+                String css = Objects.requireNonNull(getClass().getClassLoader().getResource("board.css")).toExternalForm();
+                scene.getStylesheets().add(css);
+                stage.show();
+                break;
             }
             Thread.sleep(250);
         }
